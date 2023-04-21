@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package YourProject;
+
+service YourProjectServer {
+  rpc Ping(Id) returns (Id) {}
+}
+
+message Id{
+    int32 id = 1;
+}
