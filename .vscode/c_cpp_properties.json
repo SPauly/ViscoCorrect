@@ -16,7 +16,7 @@
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-msvc-x64",
-            "configurationProvider": "cmake-tools"
+            "configurationProvider": "ms-vscode.cmake-tools"
         },
         {
             "name": "mingw",

@@ -15,14 +15,6 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-#include <grpc/grpc.h>
-#include <grpcpp/channel.h>
-#include <grpcpp/client_context.h>
-#include <grpcpp/create_channel.h>
-#include <grpcpp/security/credentials.h>
-
-#include "Your_Project_protocol.grpc.pb.h"
-
 #include "LayerStack.h"
 
 namespace Your_Project
@@ -56,10 +48,6 @@ namespace Your_Project
         LayerStack m_layer_stack;
     private:
         static Application *s_Instance;
-
-        std::string m_server_address = "localhost:50000";
-        std::shared_ptr<grpc::Channel> msprt_channel;
-        std::unique_ptr<YourProject::YourProjectServer::Stub> muprt_stub;
     };
 
     Application *CreateApplication();
