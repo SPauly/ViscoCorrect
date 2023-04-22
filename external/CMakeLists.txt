@@ -1,8 +1,4 @@
 cmake_minimum_required(VERSION 3.5.1)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wformat")
-set(-DCMAKE_RC_COMPILER=windres)
 
 # Project
 project(external)
@@ -19,7 +15,7 @@ ExternalProject_Add(glfw
   SOURCE_DIR "${SUP_GLFW_DIR}"
   CMAKE_CACHE_ARGS
         -DCMAKE_CXX_FLAGS:STRING=pkg-config --libs glfw3
-        -DCMAKE_INSTALL_PREFIX:PATH=${SUP_ROOT_FOLDER}/build/third_party/glfw
+        -DCMAKE_INSTALL_PREFIX:PATH=${SUP_ROOT_FOLDER}/build/external/glfw
         -DGLFW_BUILD_DOCS:BOOL=OFF
         -DGLFW_BUILD_TESTS:BOOL=OFF 
         -DGLFW_BUILD_EXAMPLES:BOOL=OFF
@@ -44,6 +40,6 @@ add_dependencies(imgui glfw)
 target_include_directories(imgui PUBLIC
     "${PROJECT_SOURCE_DIR}/imgui"
     "${PROJECT_SOURCE_DIR}/imgui/backends"
-    "${SUP_ROOT_FOLDER}/build/third_party/glfw/include"
+    "${SUP_ROOT_FOLDER}/build/external/glfw/include"
 )
 
