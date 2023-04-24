@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-namespace Your_Project
+namespace ViscoCorrect
 {
 	class LayerStack
 	{
@@ -16,7 +16,7 @@ namespace Your_Project
 		template <typename T>
 		void PushLayer()
 		{
-			static_assert(std::is_base_of<Your_Project::Layer, T>::value, "Pushed type is not subclass of Layer!");
+			static_assert(std::is_base_of<ViscoCorrect::Layer, T>::value, "Pushed type is not subclass of Layer!");
 			mvec_layers.emplace_back(std::make_shared<T>());
 			mvec_layers.back()->OnAttach();
 		}

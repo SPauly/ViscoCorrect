@@ -1,7 +1,7 @@
 #include "LayerStack.h"
 #include <algorithm>
 
-namespace Your_Project
+namespace ViscoCorrect
 {
     LayerStack::~LayerStack()
 	{

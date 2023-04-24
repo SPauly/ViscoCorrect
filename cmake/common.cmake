@@ -1,1 +1,0 @@
-set(glfw3_DIR ${SUP_ROOT_FOLDER}/build/third_party/glfw/lib/cmake/glfw3)

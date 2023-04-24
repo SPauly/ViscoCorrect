@@ -9,7 +9,7 @@ static void glfw_error_callback(int error, const char *description)
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-namespace Your_Project
+namespace ViscoCorrect
 {
     Application *Application::s_Instance = nullptr;
     Application *CreateApplication()
@@ -55,7 +55,7 @@ namespace Your_Project
 #endif
 
         // Create window with graphics context
-        window = glfwCreateWindow(1280, 720, "Your_Project", NULL, NULL);
+        window = glfwCreateWindow(1280, 720, "ViscoCorrect", NULL, NULL);
         if (window == NULL)
             return false;
         glfwMakeContextCurrent(window);
@@ -109,6 +109,7 @@ namespace Your_Project
 
         //layer init
         this->PushLayer<ExampleLayer>();
+        this->PushLayer<Viewport>();
         return true;
     }
 

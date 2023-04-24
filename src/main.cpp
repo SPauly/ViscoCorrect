@@ -2,7 +2,7 @@
 
 
 int main(){
-    Your_Project::Application *app = Your_Project::CreateApplication();
+    ViscoCorrect::Application *app = ViscoCorrect::CreateApplication();
     app->Run();
     delete app;
     return 0;

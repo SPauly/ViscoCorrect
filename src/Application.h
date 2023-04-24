@@ -16,8 +16,9 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #include "LayerStack.h"
+#include "Viewport.h"
 
-namespace Your_Project
+namespace ViscoCorrect
 {
     class Application
     {
@@ -52,7 +53,7 @@ namespace Your_Project
 
     Application *CreateApplication();
 
-    class ExampleLayer : public Your_Project::Layer
+    class ExampleLayer : public ViscoCorrect::Layer
     {
     public:
         virtual void OnUIRender() override; 

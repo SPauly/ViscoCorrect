@@ -7,15 +7,15 @@ include(ExternalProject)
 
 #build smaller dependencies (GLFW and ImGUI)
 # GLFW
-message(STATUS "SUP: External:Adding GLFW")
-message(STATUS "SUP: External: DEB: dir is: ${SUP_GLFW_DIR}")
+message(STATUS "external: Add glfw")
 
 ExternalProject_Add(glfw
   PREFIX glfw
-  SOURCE_DIR "${SUP_GLFW_DIR}"
+  SOURCE_DIR "${SUP_ROOT_FOLDER}/external/glfw"
+  BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/glfw"
   CMAKE_CACHE_ARGS
         -DCMAKE_CXX_FLAGS:STRING=pkg-config --libs glfw3
-        -DCMAKE_INSTALL_PREFIX:PATH=${SUP_ROOT_FOLDER}/build/external/glfw
+        -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/glfw
         -DGLFW_BUILD_DOCS:BOOL=OFF
         -DGLFW_BUILD_TESTS:BOOL=OFF 
         -DGLFW_BUILD_EXAMPLES:BOOL=OFF
@@ -23,7 +23,7 @@ ExternalProject_Add(glfw
 )
 
 # ImGUI
-message(STATUS "SUP: External: Building imgui")
+message(STATUS "external: Add imgui")
 
 add_library(imgui
       "${PROJECT_SOURCE_DIR}/imgui/imgui.cpp"
@@ -40,6 +40,6 @@ add_dependencies(imgui glfw)
 target_include_directories(imgui PUBLIC
     "${PROJECT_SOURCE_DIR}/imgui"
     "${PROJECT_SOURCE_DIR}/imgui/backends"
-    "${SUP_ROOT_FOLDER}/build/external/glfw/include"
+    "${CMAKE_CURRENT_BINARY_DIR}/glfw/include"
 )
 

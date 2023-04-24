@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Your_Project
+namespace ViscoCorrect
 {
     class Layer
     {
