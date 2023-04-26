@@ -16,9 +16,13 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-#include "LayerStack.h"
+#include "utils/LayerStack.h"
 #include "Graph.h"
 #include "Project.h"
+
+#if defined(DEBUG_BUILD)
+#include "utils/Debug/DebugTools.h"
+#endif
 
 namespace ViscoCorrect
 {
@@ -59,7 +63,7 @@ namespace ViscoCorrect
         LayerStack m_layer_stack;  
         std::shared_ptr<ViscoCorrect::Graph> m_graph;
         std::vector<std::shared_ptr<ViscoCorrect::Project>> mvec_projects;
-        
+
     private:
         static Application *s_Instance;
     };

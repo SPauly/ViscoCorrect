@@ -64,7 +64,6 @@ namespace ViscoCorrect
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-        ImPlot::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
         (void)io;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
@@ -91,9 +90,10 @@ namespace ViscoCorrect
         mvec_projects.push_back(std::make_shared<Project>());
         this->PushLayer(mvec_projects.back());
 
+#if defined(DEBUG_BUILD)
         // layer init ExampleLayer
-        this->PushLayer<ExampleLayer>();
-
+        this->PushLayer<Debug::DebugTools>();
+#endif
         return true;
     }
 
@@ -105,7 +105,6 @@ namespace ViscoCorrect
         // Cleanup
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
-        ImPlot::DestroyContext();
         ImGui::DestroyContext();
 
         glfwDestroyWindow(window);
