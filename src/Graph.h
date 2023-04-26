@@ -5,10 +5,11 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "implot.h"
 
 namespace ViscoCorrect
 {
-    class Viewport : public Layer
+    class Graph : public Layer
     {
     public:
         virtual void OnUIRender() override;

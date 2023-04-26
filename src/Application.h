@@ -8,6 +8,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "implot.h"
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -16,7 +17,8 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #include "LayerStack.h"
-#include "Viewport.h"
+#include "Graph.h"
+#include "Project.h"
 
 namespace ViscoCorrect
 {
@@ -38,15 +40,26 @@ namespace ViscoCorrect
     private:
         bool Init();
         void Shutdown();
+
+        void SetStyle();
+
     private:
         // Demo dependencies
         GLFWwindow *window;
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        ImGuiContext *ctx;
+
         float m_TimeStep = 0.0f;
 		float m_FrameTime = 0.0f;
 		float m_LastFrameTime = 0.0f;   
+
+        //Style
+        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        ImVec4 *colors = nullptr;
         
-        LayerStack m_layer_stack;
+        LayerStack m_layer_stack;  
+        std::shared_ptr<ViscoCorrect::Graph> m_graph;
+        std::vector<std::shared_ptr<ViscoCorrect::Project>> mvec_projects;
+        
     private:
         static Application *s_Instance;
     };

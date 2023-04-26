@@ -5,11 +5,7 @@ namespace ViscoCorrect
 {
     LayerStack::~LayerStack()
 	{
-		for (std::shared_ptr<Layer> layer : mvec_layers)
-		{
-			layer->OnDetach();
-			layer.reset();
-		}
+		clear();
 	}
 
 	void LayerStack::PushLayer(const std::shared_ptr<Layer> &layer)
@@ -43,6 +39,15 @@ namespace ViscoCorrect
 		{
 			overlay->OnDetach();
 			mvec_layers.erase(it);
+		}
+	}
+
+	void LayerStack::clear()
+	{
+		for (std::shared_ptr<Layer> layer : mvec_layers)
+		{
+			layer->OnDetach();
+			layer.reset();
 		}
 	}
 }

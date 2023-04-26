@@ -49,21 +49,37 @@
       "${PROJECT_SOURCE_DIR}/external/glfw/include"
   )
 
-  #Application
-  add_executable(ViscoCorrect
-      "${PROJECT_SOURCE_DIR}/src/main.cpp"
-      "${PROJECT_SOURCE_DIR}/src/Application.cpp"    
-      "${PROJECT_SOURCE_DIR}/src/LayerStack.cpp"
-      "${PROJECT_SOURCE_DIR}/src/Viewport.cpp"
-  )
+add_library( implot 
+    "${PROJECT_SOURCE_DIR}/external/implot/implot.cpp"
+    "${PROJECT_SOURCE_DIR}/external/implot/implot_items.cpp"
+    "${PROJECT_SOURCE_DIR}/external/implot/implot_demo.cpp"
+)
 
-  target_include_directories(ViscoCorrect PUBLIC
-      "${PROJECT_BINARY_DIR}"
-      "${PROJECT_SOURCE_DIR}/src/"
-      "${PROJECT_SOURCE_DIR}/external/imgui"
-      "${PROJECT_SOURCE_DIR}/external/imgui/backends"
-  )
+add_dependencies(implot imgui)
 
-  target_link_libraries(ViscoCorrect glfw ${GLFW_LIBRARIES})
-  target_link_libraries(ViscoCorrect OpenGL::GL)
-  target_link_libraries(ViscoCorrect imgui)
+target_include_directories( implot PUBLIC
+    "${PROJECT_SOURCE_DIR}/external/implot/implot.h"
+    "${PROJECT_SOURCE_DIR}/external/implot/implot_internal"
+)
+
+target_link_libraries(implot PUBLIC imgui)
+
+#Application
+add_executable(ViscoCorrect
+    "${PROJECT_SOURCE_DIR}/src/main.cpp"
+    "${PROJECT_SOURCE_DIR}/src/Application.cpp"    
+    "${PROJECT_SOURCE_DIR}/src/LayerStack.cpp"
+    "${PROJECT_SOURCE_DIR}/src/Graph.cpp"
+    "${PROJECT_SOURCE_DIR}/src/Project.cpp"
+)
+target_include_directories(ViscoCorrect PUBLIC
+    "${PROJECT_BINARY_DIR}"
+    "${PROJECT_SOURCE_DIR}/src/"
+    "${PROJECT_SOURCE_DIR}/external/imgui"
+    "${PROJECT_SOURCE_DIR}/external/imgui/backends"
+    "${PROJECT_SOURCE_DIR}/external/implot"
+)
+
+target_link_libraries(ViscoCorrect glfw ${GLFW_LIBRARIES})
+target_link_libraries(ViscoCorrect OpenGL::GL)
+target_link_libraries(ViscoCorrect imgui implot)

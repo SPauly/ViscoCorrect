@@ -26,6 +26,8 @@ namespace ViscoCorrect
 		void PopLayer(std::shared_ptr<Layer> layer);
 		void PopOverlay(std::shared_ptr<Layer> overlay);
 
+		void clear();
+
 		std::vector<std::shared_ptr<Layer>>::iterator begin() { return mvec_layers.begin(); }
 		std::vector<std::shared_ptr<Layer>>::iterator end() { return mvec_layers.end(); }
 		std::vector<std::shared_ptr<Layer>>::reverse_iterator rbegin() { return mvec_layers.rbegin(); }
