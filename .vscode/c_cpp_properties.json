@@ -22,7 +22,7 @@
             "name": "mingw",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/build/external/**"
+                "${workspaceFolder}/build/**"
             ],
             "defines": [
                 "_DEBUG",

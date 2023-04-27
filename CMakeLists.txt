@@ -42,7 +42,6 @@ add_library(imgui
 add_dependencies(imgui glfw)
 
 target_include_directories(imgui PUBLIC
-    "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/external/imgui"
     "${PROJECT_SOURCE_DIR}/external/imgui/backends"
     "${PROJECT_SOURCE_DIR}/external/glfw/include"
@@ -55,8 +54,7 @@ add_library( implot
 )
 
 target_include_directories( implot PUBLIC
-    "${PROJECT_SOURCE_DIR}/external/implot/implot.h"
-    "${PROJECT_SOURCE_DIR}/external/implot/implot_internal"
+    "${PROJECT_SOURCE_DIR}/external/implot/"
 )
 
 add_dependencies(implot imgui)
@@ -72,7 +70,6 @@ add_executable(ViscoCorrect
 )
 
 target_include_directories(ViscoCorrect PUBLIC
-    "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/src/"    
     "${PROJECT_SOURCE_DIR}/src/utils/"    
     "${PROJECT_SOURCE_DIR}/external/imgui"
@@ -87,11 +84,13 @@ target_link_libraries(ViscoCorrect imgui implot)
 # Debugtools
 if(BUILD_DEBUG_FEATURES)
     add_library(debug_tools 
-        "${PROJECT_SOURCE_DIR}/src/utils/Debug/DebugTools.h"
+        "${PROJECT_SOURCE_DIR}/src/utils/Debug/DebugTools.cpp"
     )
 
     target_include_directories(debug_tools PUBLIC   
         "${PROJECT_SOURCE_DIR}/src/utils/"
+        "${PROJECT_SOURCE_DIR}/src/utils/Debug"
+        "${PROJECT_SOURCE_DIR}/external/imgui"
     )
 
     target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)
