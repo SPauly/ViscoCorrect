@@ -63,7 +63,7 @@ namespace ViscoCorrect
         LayerStack m_layer_stack;  
         std::shared_ptr<ViscoCorrect::Graph> m_graph;
         std::vector<std::shared_ptr<ViscoCorrect::Project>> mvec_projects;
-
+    
     private:
         static Application *s_Instance;
     };

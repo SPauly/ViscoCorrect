@@ -67,6 +67,7 @@ add_executable(ViscoCorrect
     "${PROJECT_SOURCE_DIR}/src/utils/LayerStack.cpp"
     "${PROJECT_SOURCE_DIR}/src/Graph.cpp"
     "${PROJECT_SOURCE_DIR}/src/Project.cpp"
+    "${PROJECT_SOURCE_DIR}/src/Calculator.cpp"
 )
 
 target_include_directories(ViscoCorrect PUBLIC
