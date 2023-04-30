@@ -92,6 +92,7 @@ if(BUILD_DEBUG_FEATURES)
         "${PROJECT_SOURCE_DIR}/src/utils/"
         "${PROJECT_SOURCE_DIR}/src/utils/Debug"
         "${PROJECT_SOURCE_DIR}/external/imgui"
+        "${PROJECT_SOURCE_DIR}/external/implot"
     )
 
     target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)

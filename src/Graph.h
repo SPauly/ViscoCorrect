@@ -15,6 +15,9 @@ namespace ViscoCorrect
     class Graph : public Layer
     {
     public:
+        virtual void OnAttach() override;
+        virtual void OnDetach() override;
+        
         virtual void OnUIRender() override;
 
     private:
