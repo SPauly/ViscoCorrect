@@ -21,9 +21,6 @@ namespace ViscoCorrect
 
     void Graph::OnUIRender()
     {
-#if defined(DEBUG_BUILD)
-        ImPlot::ShowDemoWindow();
-#endif
         static float v[2][2] = {{50,0},{50,100}};
         static double x_min=0, x_max=100, y_min=0, y_max=100;
         ImGui::Begin("Viewport");
@@ -46,5 +43,26 @@ namespace ViscoCorrect
             ImPlot::EndPlot();
         }
         ImGui::End();
+
+#if defined(DEBUG_BUILD)
+        ImPlot::ShowDemoWindow();
+        Debug::s_DebugInstance->AddTool(&m_debug_graph);
+        m_debug_graph.AddCallback(&debug_func_callback);
+#endif
     }
+
+#if defined(DEBUG_BUILD)
+    void Graph::DebugGraph::Run()
+    {
+        for(auto &_func : mvec_callbacks)
+        {
+            _func();
+        }
+    }
+
+    void Graph::debug_func(Graph *_graph)
+    {
+        
+    }
+#endif
 }

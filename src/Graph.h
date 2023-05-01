@@ -10,6 +10,10 @@
 #include "Layer.h"
 #include "Calculator.h"
 #include "Types.h"
+
+#if defined(DEBUG_BUILD)
+#include "utils/Debug/DebugTools.h"
+#endif
 namespace ViscoCorrect
 {
     class Graph : public Layer
@@ -22,6 +26,21 @@ namespace ViscoCorrect
 
     private:
         std::shared_ptr<Calculator> m_calculator;
+
+#if defined(DEBUG_BUILD)
+        class DebugGraph : public Debug::DebugToolBase
+        {
+        public:
+            virtual void Run() override;
+        };
+
+        DebugGraph m_debug_graph{"Graph"};
+
+        void debug_func(Graph*);
+        std::function<void()> debug_func_callback = [this](){
+            debug_func(this);
+        }
+#endif
     };
 
 }
