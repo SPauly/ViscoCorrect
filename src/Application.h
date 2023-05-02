@@ -21,7 +21,7 @@
 #include "Project.h"
 
 #if defined(DEBUG_BUILD)
-#include "utils/Debug/DebugTools.h"
+#include "utils/Debugging/DebugTools.h"
 #endif
 
 namespace ViscoCorrect

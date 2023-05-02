@@ -12,7 +12,7 @@
 #include "Types.h"
 
 #if defined(DEBUG_BUILD)
-#include "utils/Debug/DebugTools.h"
+#include "utils/Debugging/DebugTools.h"
 #endif
 namespace ViscoCorrect
 {
@@ -36,10 +36,8 @@ namespace ViscoCorrect
 
         DebugGraph m_debug_graph{"Graph"};
 
-        void debug_func(Graph*);
-        std::function<void()> debug_func_callback = [this](){
-            debug_func(this);
-        }
+        void debug_func();
+        std::function<void()> debug_func_callback = std::bind(&debug_func, this);
 #endif
     };
 

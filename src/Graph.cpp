@@ -60,7 +60,7 @@ namespace ViscoCorrect
         }
     }
 
-    void Graph::debug_func(Graph *_graph)
+    void Graph::debug_func()
     {
         
     }
