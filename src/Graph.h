@@ -31,6 +31,8 @@ namespace ViscoCorrect
         class DebugGraph : public Debug::DebugToolBase
         {
         public:
+            DebugGraph(const std::string &_name) : DebugToolBase(_name){};
+            
             virtual void Run() override;
         };
 

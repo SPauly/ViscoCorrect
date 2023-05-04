@@ -7,7 +7,7 @@ namespace ViscoCorrect
     {
         ImPlot::CreateContext();
 #if defined(DEBUG_BUILD)
-        m_debug_graph = std::make_shared<DebugGraph>();
+        m_debug_graph = std::make_shared<DebugGraph>("Graph");
         Application::GetInstance()->GetDebugTools()->AddTool(m_debug_graph);
         m_debug_graph->AddCallback(m_debug_graph->GetCallback(&debug_func, this));
 #endif

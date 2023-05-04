@@ -96,7 +96,6 @@ namespace ViscoCorrect
 
 #if defined(DEBUG_BUILD)
         // layer init ExampleLayer
-        m_debug_tools = std::make_shared<Debug::DebugTools>();
         this->PushLayer(m_debug_tools);
 #endif
         return true;

@@ -27,13 +27,13 @@ namespace ViscoCorrect
         }
 
         // DebugToolBase
-        DebugToolBase::DebugToolBase(const char *_name) : name(_name)
+        DebugToolBase::DebugToolBase(const std::string &_name) : m_name(_name)
         {
         }
 
         void DebugToolBase::OnUIRender()
         {
-            if (ImGui::CollapsingHeader(name))
+            if (ImGui::CollapsingHeader(m_name.c_str()))
                 return;
             ImGui::Text("Hello from DebugToolBase");
             Run();

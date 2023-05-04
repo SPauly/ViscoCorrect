@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <string>
 
 #include "Layer.h"
 #include "LayerStack.h"
@@ -34,7 +35,7 @@ namespace ViscoCorrect
         {
         public:
             DebugToolBase() = default;
-            DebugToolBase(const char *);
+            DebugToolBase(const std::string &);
             virtual ~DebugToolBase() = default;
 
             virtual void OnUIRender() final;
@@ -55,7 +56,7 @@ namespace ViscoCorrect
             std::vector<std::unique_ptr<std::function<void()>>> mvec_callbacks;
 
         private:
-            const char *name;
+            std::string m_name;
         };
 
     }
