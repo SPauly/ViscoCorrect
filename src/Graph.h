@@ -21,7 +21,7 @@ namespace ViscoCorrect
     public:
         virtual void OnAttach() override;
         virtual void OnDetach() override;
-        
+
         virtual void OnUIRender() override;
 
     private:
@@ -34,10 +34,9 @@ namespace ViscoCorrect
             virtual void Run() override;
         };
 
-        DebugGraph m_debug_graph{"Graph"};
+        std::shared_ptr<DebugGraph> m_debug_graph;
 
         void debug_func();
-        std::function<void()> debug_func_callback = std::bind(&debug_func, this);
 #endif
     };
 

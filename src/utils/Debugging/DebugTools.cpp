@@ -4,15 +4,13 @@ namespace ViscoCorrect
 {
     namespace Debug
     {
-
         DebugTools::DebugTools()
         {
-            s_DebugInstance = this;
         }
 
         DebugTools::~DebugTools()
-        { 
-            s_DebugInstance = nullptr;
+        {
+            mvec_tools.clear();
         }
 
         void DebugTools::OnUIRender()
@@ -28,13 +26,6 @@ namespace ViscoCorrect
             ImGui::End();
         }
 
-        template <typename T>
-        void DebugTools::AddTool(const T *_t)
-        {
-            static_assert(std::is_base_of<ViscoCorrect::Debug::DebugToolBase, T>::value, "Pushed type is not subclass of DebugToolBase!");
-            mvec_tools.PushLayer(_t);
-        }
-
         // DebugToolBase
         DebugToolBase::DebugToolBase(const char *_name) : name(_name)
         {
@@ -44,17 +35,18 @@ namespace ViscoCorrect
         {
             if (ImGui::CollapsingHeader(name))
                 return;
-
+            ImGui::Text("Hello from DebugToolBase");
             Run();
         }
 
-        void DebugToolBase::AddCallback(std::function<void()> *_callback)
+        void DebugToolBase::AddCallback(std::unique_ptr<std::function<void()>> _callback)
         {
-            mvec_callbacks.push_back(*_callback);
+            mvec_callbacks.push_back(std::move(_callback));
         }
 
-        void DebugToolBase::RemoveCallback(std::function<void()> *_rm_callback)
+        void RemoveCallback(std::function<void()> *callback)
         {
         }
+
     }
 }

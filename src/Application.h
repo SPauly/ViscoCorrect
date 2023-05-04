@@ -38,8 +38,14 @@ namespace ViscoCorrect
         void PushLayer();
         void PushLayer(const std::shared_ptr<Layer> &);
 
-        static Application& Get() {return *s_Instance; };  
+        static Application *GetInstance() {return s_Instance; };
 
+#if defined(DEBUG_BUILD)
+        inline std::shared_ptr<Debug::DebugTools> GetDebugTools()
+        {
+            return m_debug_tools;
+        }
+#endif
         void Close();
     private:
         bool Init();
@@ -63,6 +69,9 @@ namespace ViscoCorrect
         LayerStack m_layer_stack;  
         std::shared_ptr<ViscoCorrect::Graph> m_graph;
         std::vector<std::shared_ptr<ViscoCorrect::Project>> mvec_projects;
+#if defined(DEBUG_BUILD)
+        std::shared_ptr<Debug::DebugTools> m_debug_tools;
+#endif
     
     private:
         static Application *s_Instance;

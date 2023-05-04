@@ -12,6 +12,7 @@ static void glfw_error_callback(int error, const char *description)
 namespace ViscoCorrect
 {
     Application *Application::s_Instance = nullptr;
+
     Application *CreateApplication()
     {
         return new Application;
@@ -20,6 +21,9 @@ namespace ViscoCorrect
     Application::Application()
     {
         s_Instance = this;
+#if defined(DEBUG_BUILD)
+        m_debug_tools = std::make_shared<Debug::DebugTools>();
+#endif
     }
 
     bool Application::Init()
@@ -92,7 +96,8 @@ namespace ViscoCorrect
 
 #if defined(DEBUG_BUILD)
         // layer init ExampleLayer
-        this->PushLayer<Debug::DebugTools>();
+        m_debug_tools = std::make_shared<Debug::DebugTools>();
+        this->PushLayer(m_debug_tools);
 #endif
         return true;
     }

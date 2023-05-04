@@ -1,10 +1,16 @@
 #include "Graph.h"
+#include "Application.h"
 
 namespace ViscoCorrect
 {
     void Graph::OnAttach()
     {
         ImPlot::CreateContext();
+#if defined(DEBUG_BUILD)
+        m_debug_graph = std::make_shared<DebugGraph>();
+        Application::GetInstance()->GetDebugTools()->AddTool(m_debug_graph);
+        m_debug_graph->AddCallback(m_debug_graph->GetCallback(&debug_func, this));
+#endif
     }
 
     void Graph::OnDetach()
@@ -46,23 +52,22 @@ namespace ViscoCorrect
 
 #if defined(DEBUG_BUILD)
         ImPlot::ShowDemoWindow();
-        Debug::s_DebugInstance->AddTool(&m_debug_graph);
-        m_debug_graph.AddCallback(&debug_func_callback);
 #endif
     }
 
 #if defined(DEBUG_BUILD)
     void Graph::DebugGraph::Run()
     {
-        for(auto &_func : mvec_callbacks)
+        ImGui::Text("Hello from Run");
+        for(const auto &_func : mvec_callbacks)
         {
-            _func();
+            (*_func)();
         }
     }
 
     void Graph::debug_func()
     {
-        
+        ImGui::Text("Hello this is the callback");
     }
 #endif
 }
