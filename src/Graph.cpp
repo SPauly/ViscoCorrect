@@ -58,11 +58,7 @@ namespace ViscoCorrect
 #if defined(DEBUG_BUILD)
     void Graph::DebugGraph::Run()
     {
-        ImGui::Text("Hello from Run");
-        for(const auto &_func : mvec_callbacks)
-        {
-            (*_func)();
-        }
+        RunCallbacks();
     }
 
     void Graph::debug_func()

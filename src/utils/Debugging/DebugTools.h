@@ -50,11 +50,11 @@ namespace ViscoCorrect
             }
 
             void AddCallback(std::unique_ptr<std::function<void()>>);
-            void RemoveCallback(std::function<void()> &);
 
         protected:
             std::vector<std::unique_ptr<std::function<void()>>> mvec_callbacks;
 
+            void RunCallbacks();
         private:
             std::string m_name;
         };

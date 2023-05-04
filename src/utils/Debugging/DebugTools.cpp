@@ -34,9 +34,10 @@ namespace ViscoCorrect
         void DebugToolBase::OnUIRender()
         {
             if (ImGui::CollapsingHeader(m_name.c_str()))
+            {
+                Run();
                 return;
-            ImGui::Text("Hello from DebugToolBase");
-            Run();
+            }
         }
 
         void DebugToolBase::AddCallback(std::unique_ptr<std::function<void()>> _callback)
@@ -44,9 +45,13 @@ namespace ViscoCorrect
             mvec_callbacks.push_back(std::move(_callback));
         }
 
-        void RemoveCallback(std::function<void()> *callback)
-        {
-        }
 
+        void DebugToolBase::RunCallbacks()
+        {
+            for (const auto &_func : mvec_callbacks)
+            {
+                (*_func)();
+            }
+        }
     }
 }
