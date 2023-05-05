@@ -3,9 +3,62 @@
 
 namespace ViscoCorrect
 {
+    // Flowrate
+    Flowrate::Flowrate(const ImVec2 &_win_size) : m_win_size(_win_size)
+    {
+        int it_total_dist = 0;
+        for (const auto &pair : raw_distances)
+        {
+            it_total_dist += pair.second;
+
+            LinePoint temp;
+            temp.relative_distance = pair.second;
+            temp.total_distance = it_total_dist;
+            temp.tag = pair.first;
+
+            temp.x_coords[0] = it_total_dist;
+            temp.x_coords[1] = it_total_dist;
+            temp.y_coords[0] = 0;
+            temp.y_coords[1] = m_win_size.y;
+
+            rates.insert({pair.first, temp});
+        }
+    }
+
+    Flowrate::~Flowrate()
+    {
+    }
+
+    void Flowrate::RenderFlowrates()
+    {
+        for (const auto &pair : rates)
+        {
+            ImPlot::PlotLine("##", pair.second.x_coords, pair.second.y_coords, 2);
+        }
+    }
+
+    void Flowrate::Resize(const ImVec2 &_new_size, const double _scal)
+    {
+        m_win_size = _new_size;
+        m_scaling_factor = _scal;
+
+        for(auto &pair : rates)
+        {
+            auto it = raw_distances.find(pair.first);
+            pair.second.x_coords[0] = ;
+            pair.second.x_coords[1] *= _scal;
+            pair.second.y_coords[1] *= _scal;
+        }
+    }
+
+    Graph::Graph() : m_flowrate(m_win_size)
+    {
+    }
+
     void Graph::OnAttach()
     {
         ImPlot::CreateContext();
+
 #if defined(DEBUG_BUILD)
         m_debug_graph = std::make_shared<DebugGraph>("Graph");
         Application::GetInstance()->GetDebugTools()->AddTool(m_debug_graph);
@@ -18,25 +71,64 @@ namespace ViscoCorrect
         ImPlot::DestroyContext();
     }
 
+    void Graph::OnUpdate(float ts)
+    {
+    }
+
     void Graph::OnUIRender()
     {
-        ImGui::Begin("Viewport");
+        ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        ImGui::SetWindowSize(m_win_size);
 
-        if(ImPlot::BeginPlot("##", ImVec2(sz[0],sz[1]),ImPlotFlags_NoLegend))
+        if (ImGui::GetIO().DisplaySize.x != m_main_win_size.x || ImGui::GetIO().DisplaySize.y != m_main_win_size.y)
         {
+            m_main_win_size = ImGui::GetIO().DisplaySize;
+
+            // Check the maximum size available
+            int maxWidth = m_main_win_size.x;
+            int maxHeight = m_main_win_size.y;
+
+            int targetWidth = maxHeight * m_win_ratio;
+            int targetHeight = maxWidth * m_win_invratio;
+
+            if (targetWidth <= maxWidth)
+            {
+                m_win_size.x = targetWidth;
+                m_win_size.y = maxHeight;
+            }
+            else
+            {
+                m_win_size.x = maxWidth;
+                m_win_size.y = targetHeight;
+            }
+
+            //set the sizes
+            m_plot_size1.x = m_win_size.x - padding;
+            m_plot_size1.y = (m_win_size.y * m_plot1_yratio) - padding;
+
+            m_plot_size2.x = m_win_size.x - padding;
+            m_plot_size2.y = (m_win_size.y * m_plot2_yratio) - padding;
+
+            m_scalling_factor = m_plot_size1.x / 434;
+
+            m_flowrate.Resize(m_plot_size1, m_scalling_factor);
+        }
+
+        if (ImPlot::BeginPlot("##plot1", m_plot_size1, ImPlotFlags_NoLegend))
+        {
+            // Set up Graph
             ImPlot::SetupAxis(ImAxis_X1, nullptr);
             ImPlot::SetupAxis(ImAxis_Y1, nullptr);
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, x_min,x_max);
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, y_min,y_max);
-            ImPlot::PlotLine("##data",v[0],v[1],v_size);
-            m_flowrate.render_flowrates();
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, m_plot_size1.x);
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_plot_size1.y);
+
+            // Render the different functions
+            m_flowrate.RenderFlowrates();
+
             ImPlot::EndPlot();
         }
-        ImGui::End();
 
-#if defined(DEBUG_BUILD)
-        ImPlot::ShowDemoWindow();
-#endif
+        ImGui::End();
     }
 
 #if defined(DEBUG_BUILD)
@@ -47,49 +139,9 @@ namespace ViscoCorrect
 
     void Graph::debug_func()
     {
-        ImGui::InputFloat2("v[0]", v[0]);
-        ImGui::InputFloat2("v[1]", v[1]);
-        ImGui::InputInt("v_count", &v_size);
-        ImGui::InputDouble("x_min", &x_min);
-        ImGui::InputDouble("x_max", &x_max);
-        ImGui::InputDouble("y_min", &y_min);
-        ImGui::InputDouble("y_max", &y_max);
-        ImGui::InputInt2("Size", sz);
+        ImPlot::ShowDemoWindow();
+        ImGui::Text("Window Height: %.1f Window Width: %.1f", m_win_size.y, m_win_size.x);
+        ImGui::InputInt("Padding", &padding);
     }
 #endif
-
-    //Flowrate
-    Flowrate::Flowrate()
-    {
-        int it_total_dist = 0;
-        for(const auto &pair : raw_distances)
-        {
-            it_total_dist += pair.second;
-
-            LinePoint temp;
-            temp.relative_distance = pair.second;
-            temp.total_distance = it_total_dist;
-            temp.tag = pair.first;
-
-            temp.x_coords[0] = it_total_dist;
-            temp.x_coords[1] = it_total_dist;
-            temp.y_coords[0] = 0;
-            temp.y_coords[1] = y_dim;
-
-            rates.insert({pair.first, temp});
-        }
-    }
-
-    Flowrate::~Flowrate()
-    {
-    }
-
-    void Flowrate::render_flowrates()
-    {
-        for(const auto &pair : rates)
-        {
-            ImPlot::PlotLine("##", pair.second.x_coords, pair.second.y_coords,2);
-        }
-    }
-
 }

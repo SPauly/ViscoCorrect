@@ -61,7 +61,8 @@
         "optional": "cpp",
         "random": "cpp",
         "string_view": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "map": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "disabled"
 }
