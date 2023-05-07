@@ -84,10 +84,10 @@ namespace ViscoCorrect
 
         const double m_win_ratio = 434.0/625.0;
         const double m_win_invratio = 625.0/434.0;
-        const double m_plot1_yratio = 304.0/625;
-        const double m_plot2_yratio = 284.0/625;
+        const double m_plot1_yratio = 304.0/625.0;
+        const double m_plot2_yratio = 284.0/625.0;
         double m_scalling_factor = 1.0;
-        int padding = 10;
+        int padding = 5;
         
 
         std::shared_ptr<Calculator> m_calculator;

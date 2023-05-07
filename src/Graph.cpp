@@ -9,7 +9,7 @@ namespace ViscoCorrect
         int it_total_dist = 0;
         for (const auto &pair : raw_distances)
         {
-            it_total_dist += pair.second;
+            it_total_dist += pair.second*m_scaling_factor;
 
             LinePoint temp;
             temp.relative_distance = pair.second;
@@ -42,12 +42,16 @@ namespace ViscoCorrect
         m_win_size = _new_size;
         m_scaling_factor = _scal;
 
-        for(auto &pair : rates)
+        int it_total_distance = 0;
+        for(auto &pair : raw_distances)
         {
-            auto it = raw_distances.find(pair.first);
-            pair.second.x_coords[0] = ;
-            pair.second.x_coords[1] *= _scal;
-            pair.second.y_coords[1] *= _scal;
+            it_total_distance += pair.second * m_scaling_factor;
+
+            auto it = rates.find(pair.first);
+            it->second.total_distance = it_total_distance;
+            it->second.x_coords[0] = it_total_distance;
+            it->second.x_coords[1] = it_total_distance;
+            it->second.y_coords[1] = m_win_size.y;
         }
     }
 
@@ -77,8 +81,8 @@ namespace ViscoCorrect
 
     void Graph::OnUIRender()
     {
-        ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-        ImGui::SetWindowSize(m_win_size);
+        ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
+    
 
         if (ImGui::GetIO().DisplaySize.x != m_main_win_size.x || ImGui::GetIO().DisplaySize.y != m_main_win_size.y)
         {
@@ -112,6 +116,7 @@ namespace ViscoCorrect
             m_scalling_factor = m_plot_size1.x / 434;
 
             m_flowrate.Resize(m_plot_size1, m_scalling_factor);
+            //Resize other plot
         }
 
         if (ImPlot::BeginPlot("##plot1", m_plot_size1, ImPlotFlags_NoLegend))
