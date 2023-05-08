@@ -10,7 +10,6 @@
 #include "implot.h"
 
 #include "Layer.h"
-#include "Calculator.h"
 #include "Types.h"
 
 #if defined(DEBUG_BUILD)
@@ -21,18 +20,28 @@ namespace ViscoCorrect
     class Flowrate
     {
     public:
-        Flowrate(const ImVec2&);
+        Flowrate(const ImVec2 &);
         ~Flowrate();
 
         void RenderFlowrates();
 
-        void Resize(const ImVec2&, const double);
+        void Resize(const double);
 
     private:
-        ImVec2 m_win_size;
+        struct FlowrateLinePoints
+        {
+            int x_coords[2];
+            int y_coords[2];
+            int relative_distance = 0;
+            int total_distance = 0;
+            int tag = 0;
+        };
+
+    private:
+        ImVec2 m_plot_size;
         double m_scaling_factor = 1.0;
 
-        std::unordered_map<int, LinePoint> rates;
+        std::unordered_map<int, FlowrateLinePoints> rates;
 
         std::map<int, int> raw_distances{
             {6, 14},
@@ -63,6 +72,26 @@ namespace ViscoCorrect
             {2000, 22}};
     };
 
+    class TotalHead
+    {
+    public:
+        TotalHead();
+        ~TotalHead(){};
+
+        void RenderTotalHead();
+
+        void Resize(const double);
+
+    private:
+        std::unordered_map<int, LinearFunction> total_heads;
+
+        std::unordered_map<int, LineCoordinates> raw_lines{
+            {5, {4,434,1,227}},
+            {10, {4,434,16,242}}
+        };
+
+    };
+
     class Graph : public Layer
     {
     public:
@@ -78,20 +107,19 @@ namespace ViscoCorrect
     private:
         // properties
         ImVec2 m_main_win_size;
-        ImVec2 m_win_size{434,625};
-        ImVec2 m_plot_size1{434,304};
+        ImVec2 m_win_size{434, 625};
+        ImVec2 m_plot_size1{434, 304};
         ImVec2 m_plot_size2{434, 284};
 
-        const double m_win_ratio = 434.0/625.0;
-        const double m_win_invratio = 625.0/434.0;
-        const double m_plot1_yratio = 304.0/625.0;
-        const double m_plot2_yratio = 284.0/625.0;
+        const double m_win_ratio = 434.0 / 625.0;
+        const double m_win_invratio = 625.0 / 434.0;
+        const double m_plot1_yratio = 304.0 / 625.0;
+        const double m_plot2_yratio = 284.0 / 625.0;
         double m_scalling_factor = 1.0;
         int padding = 5;
-        
 
-        std::shared_ptr<Calculator> m_calculator;
         Flowrate m_flowrate;
+        TotalHead m_totalhead;
 
         // debugging
 #if defined(DEBUG_BUILD)

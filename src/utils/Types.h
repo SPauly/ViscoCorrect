@@ -16,15 +16,29 @@ namespace ViscoCorrect
         float c_h[4] = {0.0f,0.0f,0.0f,0.0f};
     };
 
-    class LinePoint
+    struct LineCoordinates
     {
-    public:
         int x_coords[2];
         int y_coords[2];
-        int relative_distance = 0;
-        int total_distance = 0;
-        double proportion = 0;
-        int tag = 0;
+
+        LineCoordinates(int _x1 = 0, int _x2 = 0, int _y1 = 0, int _y2 = 0) : x_coords{_x1,_x2}, y_coords{_y1, _y2} {}
+        ~LineCoordinates() = default;
+    }; 
+
+    class LinearFunction
+    {
+    public:
+        LinearFunction(LineCoordinates _l);
+
+        template<typename T>
+        T f(const T _x){
+            return m * _x + b;
+        }
+
+        
+    private:
+        double m;
+        double b;
     };
     
 }

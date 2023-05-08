@@ -6,7 +6,6 @@
 #include "imgui.h"
 #include "Layer.h"
 #include "Types.h"
-#include "Calculator.h"
 
 namespace ViscoCorrect
 {
@@ -23,8 +22,5 @@ namespace ViscoCorrect
         //data
         CalcParameters m_parameters;
         CorrectionFactors m_correction; 
-
-        //Calculator --> shared with Graph
-        std::shared_ptr<Calculator> m_calculator;
     };
 }

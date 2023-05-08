@@ -4,14 +4,14 @@
 namespace ViscoCorrect
 {
     // Flowrate
-    Flowrate::Flowrate(const ImVec2 &_win_size) : m_win_size(_win_size)
+    Flowrate::Flowrate(const ImVec2 &_win_size) : m_plot_size(_win_size)
     {
         int it_total_dist = 0;
         for (const auto &pair : raw_distances)
         {
             it_total_dist += pair.second*m_scaling_factor;
 
-            LinePoint temp;
+            FlowrateLinePoints temp;
             temp.relative_distance = pair.second;
             temp.total_distance = it_total_dist;
             temp.tag = pair.first;
@@ -19,9 +19,9 @@ namespace ViscoCorrect
             temp.x_coords[0] = it_total_dist;
             temp.x_coords[1] = it_total_dist;
             temp.y_coords[0] = 0;
-            temp.y_coords[1] = m_win_size.y;
+            temp.y_coords[1] = m_plot_size.y*m_scaling_factor;
 
-            rates.insert({pair.first, temp});
+            rates.insert(std::make_pair(pair.first, temp));
         }
     }
 
@@ -33,13 +33,12 @@ namespace ViscoCorrect
     {
         for (const auto &pair : rates)
         {
-            ImPlot::PlotLine("##", pair.second.x_coords, pair.second.y_coords, 2);
+            ImPlot::PlotLine("##flowrates", pair.second.x_coords, pair.second.y_coords, 2);
         }
     }
 
-    void Flowrate::Resize(const ImVec2 &_new_size, const double _scal)
+    void Flowrate::Resize(const double _scal)
     {
-        m_win_size = _new_size;
         m_scaling_factor = _scal;
 
         int it_total_distance = 0;
@@ -51,10 +50,27 @@ namespace ViscoCorrect
             it->second.total_distance = it_total_distance;
             it->second.x_coords[0] = it_total_distance;
             it->second.x_coords[1] = it_total_distance;
-            it->second.y_coords[1] = m_win_size.y;
+            it->second.y_coords[1] = m_plot_size.y * m_scaling_factor;
         }
     }
 
+//TotalHead
+    TotalHead::TotalHead(){
+        for(const auto &pair : raw_lines)
+        {
+            total_heads.emplace(pair.first, LinearFunction{pair.second});
+        }
+    }
+
+    void TotalHead::RenderTotalHead()
+    {
+        for(const auto &pair : total_heads)
+        {
+            //ImPlot::PlotLine("##totalhead",)
+        }
+    }
+
+//Graph
     Graph::Graph() : m_flowrate(m_win_size)
     {
     }
@@ -115,7 +131,7 @@ namespace ViscoCorrect
 
             m_scalling_factor = m_plot_size1.x / 434;
 
-            m_flowrate.Resize(m_plot_size1, m_scalling_factor);
+            m_flowrate.Resize(m_scalling_factor);
             //Resize other plot
         }
 
