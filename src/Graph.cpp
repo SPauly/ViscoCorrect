@@ -64,9 +64,18 @@ namespace ViscoCorrect
 
     void TotalHead::RenderTotalHead()
     {
-        for(const auto &pair : total_heads)
+        for(auto &pair : total_heads)
         {
-            //ImPlot::PlotLine("##totalhead",)
+            ImPlot::PlotLine("##totalhead", pair.second.GetCoordinates().x_coords, pair.second.GetCoordinates().y_coords, 2);
+        }
+    }
+
+    void TotalHead::Resize(const double _scale, int _xmin, int _xmax)
+    {
+        for(auto &pair : total_heads)
+        {
+            pair.second.ScaleYAxis(_scale);
+            pair.second.SetCoordinates(_xmin, _xmax);
         }
     }
 
@@ -132,7 +141,7 @@ namespace ViscoCorrect
             m_scalling_factor = m_plot_size1.x / 434;
 
             m_flowrate.Resize(m_scalling_factor);
-            //Resize other plot
+            m_totalhead.Resize(m_scalling_factor, 0, m_plot_size1.x);
         }
 
         if (ImPlot::BeginPlot("##plot1", m_plot_size1, ImPlotFlags_NoLegend))
@@ -145,6 +154,7 @@ namespace ViscoCorrect
 
             // Render the different functions
             m_flowrate.RenderFlowrates();
+            m_totalhead.RenderTotalHead();
 
             ImPlot::EndPlot();
         }

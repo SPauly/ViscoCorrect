@@ -32,14 +32,14 @@ namespace ViscoCorrect
 
         template<typename T>
         T f(const T _x){
-            return m * _x + (b*y_scale);
+            return static_cast<T>(m * _x + (b*y_scale));
         }
 
         inline void ScaleYAxis(double _scale) { y_scale = _scale; }
         inline void SetRange(int _xmin, int _xmax) { xmin = _xmin; xmax = _xmax; }
+        const LineCoordinates &SetCoordinates(int, int);
 
-        const LineCoordinates &GetCoordinates();
-        const LineCoordinates &GetCoordinates(int, int);
+        inline LineCoordinates &GetCoordinates() { return m_current_coords; }
 
     private:
         double m = 0.0, b = 0.0;

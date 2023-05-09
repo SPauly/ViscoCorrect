@@ -80,14 +80,15 @@ namespace ViscoCorrect
 
         void RenderTotalHead();
 
-        void Resize(const double);
+        void Resize(const double, int, int);
 
     private:
         std::unordered_map<int, LinearFunction> total_heads;
 
         std::unordered_map<int, LineCoordinates> raw_lines{
             {5, {4,434,1,227}},
-            {10, {4,434,16,242}}
+            {10, {4,434,16,242}},
+            {20, {4,434,28,254}},
         };
 
     };

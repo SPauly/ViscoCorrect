@@ -4,16 +4,11 @@ namespace ViscoCorrect
 {
     LinearFunction::LinearFunction(LineCoordinates _l) : m_initial_coords(_l), m_current_coords(_l)
     {
-        m = (_l.y_coords[1]-_l.y_coords[0])/(_l.x_coords[1] - _l.x_coords[0]);
-        b = _l.y_coords[0] - (_l.x_coords[0] * m);
+        m = static_cast<double>(_l.y_coords[1]-_l.y_coords[0])/(_l.x_coords[1] - _l.x_coords[0]);
+        b = static_cast<double>(_l.y_coords[0] - (_l.x_coords[0] * m));
     }
 
-    const LineCoordinates &LinearFunction::GetCoordinates()
-    {
-        return m_current_coords;
-    }
-
-    const LineCoordinates &LinearFunction::GetCoordinates(int _xmin, int _xmax)
+    const LineCoordinates &LinearFunction::SetCoordinates(int _xmin, int _xmax)
     {
         xmin = _xmin; xmax = _xmax;
 
