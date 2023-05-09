@@ -28,17 +28,26 @@ namespace ViscoCorrect
     class LinearFunction
     {
     public:
-        LinearFunction(LineCoordinates _l);
+        LinearFunction(LineCoordinates);
 
         template<typename T>
         T f(const T _x){
-            return m * _x + b;
+            return m * _x + (b*y_scale);
         }
 
-        
+        inline void ScaleYAxis(double _scale) { y_scale = _scale; }
+        inline void SetRange(int _xmin, int _xmax) { xmin = _xmin; xmax = _xmax; }
+
+        const LineCoordinates &GetCoordinates();
+        const LineCoordinates &GetCoordinates(int, int);
+
     private:
-        double m;
-        double b;
+        double m = 0.0, b = 0.0;
+        double y_scale = 1.0f;
+        int xmin = 0, xmax = 1;
+
+        LineCoordinates m_initial_coords;
+        LineCoordinates m_current_coords;
     };
     
 }
