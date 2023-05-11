@@ -9,6 +9,8 @@
 #include "LayerStack.h"
 #include "imgui.h"
 
+#include "CurveFitting.h"
+
 namespace ViscoCorrect
 {
     namespace Debug
@@ -29,6 +31,7 @@ namespace ViscoCorrect
 
         private:
             LayerStack mvec_tools;
+            CurveFitting m_debug_curve;
         };
 
         class DebugToolBase : public Layer

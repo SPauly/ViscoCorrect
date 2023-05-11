@@ -29,7 +29,7 @@ namespace ViscoCorrect
     {
     }
 
-    void Flowrate::RenderFlowrates()
+    void Flowrate::RenderFlowrate()
     {
         for (const auto &pair : rates)
         {
@@ -54,15 +54,16 @@ namespace ViscoCorrect
         }
     }
 
-//TotalHead
-    TotalHead::TotalHead(){
+//LinearFunctionWrapper
+    LinearFunctionWrapper::LinearFunctionWrapper(const std::unordered_map<int, LineCoordinates> &_raw) : raw_lines(_raw)
+    {
         for(const auto &pair : raw_lines)
         {
             total_heads.emplace(pair.first, LinearFunction{pair.second});
         }
     }
 
-    void TotalHead::RenderTotalHead()
+    void LinearFunctionWrapper::RenderFunctions()
     {
         for(auto &pair : total_heads)
         {
@@ -70,7 +71,7 @@ namespace ViscoCorrect
         }
     }
 
-    void TotalHead::Resize(const double _scale, int _xmin, int _xmax)
+    void LinearFunctionWrapper::Resize(const double _scale, int _xmin, int _xmax)
     {
         for(auto &pair : total_heads)
         {
@@ -80,7 +81,7 @@ namespace ViscoCorrect
     }
 
 //Graph
-    Graph::Graph() : m_flowrate(m_win_size)
+    Graph::Graph() : m_flowrate(m_win_size), m_totalhead(raw_totalhead), m_viscosity(raw_viscosity)
     {
     }
 
@@ -142,6 +143,7 @@ namespace ViscoCorrect
 
             m_flowrate.Resize(m_scalling_factor);
             m_totalhead.Resize(m_scalling_factor, 0, m_plot_size1.x);
+            m_viscosity.Resize(m_scalling_factor, 0, m_plot_size1.x);
         }
 
         if (ImPlot::BeginPlot("##plot1", m_plot_size1, ImPlotFlags_NoLegend))
@@ -153,8 +155,9 @@ namespace ViscoCorrect
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_plot_size1.y);
 
             // Render the different functions
-            m_flowrate.RenderFlowrates();
-            m_totalhead.RenderTotalHead();
+            m_flowrate.RenderFlowrate();
+            m_totalhead.RenderFunctions();
+            m_viscosity.RenderFunctions();
 
             ImPlot::EndPlot();
         }

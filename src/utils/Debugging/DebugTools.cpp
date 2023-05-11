@@ -16,6 +16,7 @@ namespace ViscoCorrect
         void DebugTools::OnUIRender()
         {
             ImGui::ShowDemoWindow();
+            m_debug_curve.Render();
 
             ImGui::Begin("Debugging");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

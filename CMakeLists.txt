@@ -86,6 +86,7 @@ target_link_libraries(ViscoCorrect imgui implot)
 if(BUILD_DEBUG_FEATURES)
     add_library(debug_tools 
         "${PROJECT_SOURCE_DIR}/src/utils/Debugging/DebugTools.cpp"
+        "${PROJECT_SOURCE_DIR}/src/utils/Debugging/CurveFitting.cpp"
     )
 
     target_include_directories(debug_tools PUBLIC   

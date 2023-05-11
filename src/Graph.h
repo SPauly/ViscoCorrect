@@ -23,7 +23,7 @@ namespace ViscoCorrect
         Flowrate(const ImVec2 &);
         ~Flowrate();
 
-        void RenderFlowrates();
+        void RenderFlowrate();
 
         void Resize(const double);
 
@@ -72,24 +72,20 @@ namespace ViscoCorrect
             {2000, 22}};
     };
 
-    class TotalHead
+    class LinearFunctionWrapper
     {
     public:
-        TotalHead();
-        ~TotalHead(){};
+        LinearFunctionWrapper(const std::unordered_map<int, LineCoordinates> &);
+        ~LinearFunctionWrapper(){};
 
-        void RenderTotalHead();
+        void RenderFunctions();
 
         void Resize(const double, int, int);
 
     private:
         std::unordered_map<int, LinearFunction> total_heads;
 
-        std::unordered_map<int, LineCoordinates> raw_lines{
-            {5, {4,434,1,227}},
-            {10, {4,434,16,242}},
-            {20, {4,434,28,254}},
-        };
+        std::unordered_map<int, LineCoordinates> raw_lines;
 
     };
 
@@ -117,10 +113,25 @@ namespace ViscoCorrect
         const double m_plot1_yratio = 304.0 / 625.0;
         const double m_plot2_yratio = 284.0 / 625.0;
         double m_scalling_factor = 1.0;
-        int padding = 5;
+        int padding = 2;
 
+        //Line data
+        std::unordered_map<int, LineCoordinates> raw_totalhead{
+            {5, {4,434,1,227}},
+            {10, {4,434,16,242}},
+            {20, {4,434,28,254}}
+        };
+        
+        std::unordered_map<int, LineCoordinates> raw_viscosity{
+            {5, {4,434,227,1}},
+            {10, {4,434,242,16}},
+            {20, {4,434,254,28}}
+        };
+
+        //Needed objects
         Flowrate m_flowrate;
-        TotalHead m_totalhead;
+        LinearFunctionWrapper m_totalhead;
+        LinearFunctionWrapper m_viscosity;  
 
         // debugging
 #if defined(DEBUG_BUILD)
