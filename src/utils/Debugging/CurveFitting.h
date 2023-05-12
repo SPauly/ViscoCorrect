@@ -16,7 +16,8 @@ namespace ViscoCorrect
             void Render();
 
         private:
-
+            ImVec2 m_size{434, 284};
+            
         };
         
     } // namespace Debug
