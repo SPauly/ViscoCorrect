@@ -8,3 +8,6 @@
 [submodule "external/implot"]
 	path = external/implot
 	url = https://github.com/epezent/implot.git
+[submodule "external/gsl"]
+	path = external/gsl
+	url = https://github.com/ampl/gsl.git
