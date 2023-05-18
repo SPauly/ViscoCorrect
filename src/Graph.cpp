@@ -9,7 +9,7 @@ namespace ViscoCorrect
         int it_total_dist = 0;
         for (const auto &pair : raw_distances)
         {
-            it_total_dist += pair.second*m_scaling_factor;
+            it_total_dist += pair.second * m_scaling_factor;
 
             FlowrateLinePoints temp;
             temp.relative_distance = pair.second;
@@ -19,7 +19,7 @@ namespace ViscoCorrect
             temp.x_coords[0] = it_total_dist;
             temp.x_coords[1] = it_total_dist;
             temp.y_coords[0] = 0;
-            temp.y_coords[1] = m_plot_size.y*m_scaling_factor;
+            temp.y_coords[1] = m_plot_size.y * m_scaling_factor;
 
             rates.insert(std::make_pair(pair.first, temp));
         }
@@ -42,7 +42,7 @@ namespace ViscoCorrect
         m_scaling_factor = _scal;
 
         int it_total_distance = 0;
-        for(auto &pair : raw_distances)
+        for (auto &pair : raw_distances)
         {
             it_total_distance += pair.second * m_scaling_factor;
 
@@ -54,10 +54,10 @@ namespace ViscoCorrect
         }
     }
 
-//LinearFunctionWrapper
+    // LinearFunctionWrapper
     LinearFunctionWrapper::LinearFunctionWrapper(const std::unordered_map<int, LineCoordinates> &_raw) : raw_lines(_raw)
     {
-        for(const auto &pair : raw_lines)
+        for (const auto &pair : raw_lines)
         {
             total_heads.emplace(pair.first, LinearFunction{pair.second});
         }
@@ -65,7 +65,7 @@ namespace ViscoCorrect
 
     void LinearFunctionWrapper::RenderFunctions()
     {
-        for(auto &pair : total_heads)
+        for (auto &pair : total_heads)
         {
             ImPlot::PlotLine("##totalhead", pair.second.GetCoordinates().x_coords, pair.second.GetCoordinates().y_coords, 2);
         }
@@ -73,14 +73,14 @@ namespace ViscoCorrect
 
     void LinearFunctionWrapper::Resize(const double _scale, int _xmin, int _xmax)
     {
-        for(auto &pair : total_heads)
+        for (auto &pair : total_heads)
         {
             pair.second.ScaleYAxis(_scale);
             pair.second.SetCoordinates(_xmin, _xmax);
         }
     }
 
-//Graph
+    // Graph
     Graph::Graph() : m_flowrate(m_win_size), m_totalhead(raw_totalhead), m_viscosity(raw_viscosity)
     {
     }
@@ -108,8 +108,8 @@ namespace ViscoCorrect
     void Graph::OnUIRender()
     {
         ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
-    
-        if(b_autofit)
+
+        if (b_autofit)
             Autofit();
 
         if (ImPlot::BeginPlot("##plot2", m_plot_size2, ImPlotFlags_NoLegend))
@@ -122,6 +122,10 @@ namespace ViscoCorrect
 
             // Render the different functions
             m_flowrate.RenderFlowrate();
+            for (const auto &_func : mvec_callbacks_plot2)
+            {
+                (*_func)();
+            }
 
             ImPlot::EndPlot();
         }
@@ -138,12 +142,68 @@ namespace ViscoCorrect
             m_flowrate.RenderFlowrate();
             m_totalhead.RenderFunctions();
             m_viscosity.RenderFunctions();
+            for (const auto &_func : mvec_callbacks_plot1)
+            {
+                (*_func)();
+            }
 
             ImPlot::EndPlot();
         }
 
         ImGui::End();
     }
+
+    void Graph::AddCallbackToPlot(std::shared_ptr<std::function<void()>> _func, int _plot)
+    {
+        switch (_plot)
+        {
+        case 0:
+            mvec_callbacks_plot1.push_back(_func);
+            break;
+
+        case 1:
+            mvec_callbacks_plot2.push_back(_func);
+            break;
+
+        default:
+            break;
+        }
+    };
+
+    void Graph::RemoveCallbackFromPlot(std::shared_ptr<std::function<void()>> _func, int _plot)
+    {
+        switch (_plot)
+        {
+        case 0:
+        {
+            auto it = std::find(mvec_callbacks_plot1.begin(), mvec_callbacks_plot1.end(), _func);
+            try
+            {
+                mvec_callbacks_plot1.erase(it);
+            }
+            catch (std::runtime_error &)
+            {
+                break;
+            }
+            break;
+        }
+        case 1:
+        {
+            auto it = std::find(mvec_callbacks_plot2.begin(), mvec_callbacks_plot2.end(), _func);
+            try
+            {
+                mvec_callbacks_plot2.erase(it);
+            }
+            catch (std::runtime_error &)
+            {
+                break;
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    };
 
     void Graph::Autofit()
     {
@@ -202,7 +262,7 @@ namespace ViscoCorrect
         ImGui::Text("Window Height: %.1f Window Width: %.1f", m_win_size.y, m_win_size.x);
         ImGui::RadioButton("Autofit", &b_autofit, 1);
         ImGui::RadioButton("No Autofit", &b_autofit, 0);
-        if(!b_autofit)
+        if (!b_autofit)
         {
             ImGui::InputDouble("Scaling Factor", &m_scalling_factor);
             Resize(m_scalling_factor);

@@ -38,6 +38,8 @@ namespace ViscoCorrect
         void PushLayer();
         void PushLayer(const std::shared_ptr<Layer> &);
 
+        inline std::shared_ptr<Graph> GetGraph() { return m_graph; }
+
         static Application *GetInstance() {return s_Instance; };
 
 #if defined(DEBUG_BUILD)

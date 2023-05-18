@@ -102,10 +102,12 @@ if(BUILD_DEBUG_FEATURES)
         "${PROJECT_SOURCE_DIR}/src/utils/Debugging/CurveFitting.cpp"
     )
 
-    target_include_directories(debug_tools PUBLIC   
+    target_include_directories(debug_tools PUBLIC
+        "${PROJECT_SOURCE_DIR}/src/"   
         "${PROJECT_SOURCE_DIR}/src/utils/"
         "${PROJECT_SOURCE_DIR}/src/utils/Debug"
         "${PROJECT_SOURCE_DIR}/external/imgui"
+        "${PROJECT_SOURCE_DIR}/external/imgui/backends"
         "${PROJECT_SOURCE_DIR}/external/implot"
         "${PROJECT_BINARY_DIR}/external/gsl"
     )
@@ -113,7 +115,7 @@ if(BUILD_DEBUG_FEATURES)
     add_dependencies(debug_tools gsl)
     target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)
 
-    target_link_libraries(debug_tools PUBLIC gsl gslcblas)
+    target_link_libraries(debug_tools PUBLIC glfw gsl gslcblas)
     target_link_libraries(ViscoCorrect debug_tools)
 
     set_target_properties(debug_tools PROPERTIES

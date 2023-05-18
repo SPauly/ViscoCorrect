@@ -1,4 +1,5 @@
 #include "CurveFitting.h"
+#include "Application.h"
 
 namespace ViscoCorrect
 {
@@ -12,6 +13,8 @@ namespace ViscoCorrect
                 xData.push_back(pair.first);
                 yData.push_back(pair.second);
             }
+
+            PlotRender_func = std::make_shared<std::function<void()>>(std::bind(RenderInPlot, this)); 
         }
         
         CurveFitting::~CurveFitting()
@@ -20,18 +23,21 @@ namespace ViscoCorrect
 
         void CurveFitting::Render()
         {
-            ImGui::Begin("CurveFitting");
-            if(ImPlot::BeginPlot("Curve Fitting", m_size))
+            ImGui::Begin("Curve Fitting");
+            if(ImGui::Button("Enable Render"))
             {
-                            // Set up Graph
-                ImPlot::SetupAxis(ImAxis_X1, nullptr);
-                ImPlot::SetupAxis(ImAxis_Y1, nullptr);
-                ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, m_size.x);
-                ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_size.y);
-                ImPlot::PlotScatter("Data CQ", xData.data(), yData.data(), xData.size());
-                ImPlot::EndPlot();
+                Application::GetInstance()->GetGraph()->AddCallbackToPlot(PlotRender_func, 1);
+            }
+            if(ImGui::Button("Disable Render"))
+            {
+                Application::GetInstance()->GetGraph()->RemoveCallbackFromPlot(PlotRender_func, 1);
             }
             ImGui::End();
+        }
+
+        void CurveFitting::RenderInPlot()
+        {
+            ImPlot::PlotScatter("CQ", xData.data(), yData.data(), xData.size());
         }
     } // namespace Debug
     

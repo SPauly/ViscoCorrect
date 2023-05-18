@@ -1,12 +1,14 @@
 #pragma once
 
 #include "imgui.h"
-#include "implot.h"
+#include "implot.h" 
 
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_multifit_nlinear.h>
 #include <vector>
 #include <map>
+#include <functional>
+#include <memory>
 
 namespace ViscoCorrect
 {
@@ -25,12 +27,16 @@ namespace ViscoCorrect
             double ModelFunction(double, const gsl_vector*);
             int ResidualFunction(const gsl_vector*, void *, gsl_vector*);
 
+            void RenderInPlot();
+
         private:
             ImVec2 m_size{434, 284};
 
             std::vector<double> xData;
             std::vector<double> yData;
             double a,b,c;
+
+            std::shared_ptr<std::function<void()>> PlotRender_func;
 
             std::map<int, int> data{
                 {242,174},

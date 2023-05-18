@@ -101,31 +101,32 @@ namespace ViscoCorrect
         virtual void OnUpdate(float) override;
         virtual void OnUIRender() override;
 
-        void AddCallbackToPlot();
-        void RemoveCallbackFromPlot();
+        void AddCallbackToPlot(std::shared_ptr<std::function<void()>>, int);
+        void RemoveCallbackFromPlot(std::shared_ptr<std::function<void()>>, int);
 
     private:
         void Resize(double);
         void Autofit();
 
     private:
-        // properties
+        // general properties
         ImVec2 m_main_win_size;
         const ImVec2 mor_win_size{434, 625};
         const ImVec2 mor_plot_size1{434, 304};
-        const ImVec2 mor_plot_size2{434, 284};
+        const ImVec2 mor_plot_size2{434, 284}; 
+        double m_scalling_factor = 1.0;
+        int b_autofit = 1;
         
+        // current sizes
         ImVec2 m_win_size{mor_win_size};
         ImVec2 m_plot_size1{mor_plot_size1};
         ImVec2 m_plot_size2{mor_plot_size2};
 
+        //ratios
         const double m_win_ratio = 434.0 / 625.0;
         const double m_win_invratio = 625.0 / 434.0;
         const double m_plot1_yratio = 304.0 / 625.0;
         const double m_plot2_yratio = 284.0 / 625.0;
-        double m_scalling_factor = 1.0;
-
-        int b_autofit = 1;
 
         //Line data
         std::unordered_map<int, LineCoordinates> raw_totalhead{
@@ -143,7 +144,10 @@ namespace ViscoCorrect
         //Needed objects
         Flowrate m_flowrate;
         LinearFunctionWrapper m_totalhead;
-        LinearFunctionWrapper m_viscosity;  
+        LinearFunctionWrapper m_viscosity;
+
+        std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot1;
+        std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot2;
     
     private:
         // debugging
