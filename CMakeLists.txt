@@ -6,7 +6,6 @@ project(ViscoCorrect)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wformat -fno-var-tracking-assignments -fverbose-asm -fopenmp")
-set(CMAKE_RC_COMPILER=windres)
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g -fno-omit-frame-pointer -rdynamic")
@@ -28,6 +27,7 @@ set( GLFW_BUILD_TESTS OFF CACHE BOOL "")
 set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "")
 
 add_subdirectory(external/glfw)
+link_directories("${PROJECT_BINARY_DIR}/lib")
 
 add_library(imgui
     "${PROJECT_SOURCE_DIR}/external/imgui/imgui.cpp"
@@ -78,12 +78,25 @@ target_include_directories(ViscoCorrect PUBLIC
     "${PROJECT_SOURCE_DIR}/external/implot"
 )
 
+target_link_libraries(ViscoCorrect imgui implot)
 target_link_libraries(ViscoCorrect glfw ${GLFW_LIBRARIES})
 target_link_libraries(ViscoCorrect OpenGL::GL)
-target_link_libraries(ViscoCorrect imgui implot)
+
+# Output libraries to dedicated "lib" folder
+set_target_properties(imgui implot PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/external/libs"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/external/libs"
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/external/libs"
+)
 
 # Debugtools
 if(BUILD_DEBUG_FEATURES)
+    set (BUILDLIBS "multifit_nlinear" CACHE STRING "")
+    set (NO_AMPL_BINDINGS ON CACHE BOOL "")
+    set (GSL_DISABLE_TESTS ON CACHE BOOL "")
+
+    add_subdirectory(external/gsl)
+
     add_library(debug_tools 
         "${PROJECT_SOURCE_DIR}/src/utils/Debugging/DebugTools.cpp"
         "${PROJECT_SOURCE_DIR}/src/utils/Debugging/CurveFitting.cpp"
@@ -94,8 +107,18 @@ if(BUILD_DEBUG_FEATURES)
         "${PROJECT_SOURCE_DIR}/src/utils/Debug"
         "${PROJECT_SOURCE_DIR}/external/imgui"
         "${PROJECT_SOURCE_DIR}/external/implot"
+        "${PROJECT_BINARY_DIR}/external/gsl"
     )
 
+    add_dependencies(debug_tools gsl)
     target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)
+
+    target_link_libraries(debug_tools PUBLIC gsl gslcblas)
     target_link_libraries(ViscoCorrect debug_tools)
+
+    set_target_properties(debug_tools PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
+    )
 endif()

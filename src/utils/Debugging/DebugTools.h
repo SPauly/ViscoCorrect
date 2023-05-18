@@ -45,6 +45,7 @@ namespace ViscoCorrect
 
             // overload this function
             virtual void Run(){};
+            
             template <typename Func, typename Obj>
             std::unique_ptr<std::function<void()>> GetCallback(Func func, Obj *obj)
             {

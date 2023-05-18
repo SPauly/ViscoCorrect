@@ -109,7 +109,44 @@ namespace ViscoCorrect
     {
         ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
     
+        if(b_autofit)
+            Autofit();
 
+        if (ImPlot::BeginPlot("##plot2", m_plot_size2, ImPlotFlags_NoLegend))
+        {
+            // Set up Graph
+            ImPlot::SetupAxis(ImAxis_X1, nullptr);
+            ImPlot::SetupAxis(ImAxis_Y1, nullptr);
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, m_plot_size2.x);
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_plot_size2.y);
+
+            // Render the different functions
+            m_flowrate.RenderFlowrate();
+
+            ImPlot::EndPlot();
+        }
+
+        if (ImPlot::BeginPlot("##plot1", m_plot_size1, ImPlotFlags_NoLegend))
+        {
+            // Set up Graph
+            ImPlot::SetupAxis(ImAxis_X1, nullptr);
+            ImPlot::SetupAxis(ImAxis_Y1, nullptr);
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, m_plot_size1.x);
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_plot_size1.y);
+
+            // Render the different functions
+            m_flowrate.RenderFlowrate();
+            m_totalhead.RenderFunctions();
+            m_viscosity.RenderFunctions();
+
+            ImPlot::EndPlot();
+        }
+
+        ImGui::End();
+    }
+
+    void Graph::Autofit()
+    {
         if (ImGui::GetIO().DisplaySize.x != m_main_win_size.x || ImGui::GetIO().DisplaySize.y != m_main_win_size.y)
         {
             m_main_win_size = ImGui::GetIO().DisplaySize;
@@ -132,37 +169,25 @@ namespace ViscoCorrect
                 m_win_size.y = targetHeight;
             }
 
-            //set the sizes
-            m_plot_size1.x = m_win_size.x - padding;
-            m_plot_size1.y = (m_win_size.y * m_plot1_yratio) - padding;
+            m_scalling_factor = m_win_size.x / 434;
 
-            m_plot_size2.x = m_win_size.x - padding;
-            m_plot_size2.y = (m_win_size.y * m_plot2_yratio) - padding;
-
-            m_scalling_factor = m_plot_size1.x / 434;
-
-            m_flowrate.Resize(m_scalling_factor);
-            m_totalhead.Resize(m_scalling_factor, 0, m_plot_size1.x);
-            m_viscosity.Resize(m_scalling_factor, 0, m_plot_size1.x);
+            Resize(m_scalling_factor);
         }
+    }
 
-        if (ImPlot::BeginPlot("##plot1", m_plot_size1, ImPlotFlags_NoLegend))
-        {
-            // Set up Graph
-            ImPlot::SetupAxis(ImAxis_X1, nullptr);
-            ImPlot::SetupAxis(ImAxis_Y1, nullptr);
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, m_plot_size1.x);
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_plot_size1.y);
+    void Graph::Resize(double _scale)
+    {
+        m_scalling_factor = _scale;
 
-            // Render the different functions
-            m_flowrate.RenderFlowrate();
-            m_totalhead.RenderFunctions();
-            m_viscosity.RenderFunctions();
+        m_plot_size1.x = mor_plot_size1.x * _scale;
+        m_plot_size1.y = mor_plot_size1.y * _scale;
 
-            ImPlot::EndPlot();
-        }
+        m_plot_size2.x = mor_plot_size2.x * _scale;
+        m_plot_size2.y = mor_plot_size2.y * _scale;
 
-        ImGui::End();
+        m_flowrate.Resize(m_scalling_factor);
+        m_totalhead.Resize(m_scalling_factor, 0, m_plot_size1.x);
+        m_viscosity.Resize(m_scalling_factor, 0, m_plot_size1.x);
     }
 
 #if defined(DEBUG_BUILD)
@@ -175,7 +200,13 @@ namespace ViscoCorrect
     {
         ImPlot::ShowDemoWindow();
         ImGui::Text("Window Height: %.1f Window Width: %.1f", m_win_size.y, m_win_size.x);
-        ImGui::InputInt("Padding", &padding);
+        ImGui::RadioButton("Autofit", &b_autofit, 1);
+        ImGui::RadioButton("No Autofit", &b_autofit, 0);
+        if(!b_autofit)
+        {
+            ImGui::InputDouble("Scaling Factor", &m_scalling_factor);
+            Resize(m_scalling_factor);
+        }
     }
 #endif
 }
