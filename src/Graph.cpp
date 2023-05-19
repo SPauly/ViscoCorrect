@@ -54,6 +54,42 @@ namespace ViscoCorrect
         }
     }
 
+    const double Flowrate::ConvertFromInput(const int _input)
+    {
+        double absolute_position = 0;
+        int prev_value = 0;
+        bool bfound = false;
+
+        for(const auto &pair : raw_distances)
+        {
+            int value = pair.first;
+            
+            if(value == _input)
+            {
+                absolute_position += pair.second;
+                bfound = true;
+                break;
+            }
+            else if(value > _input)
+            {
+                int range = value - prev_value;
+                int relative_value = _input - prev_value;
+
+                absolute_position += ((double)relative_value / (double)range) * (double)pair.second;
+                bfound = true;
+                break;
+            }
+
+            absolute_position += pair.second;
+            prev_value = value;
+        }
+
+        if(bfound)
+            return absolute_position;
+        else
+            return 0.0f; //throw exception
+    }
+
     // LinearFunctionWrapper
     LinearFunctionWrapper::LinearFunctionWrapper(const std::unordered_map<int, LineCoordinates> &_raw) : raw_lines(_raw)
     {

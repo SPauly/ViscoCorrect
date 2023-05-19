@@ -27,6 +27,8 @@ namespace ViscoCorrect
 
         void Resize(const double);
 
+        const double ConvertFromInput(const int);
+
     private:
         struct FlowrateLinePoints
         {
@@ -44,9 +46,10 @@ namespace ViscoCorrect
         std::unordered_map<int, FlowrateLinePoints> rates;
 
         std::map<int, int> raw_distances{
-            {6, 14},
-            {7, 9},
+            {6, 0},
+            {7, 14},
             {8, 9},
+            {9, 9},
             {10, 9},
             {15, 30},
             {20, 21},
@@ -136,9 +139,6 @@ namespace ViscoCorrect
         };
         
         std::unordered_map<int, LineCoordinates> raw_viscosity{
-            {5, {4,434,227,1}},
-            {10, {4,434,242,16}},
-            {20, {4,434,254,28}}
         };
 
         //Needed objects
