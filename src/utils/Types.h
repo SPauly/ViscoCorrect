@@ -30,7 +30,8 @@ namespace ViscoCorrect
     class LinearFunction
     {
     public:
-        LinearFunction(LineCoordinates);
+        LinearFunction(LineCoordinates, int, int);
+        LinearFunction(double, int, int);
 
         template<typename T>
         T f(const T _x){
@@ -38,18 +39,18 @@ namespace ViscoCorrect
         }
 
         inline void ScaleYAxis(double _scale) { y_scale = _scale; }
-        inline void SetRange(int _xmin, int _xmax) { xmin = _xmin; xmax = _xmax; }
-        const LineCoordinates &SetCoordinates(int, int);
 
-        inline LineCoordinates &GetCoordinates() { return m_current_coords; }
+        inline void SetRange(int _xmin, int _xmax) { xmin = _xmin; xmax = _xmax; GetRenderCoords(xmin,xmax);}
+
+        inline LineCoordinates &GetRenderCoords() { return m_render_coords; }
+        LineCoordinates &GetRenderCoords(int, int);
 
     private:
         double m = 0.0, b = 0.0;
         double y_scale = 1.0f;
-        int xmin = 0, xmax = 1;
+        int xmin = 0, xmax = 100;
 
-        LineCoordinates m_initial_coords;
-        LineCoordinates m_current_coords;
+        LineCoordinates m_render_coords;
     };
 
     struct Project{

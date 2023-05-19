@@ -2,22 +2,26 @@
 
 namespace ViscoCorrect
 {
-    LinearFunction::LinearFunction(LineCoordinates _l) : m_initial_coords(_l), m_current_coords(_l)
+    LinearFunction::LinearFunction(LineCoordinates _l, int _xmin = 0, int _xmax = 100) : m_render_coords(_l), xmin(_xmin), xmax(_xmax)
     {
         m = static_cast<double>(_l.y_coords[1]-_l.y_coords[0])/(_l.x_coords[1] - _l.x_coords[0]);
         b = static_cast<double>(_l.y_coords[0] - (_l.x_coords[0] * m));
     }
 
-    const LineCoordinates &LinearFunction::SetCoordinates(int _xmin, int _xmax)
+    LinearFunction::LinearFunction(double _m, int _x, int _y) : m(_m)
     {
-        xmin = _xmin; xmax = _xmax;
+        b = static_cast<double>(_y - (_m*_x));
+        m_render_coords = GetRenderCoords(xmin,xmax);
+    }
 
-        m_current_coords.x_coords[0] = xmin;
-        m_current_coords.x_coords[1] = xmax;
-        m_current_coords.y_coords[0] = f(xmin);
-        m_current_coords.y_coords[1] = f(xmax);
+    LineCoordinates &LinearFunction::GetRenderCoords(int _xmin, int _xmax)
+    {
+        m_render_coords.x_coords[0] = _xmin;
+        m_render_coords.x_coords[1] = _xmax;
+        m_render_coords.y_coords[0] = f(_xmin);
+        m_render_coords.y_coords[1] = f(_xmax);
 
-        return m_current_coords;
+        return m_render_coords;
     }
     
 } // namespace ViscoCorrect

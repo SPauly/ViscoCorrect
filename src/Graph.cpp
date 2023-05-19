@@ -103,7 +103,7 @@ namespace ViscoCorrect
     {
         for (auto &pair : total_heads)
         {
-            ImPlot::PlotLine("##totalhead", pair.second.GetCoordinates().x_coords, pair.second.GetCoordinates().y_coords, 2);
+            ImPlot::PlotLine("##totalhead", pair.second.GetRenderCoords().x_coords, pair.second.GetRenderCoords().y_coords, 2);
         }
     }
 
@@ -112,7 +112,7 @@ namespace ViscoCorrect
         for (auto &pair : total_heads)
         {
             pair.second.ScaleYAxis(_scale);
-            pair.second.SetCoordinates(_xmin, _xmax);
+            pair.second.SetRange(_xmin, _xmax);
         }
     }
 
