@@ -91,7 +91,7 @@ namespace ViscoCorrect
     }
 
     // LinearFunctionWrapper
-    LinearFunctionWrapper::LinearFunctionWrapper(const std::unordered_map<int, int> &_raw_distances, const double _m, const ImVec2 &_starting_pos, const ImVec2 &_range, const int _xaxis, const int _yaxis) 
+    LinearFunctionWrapper::LinearFunctionWrapper(const std::map<int, int> &_raw_distances, const double _m, const ImVec2 &_starting_pos, const ImVec2 &_range, const int _xaxis, const int _yaxis) 
         : raw_distances(_raw_distances), m(_m), starting_pos(_starting_pos), range(_range), xaxis(_xaxis), yaxis(_yaxis)
     { 
         int totalx = starting_pos.x;
