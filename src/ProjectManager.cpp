@@ -2,6 +2,11 @@
 
 namespace ViscoCorrect
 {
+    ProjectManager::ProjectManager(std::shared_ptr<Graph> _graph) : m_graph(_graph)
+    {
+        m_projects.push_back(std::make_shared<Project>());
+    }
+
     void ProjectManager::OnUIRender()
     {
         ImGui::Begin("Project");

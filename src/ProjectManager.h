@@ -16,7 +16,7 @@ namespace ViscoCorrect
     {
     public:
         ProjectManager() = delete;
-        ProjectManager(std::shared_ptr<Graph> _graph) : m_graph(_graph){}
+        ProjectManager(std::shared_ptr<Graph> _graph);
         ~ProjectManager() = default;
 
         virtual void OnUIRender() override;
@@ -24,6 +24,6 @@ namespace ViscoCorrect
     private:
         std::shared_ptr<Graph> m_graph;
         
-        std::vector<std::shared_ptr<Project>> m_projects{1};
+        std::vector<std::shared_ptr<Project>> m_projects;
     };
 }

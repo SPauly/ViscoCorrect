@@ -30,7 +30,7 @@ namespace ViscoCorrect
     class LinearFunction
     {
     public:
-        LinearFunction(LineCoordinates, int, int);
+        LinearFunction(LineCoordinates, int _xmin = 0, int _xmax = 100);
         LinearFunction(double, int, int);
 
         template<typename T>

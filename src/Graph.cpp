@@ -91,17 +91,22 @@ namespace ViscoCorrect
     }
 
     // LinearFunctionWrapper
-    LinearFunctionWrapper::LinearFunctionWrapper(const std::unordered_map<int, LineCoordinates> &_raw) : raw_lines(_raw)
-    {
-        for (const auto &pair : raw_lines)
+    LinearFunctionWrapper::LinearFunctionWrapper(const std::unordered_map<int, int> &_raw_distances, const double _m, const ImVec2 &_starting_pos, const ImVec2 &_range, const int _xaxis, const int _yaxis) 
+        : raw_distances(_raw_distances), m(_m), starting_pos(_starting_pos), range(_range), xaxis(_xaxis), yaxis(_yaxis)
+    { 
+        int totalx = starting_pos.x;
+        int totaly = starting_pos.y;
+        for (const auto &pair : raw_distances)
         {
-            total_heads.emplace(pair.first, LinearFunction{pair.second});
+            totalx += xaxis * pair.second;
+            totaly += yaxis * pair.second;
+            functions.emplace(pair.first, LinearFunction{m, totalx, totaly});
         }
     }
 
     void LinearFunctionWrapper::RenderFunctions()
     {
-        for (auto &pair : total_heads)
+        for (auto &pair : functions)
         {
             ImPlot::PlotLine("##totalhead", pair.second.GetRenderCoords().x_coords, pair.second.GetRenderCoords().y_coords, 2);
         }
@@ -109,7 +114,7 @@ namespace ViscoCorrect
 
     void LinearFunctionWrapper::Resize(const double _scale, int _xmin, int _xmax)
     {
-        for (auto &pair : total_heads)
+        for (auto &pair : functions)
         {
             pair.second.ScaleYAxis(_scale);
             pair.second.SetRange(_xmin, _xmax);
@@ -117,7 +122,9 @@ namespace ViscoCorrect
     }
 
     // Graph
-    Graph::Graph() : m_flowrate(m_win_size), m_totalhead(raw_totalhead), m_viscosity(raw_viscosity)
+    Graph::Graph() 
+        : m_flowrate(m_win_size), m_totalhead(raw_totalhead, mth, m_startpos_th, (ImVec2){0, mor_plot_size1.x}, 0, 1), 
+        m_viscosity(raw_viscosity, mv, m_startpos_v, (ImVec2){0,mor_plot_size1.x})
     {
     }
 

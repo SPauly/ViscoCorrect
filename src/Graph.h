@@ -78,7 +78,7 @@ namespace ViscoCorrect
     class LinearFunctionWrapper
     {
     public:
-        LinearFunctionWrapper(const std::unordered_map<int, LineCoordinates> &);
+        LinearFunctionWrapper(const std::unordered_map<int, int> &_raw_distances, const double _m, const ImVec2 & _starting_pos, const ImVec2 &_range = (ImVec2){0,100}, const int _xaxis = 1, const int _yaxis = 0);
         ~LinearFunctionWrapper(){};
 
         void RenderFunctions();
@@ -86,10 +86,14 @@ namespace ViscoCorrect
         void Resize(const double, int, int);
 
     private:
-        std::unordered_map<int, LinearFunction> total_heads;
+        std::unordered_map<int, LinearFunction> functions;
 
-        std::unordered_map<int, LineCoordinates> raw_lines;
-
+        std::unordered_map<int, int> raw_distances;
+        const double m;
+        const ImVec2 starting_pos;
+        const ImVec2 range;
+        const int xaxis;
+        const int yaxis;
     };
 
     class Graph : public Layer
@@ -133,14 +137,19 @@ namespace ViscoCorrect
         const double m_plot1_yratio = 304.0 / 625.0;
         const double m_plot2_yratio = 284.0 / 625.0;
 
-        //Line data
-        std::unordered_map<int, LineCoordinates> raw_totalhead{
-            {5, {4,434,1,227}},
-            {10, {4,434,16,242}},
-            {20, {4,434,28,254}}
+        //Raw data totalhead
+        ImVec2 m_startpos_th{4,1}; //have to check if that is correct
+        const double mth = (553.0-327.0)/430.0;
+        std::unordered_map<int, int> raw_totalhead{
+            {5, 0},
+            {10, 15},
+            {20, 12}
         };
         
-        std::unordered_map<int, LineCoordinates> raw_viscosity{
+        ImVec2 m_startpos_v{234, 304}; //have to check this
+        const double mv = (31.0-304.0)/(377.0-234.0);
+        std::unordered_map<int, int> raw_viscosity{
+            {10, 0}
         };
 
         //Needed objects
