@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <functional>
 
 namespace ViscoCorrect
 {
@@ -48,6 +50,25 @@ namespace ViscoCorrect
 
         LineCoordinates m_initial_coords;
         LineCoordinates m_current_coords;
+    };
+
+    struct Project{
+        //metadata
+        std::string name = "";
+
+        //data
+        CalcParameters parameters;
+        CorrectionFactors correction; 
+
+        //Calculated Data
+        LinearFunction *func_totalhead;
+        LinearFunction *func_visco;
+        double flow_pos = 0;
+        double correction_x = 0;
+
+        //render functions
+        std::function<void()> *render_params;
+        std::function<void()> *render_correction;
     };
     
 }

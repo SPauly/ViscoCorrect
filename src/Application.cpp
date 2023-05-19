@@ -91,8 +91,8 @@ namespace ViscoCorrect
         this->PushLayer(m_graph);
 
         // layer init Projects
-        mvec_projects.push_back(std::make_shared<Project>());
-        this->PushLayer(mvec_projects.back());
+        m_project_man = std::make_shared<ProjectManager>(m_graph);
+        this->PushLayer(m_project_man);
 
 #if defined(DEBUG_BUILD)
         // layer init ExampleLayer

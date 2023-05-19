@@ -18,7 +18,7 @@
 
 #include "utils/LayerStack.h"
 #include "Graph.h"
-#include "Project.h"
+#include "ProjectManager.h"
 
 #if defined(DEBUG_BUILD)
 #include "utils/Debugging/DebugTools.h"
@@ -70,7 +70,7 @@ namespace ViscoCorrect
         
         LayerStack m_layer_stack;  
         std::shared_ptr<ViscoCorrect::Graph> m_graph;
-        std::vector<std::shared_ptr<ViscoCorrect::Project>> mvec_projects;
+        std::shared_ptr<ProjectManager> m_project_man;
 #if defined(DEBUG_BUILD)
         std::shared_ptr<Debug::DebugTools> m_debug_tools;
 #endif

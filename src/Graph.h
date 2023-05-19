@@ -104,6 +104,8 @@ namespace ViscoCorrect
         virtual void OnUpdate(float) override;
         virtual void OnUIRender() override;
 
+        Project *PopulateProject(Project*);
+
         void AddCallbackToPlot(std::shared_ptr<std::function<void()>>, int);
         void RemoveCallbackFromPlot(std::shared_ptr<std::function<void()>>, int);
 
