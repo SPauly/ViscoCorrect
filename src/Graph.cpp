@@ -121,6 +121,44 @@ namespace ViscoCorrect
         }
     }
 
+    LinearFunction *LinearFunctionWrapper::CreateFromInput(const int _input)
+    {
+        double absolute_position = starting_pos.x;
+        int prev_value = 0;
+        bool bfound = false;
+
+        for(const auto &pair : raw_distances)
+        {
+            int value = pair.first;
+            
+            if(value == _input)
+            {
+                absolute_position += pair.second;
+                bfound = true;
+                break;
+            }
+            else if(value > _input)
+            {
+                int range = value - prev_value;
+                int relative_value = _input - prev_value;
+
+                absolute_position += ((double)relative_value / (double)range) * (double)pair.second;
+                bfound = true;
+                break;
+            }
+
+            absolute_position += pair.second;
+            prev_value = value;
+        }
+
+        if(bfound)
+        {
+            return new LinearFunction(m, (xaxis > 0 ) ? absolute_position : starting_pos.x, (yaxis > 0) ? absolute_position : starting_pos.y);
+        }   
+        else
+            return nullptr; //throw exception
+    }
+
     // Graph
     Graph::Graph() 
         : m_flowrate(m_win_size), m_totalhead(raw_totalhead, mth, m_startpos_th, (ImVec2){0, mor_plot_size1.x}, 0, 1), 
@@ -291,6 +329,12 @@ namespace ViscoCorrect
         m_flowrate.Resize(m_scalling_factor);
         m_totalhead.Resize(m_scalling_factor, 0, m_plot_size1.x);
         m_viscosity.Resize(m_scalling_factor, 0, m_plot_size1.x);
+    }
+
+    Project *Graph::PopulateProject(Project *_proj){
+        _proj->func_totalhead = m_totalhead.CreateFromInput(_proj->parameters.total_head_m);
+        _proj->func_visco = m_viscosity.CreateFromInput(_proj->parameters.viscosity_v);
+        _proj->flow_pos = m_flowrate.ConvertFromInput(_proj->parameters.flowrate_q);
     }
 
 #if defined(DEBUG_BUILD)

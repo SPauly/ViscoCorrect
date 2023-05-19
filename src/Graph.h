@@ -85,10 +85,13 @@ namespace ViscoCorrect
 
         void Resize(const double, int, int);
 
+        LinearFunction *CreateFromInput(const int);
+
     private:
         std::unordered_map<int, LinearFunction> functions;
 
         std::map<int, int> raw_distances;
+        
         const double m;
         const ImVec2 starting_pos;
         const ImVec2 range;

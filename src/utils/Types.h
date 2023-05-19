@@ -54,6 +54,17 @@ namespace ViscoCorrect
     };
 
     struct Project{
+        Project() = default;
+        ~Project() {
+            if(func_totalhead)
+                delete func_totalhead;
+            if(func_visco)
+                delete func_visco;
+            if(render_params)
+                delete render_params;
+            if(render_correction)
+                delete render_correction;
+        }
         //metadata
         std::string name = "";
 
@@ -62,14 +73,14 @@ namespace ViscoCorrect
         CorrectionFactors correction; 
 
         //Calculated Data
-        LinearFunction *func_totalhead;
-        LinearFunction *func_visco;
+        LinearFunction *func_totalhead = nullptr;
+        LinearFunction *func_visco = nullptr;
         double flow_pos = 0;
         double correction_x = 0;
 
         //render functions
-        std::function<void()> *render_params;
-        std::function<void()> *render_correction;
+        std::function<void()> *render_params = nullptr;
+        std::function<void()> *render_correction = nullptr;
     };
     
 }

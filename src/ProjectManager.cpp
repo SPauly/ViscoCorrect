@@ -17,7 +17,10 @@ namespace ViscoCorrect
             ImGui::InputInt("Flowrate Q", &proj->parameters.flowrate_q);
             ImGui::InputInt("Total head H in m", &proj->parameters.total_head_m);
             ImGui::InputInt("Kinematic viscosity v in mm^2/s", &proj->parameters.viscosity_v);
-            ImGui::Button("Calculate");
+            if(ImGui::Button("Calculate"))
+            {
+                m_graph->PopulateProject(proj.get());
+            }
         }
 
         ImGui::End();
