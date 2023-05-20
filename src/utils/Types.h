@@ -35,7 +35,13 @@ namespace ViscoCorrect
 
         template<typename T>
         T f(const T _x){
-            return static_cast<T>(m * _x + (b*y_scale));
+            return static_cast<T>(m * (double)_x + (b*y_scale));
+        }
+
+        template<typename T>
+        T get_x(const T _y)
+        {
+            return static_cast<T>(((double)_y - (b*y_scale))/m);
         }
 
         inline void ScaleYAxis(double _scale) { y_scale = _scale; }

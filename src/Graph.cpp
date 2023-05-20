@@ -336,6 +336,9 @@ namespace ViscoCorrect
         _proj->func_visco = m_viscosity.CreateFromInput(_proj->parameters.viscosity_v);
         _proj->flow_pos = m_flowrate.ConvertFromInput(_proj->parameters.flowrate_q);
 
+        _proj->correction_x = _proj->func_visco->get_x(_proj->func_totalhead->f(_proj->flow_pos)); //correction_x = x_value of Viscosity at totalhead at Flowrate
+
+        //Populate Correction values
         return _proj;
     }
 

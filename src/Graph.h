@@ -152,7 +152,7 @@ namespace ViscoCorrect
         ImVec2 m_startpos_v{234, 304}; //have to check this
         const double mv = (31.0-304.0)/(377.0-234.0);
         std::map<int, int> raw_viscosity{
-            {10, 0}
+            {300, 0}
         };
 
         //Needed objects
