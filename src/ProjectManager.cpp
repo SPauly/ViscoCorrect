@@ -21,6 +21,7 @@ namespace ViscoCorrect
             {
                 m_graph->PopulateProject(proj.get());
             }
+            ImGui::Text("Correction Q: %.2f", proj->correction.c_q);
         }
 
         ImGui::End();

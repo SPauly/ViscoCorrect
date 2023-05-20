@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <functional>
+#include <cmath>
 
 namespace ViscoCorrect
 {
@@ -13,9 +14,9 @@ namespace ViscoCorrect
 
     struct CorrectionFactors
     {
-        float c_q = 0.0f;
-        float c_v = 0.0f;
-        float c_h[4] = {0.0f,0.0f,0.0f,0.0f};
+        double c_q = 0.0f;
+        double c_v = 0.0f;
+        double c_h[4] = {0.0f,0.0f,0.0f,0.0f};
     };
 
     struct LineCoordinates
@@ -57,6 +58,32 @@ namespace ViscoCorrect
         int xmin = 0, xmax = 100;
 
         LineCoordinates m_render_coords;
+    };
+
+    class Polynom
+    {
+    public:
+        template <typename... Args>
+        Polynom(Args... _args) : polynoms({_args...}) {}
+        Polynom(std::vector<double> &_ply) : polynoms(_ply){}
+        ~Polynom(){}
+
+        template<typename T>
+        T f(const T _x){
+            T y = 0;
+            int inv_i = polynoms.size() - 1;
+
+            for(int i = 0; i < polynoms.size(); i++)
+            {
+                y += static_cast<T>(polynoms.at(i)*std::pow((double)_x, (double)inv_i));
+                --inv_i;
+            }
+
+            return y;
+        }
+
+    private:
+        std::vector<double> polynoms;
     };
 
     struct Project{

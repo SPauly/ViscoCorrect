@@ -159,6 +159,17 @@ namespace ViscoCorrect
             return nullptr; //throw exception
     }
 
+    //Correction
+    CorrectionFactors *Correction::PopulateCorrectionFactors(CorrectionFactors *_obj, double _x)
+    {
+        _obj->c_v = (cv.f(_x) / (double)range_steps / 10) + 0.2;
+        _obj->c_q = (cq.f(_x) / (double)range_steps / 10) + 0.2;
+        //for(int i = 0; i < ch.size(); i++)
+        //{
+            //_obj->c_h[i] = (ch.at(i).f(_x) / (double)range_steps / 10) + 0.2;;
+        //}
+    }
+
     // Graph
     Graph::Graph() 
         : m_flowrate(m_win_size), m_totalhead(raw_totalhead, mth, m_startpos_th, (ImVec2){0, mor_plot_size1.x}, 0, 1), 
@@ -339,6 +350,7 @@ namespace ViscoCorrect
         _proj->correction_x = _proj->func_visco->get_x(_proj->func_totalhead->f(_proj->flow_pos)); //correction_x = x_value of Viscosity at totalhead at Flowrate
 
         //Populate Correction values
+        m_correction_factors.PopulateCorrectionFactors(&_proj->correction, _proj->correction_x);
         return _proj;
     }
 

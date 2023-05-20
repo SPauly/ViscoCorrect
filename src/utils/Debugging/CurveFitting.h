@@ -16,7 +16,7 @@ namespace ViscoCorrect
 {
     namespace Debug
     {
-        struct ComprestCurveData
+        struct CompressedCurveData
         {
             size_t dataSize;
             double *xData;
@@ -53,7 +53,7 @@ namespace ViscoCorrect
             std::vector<double> fittedX;
             std::vector<double> fittedY;
 
-            ComprestCurveData compressed_data;
+            CompressedCurveData compressed_data;
             size_t num_parameters = 3;
             double a, b, c;
 

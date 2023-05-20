@@ -49,7 +49,7 @@ namespace ViscoCorrect
                 }
                 b_function = true;
             }
-
+            ImGui::Text("Approximated Function: %.20f * x^2 + %.20f * x + %.20f", a, b, c);
             ImGui::End();
         }
 
@@ -64,7 +64,7 @@ namespace ViscoCorrect
 
         int CurveFitting::ResidualFunction(const gsl_vector *x, void *params, gsl_vector *f)
         {
-            ComprestCurveData *_data = static_cast<ComprestCurveData *>(params);
+            CompressedCurveData *_data = static_cast<CompressedCurveData *>(params);
 
             for (size_t i = 0; i < _data->dataSize; i++)
             {

@@ -99,6 +99,25 @@ namespace ViscoCorrect
         const int yaxis;
     };
 
+    class Correction
+    {
+    public:
+        Correction(){}
+        ~Correction(){}
+
+        void RenderCorrection();
+
+        CorrectionFactors *PopulateCorrectionFactors(CorrectionFactors *, double);
+
+    private:
+        int range_qv = 176, range_steps = 22;
+        Polynom cq{-0.0044112101570574934, 2.1335181301604491, -84.537483018941273};
+        Polynom cv;
+
+        int range_h = 0, offset_h = 0;
+        std::vector<Polynom> ch;
+    };
+
     class Graph : public Layer
     {
     public:
@@ -159,6 +178,7 @@ namespace ViscoCorrect
         Flowrate m_flowrate;
         LinearFunctionWrapper m_totalhead;
         LinearFunctionWrapper m_viscosity;
+        Correction m_correction_factors;
 
         std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot1;
         std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot2;
