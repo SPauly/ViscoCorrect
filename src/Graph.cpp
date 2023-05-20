@@ -335,6 +335,8 @@ namespace ViscoCorrect
         _proj->func_totalhead = m_totalhead.CreateFromInput(_proj->parameters.total_head_m);
         _proj->func_visco = m_viscosity.CreateFromInput(_proj->parameters.viscosity_v);
         _proj->flow_pos = m_flowrate.ConvertFromInput(_proj->parameters.flowrate_q);
+
+        return _proj;
     }
 
 #if defined(DEBUG_BUILD)
