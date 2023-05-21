@@ -62,7 +62,12 @@
         "random": "cpp",
         "string_view": "cpp",
         "ranges": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "complex": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "sstream": "cpp",
+        "cfenv": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "disabled"
 }
