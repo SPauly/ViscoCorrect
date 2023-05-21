@@ -164,10 +164,12 @@ namespace ViscoCorrect
     {
         _obj->c_v = (cv.f(_x) / (double)range_steps / 10) + 0.2;
         _obj->c_q = (cq.f(_x) / (double)range_steps / 10) + 0.2;
-        //for(int i = 0; i < ch.size(); i++)
-        //{
-            //_obj->c_h[i] = (ch.at(i).f(_x) / (double)range_steps / 10) + 0.2;;
-        //}
+        for(int i = 0; i < ch.size(); i++)
+        {
+            _obj->c_h[i] = (ch.at(i).f(_x) / (double)range_steps / 10) + 0.2;;
+        }
+
+        return _obj;
     }
 
     // Graph
