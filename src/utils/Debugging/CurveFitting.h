@@ -30,6 +30,15 @@ namespace ViscoCorrect
                 // Evaluate the model function for the given x-value
                 return a * _x * _x + b * _x + c;
             };
+
+            double ModelFunctionLogistic(double _x, const gsl_vector *_parameters)
+            {
+                double L = gsl_vector_get(_parameters, 0);
+                double k = gsl_vector_get(_parameters, 1);
+                double x0 = gsl_vector_get(_parameters, 2);
+
+                return L /(1+ exp(-k*(_x-x0)));
+            };
         };
         class CurveFitting
         {
@@ -66,27 +75,36 @@ namespace ViscoCorrect
             std::vector<std::map<int, int>> datas{
                 {// CQ
                  {242, 174},
-                 {242, 173},
-                 {246, 173},
-                 {253, 173},
-                 {255, 172},
-                 {262, 172},
-                 {262, 171},
-                 {263, 171},
-                 {268, 171},
-                 {272, 169},
-                 {276, 169},
-                 {277, 168},
-                 {287, 164},
-                 {288, 164},
-                 {292, 162},
-                 {302, 157},
-                 {314, 152},
-                 {322, 145},
-                 {328, 140},
-                 {334, 136}
-                },
-                { //Test
+                 {242, 173}, // n
+                 {246, 173}, // n
+                 {253, 173}, // n
+                 {255, 172}, // n
+                 {262, 170},
+                 {262, 171}, // n
+                 {263, 171}, // n
+                 {268, 171}, // n
+                 {272, 169}, // n
+                 {276, 169}, // n
+                 {277, 168}, // n
+                 {287, 164}, // n
+                 {288, 164}, // n
+                 {293, 162}, // n
+                 {302, 157}, // n
+                 {313, 151},
+                 {322, 145}, // n
+                 {328, 140}, // n
+                 {330, 140},
+                 {338, 131},
+                 {343, 124},
+                 {348, 119},
+                 {356, 108},
+                 {364, 96},
+                 {374, 82},
+                 {378, 75},
+                 {381, 71},
+                 {383, 67}},
+                {
+                    // Test
                     {242, 74},
                     {242, 73},
                     {246, 73},

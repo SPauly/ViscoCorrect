@@ -84,7 +84,7 @@ namespace ViscoCorrect
 
             for (size_t i = 0; i < _data->dataSize; i++)
             {
-                double _yModel = _data->ModelFunction(_data->xData[i], x);
+                double _yModel = _data->ModelFunctionLogistic(_data->xData[i], x);
                 gsl_vector_set(f, i, _data->yData[i] - _yModel);
             }
 
@@ -106,9 +106,9 @@ namespace ViscoCorrect
 
             gsl_vector *_initial_params = gsl_vector_alloc(num_parameters);
 
-            gsl_vector_set(_initial_params, 0, 1.0);
-            gsl_vector_set(_initial_params, 1, 1.0);
-            gsl_vector_set(_initial_params, 2, 1.0);
+            gsl_vector_set(_initial_params, 0, 174.0);
+            gsl_vector_set(_initial_params, 1, 0.1);
+            gsl_vector_set(_initial_params, 2, 300);
 
             gsl_multifit_nlinear_parameters fittingParams = gsl_multifit_nlinear_default_parameters();
             gsl_multifit_nlinear_workspace *workspace = gsl_multifit_nlinear_alloc(gsl_multifit_nlinear_trust, &fittingParams, _datasize, num_parameters);
@@ -149,7 +149,8 @@ namespace ViscoCorrect
             for (int i = xData.at(_iter).at(0); i < xData.at(_iter).back(); i++)
             {
                 fittedX.at(_iter).push_back(i);
-                fittedY.at(_iter).push_back(a.at(_iter) * i * i + b.at(_iter) * i + c.at(_iter));
+                // fittedY.at(_iter).push_back(a.at(_iter) * i * i + b.at(_iter) * i + c.at(_iter)); //ax2+bx+c
+                fittedY.at(_iter).push_back(a.at(_iter) / (1 + exp(-b.at(_iter) * (i - c.at(_iter))))); // L /(1+ exp(-k*(_x-x0)))
             }
         }
     } // namespace Debug

@@ -78,7 +78,7 @@ namespace ViscoCorrect
     class LinearFunctionWrapper
     {
     public:
-        LinearFunctionWrapper(const std::map<int, int> &_raw_distances, const double _m, const ImVec2 & _starting_pos, const ImVec2 &_range = (ImVec2){0,100}, const int _xaxis = 1, const int _yaxis = 0);
+        LinearFunctionWrapper(const std::map<int, int> &_raw_distances, const double _m, const ImVec2 &_starting_pos, const ImVec2 &_range = (ImVec2){0, 100}, const int _xaxis = 1, const int _yaxis = 0);
         ~LinearFunctionWrapper(){};
 
         void RenderFunctions();
@@ -91,7 +91,7 @@ namespace ViscoCorrect
         std::unordered_map<int, LinearFunction> functions;
 
         std::map<int, int> raw_distances;
-        
+
         const double m;
         const ImVec2 starting_pos;
         const ImVec2 range;
@@ -102,8 +102,8 @@ namespace ViscoCorrect
     class Correction
     {
     public:
-        Correction(){}
-        ~Correction(){}
+        Correction() {}
+        ~Correction() {}
 
         void RenderCorrection();
 
@@ -130,7 +130,7 @@ namespace ViscoCorrect
         virtual void OnUpdate(float) override;
         virtual void OnUIRender() override;
 
-        Project *PopulateProject(Project*);
+        Project *PopulateProject(Project *);
 
         void AddCallbackToPlot(std::shared_ptr<std::function<void()>>, int);
         void RemoveCallbackFromPlot(std::shared_ptr<std::function<void()>>, int);
@@ -144,37 +144,55 @@ namespace ViscoCorrect
         ImVec2 m_main_win_size;
         const ImVec2 mor_win_size{434, 625};
         const ImVec2 mor_plot_size1{434, 304};
-        const ImVec2 mor_plot_size2{434, 284}; 
+        const ImVec2 mor_plot_size2{434, 284};
         double m_scalling_factor = 1.0;
         int b_autofit = 1;
-        
+
         // current sizes
         ImVec2 m_win_size{mor_win_size};
         ImVec2 m_plot_size1{mor_plot_size1};
         ImVec2 m_plot_size2{mor_plot_size2};
 
-        //ratios
+        // ratios
         const double m_win_ratio = 434.0 / 625.0;
         const double m_win_invratio = 625.0 / 434.0;
         const double m_plot1_yratio = 304.0 / 625.0;
         const double m_plot2_yratio = 284.0 / 625.0;
 
-        //Raw data totalhead
-        ImVec2 m_startpos_th{4,1}; //have to check if that is correct
-        const double mth = (553.0-327.0)/430.0;
+        // Raw data totalhead
+        ImVec2 m_startpos_th{4, 1}; // have to check if that is correct
+        const double mth = (553.0 - 327.0) / 430.0;
         std::map<int, int> raw_totalhead{
             {5, 0},
             {10, 15},
-            {20, 12}
-        };
-        
-        ImVec2 m_startpos_v{234, 304}; //have to check this
-        const double mv = (31.0-304.0)/(377.0-234.0);
-        std::map<int, int> raw_viscosity{
-            {300, 0}
-        };
+            {20, 12},
+            {40, 14},
+            {50, 8},
+            {100, 9},
+            {200, 13}};
 
-        //Needed objects
+        ImVec2 m_startpos_v{105, 304}; // have to check this
+        const double mv = (31.0 - 304.0) / (377.0 - 234.0);
+        std::map<int, int> raw_viscosity{
+            {10, 0},
+            {20, 27},
+            {30, 16},
+            {40, 10},
+            {60, 15},
+            {80, 11},
+            {100, 8},
+            {200, 26},
+            {300, 16},
+            {400, 11},
+            {500, 8},
+            {600, 6},
+            {800, 12},
+            {1000, 9},
+            {2000, 26},
+            {3000, 14},
+            {4000, 10}};
+
+        // Needed objects
         Flowrate m_flowrate;
         LinearFunctionWrapper m_totalhead;
         LinearFunctionWrapper m_viscosity;
@@ -182,7 +200,7 @@ namespace ViscoCorrect
 
         std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot1;
         std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot2;
-    
+
     private:
         // debugging
 #if defined(DEBUG_BUILD)
