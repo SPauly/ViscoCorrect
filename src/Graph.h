@@ -111,11 +111,11 @@ namespace ViscoCorrect
 
     private:
         int range_qv = 176, range_steps = 22;
-        Polynom cq{-0.0044112101570574934, 2.1335181301604491, -84.537483018941273};
-        Polynom cv;
+        LogisticSigmoid cq{-0.0044112101570574934, 2.1335181301604491, -84.537483018941273};
+        LogisticSigmoid cv;
 
         int range_h = 0, offset_h = 0;
-        std::vector<Polynom> ch;
+        std::vector<LogisticSigmoid> ch;
     };
 
     class Graph : public Layer

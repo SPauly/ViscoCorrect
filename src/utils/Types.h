@@ -60,7 +60,7 @@ namespace ViscoCorrect
         LineCoordinates m_render_coords;
     };
 
-    class Polynom
+    class Polynom 
     {
     public:
         template <typename... Args>
@@ -84,6 +84,21 @@ namespace ViscoCorrect
 
     private:
         std::vector<double> polynoms;
+    };
+
+    class LogisticSigmoid
+    {
+    public:
+        LogisticSigmoid(double _l = 1, double _k = 1, double _x0 = 1) : L(_l), k(_k), x0(_x0) {}
+        ~LogisticSigmoid() {}
+
+        template <typename T>
+        T f(const T _x){
+            return static_cast<T>(L / (1 + exp(-k*(_x-x0)))); 
+        }
+
+    private:
+        double L, k, x0;
     };
 
     struct Project{

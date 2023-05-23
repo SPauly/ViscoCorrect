@@ -21,14 +21,19 @@ namespace ViscoCorrect
             size_t dataSize;
             double *xData;
             double *yData;
-            double ModelFunction(double _x, const gsl_vector *_parameters)
+            
+            double ModelFunctionPolynom(double _x, const gsl_vector *_parameters)
             {
-                double a = gsl_vector_get(_parameters, 0);
-                double b = gsl_vector_get(_parameters, 1);
-                double c = gsl_vector_get(_parameters, 2);
+                double y = 0;
+                int inv_i = _parameters->size - 1;
 
-                // Evaluate the model function for the given x-value
-                return a * _x * _x + b * _x + c;
+                for (int i = 0; i < _parameters->size; i++)
+                {
+                    y += static_cast<double>(gsl_vector_get(_parameters, i) * std::pow((double)_x, (double)inv_i));
+                    --inv_i;
+                }
+
+                return y;
             };
 
             double ModelFunctionLogistic(double _x, const gsl_vector *_parameters)
@@ -37,9 +42,22 @@ namespace ViscoCorrect
                 double k = gsl_vector_get(_parameters, 1);
                 double x0 = gsl_vector_get(_parameters, 2);
 
-                return L /(1+ exp(-k*(_x-x0)));
+                return L / (1 + exp(-k * (_x - x0)));
             };
+
+            std::function<double()> ModelFunction;
         };
+
+        struct FullDataCurve
+        {
+            FullDataCurve(std::map<int, int>& _data, bool _bpoly = true, int _params = 3);
+
+            std::vector<double> xData, yData, fittedX, fittedY;
+            std::vector<double> parameters;
+            
+            CompressedCurveData compressed_data;
+        };
+
         class CurveFitting
         {
         public:
@@ -47,7 +65,7 @@ namespace ViscoCorrect
             ~CurveFitting();
 
             void Render();
-            void FitCurve(std::map<int, int> _data, int _iter);
+            void FitCurve(FullDataCurve&);
 
         private:
             static int ResidualFunction(const gsl_vector *, void *, gsl_vector *);
@@ -59,16 +77,9 @@ namespace ViscoCorrect
 
             size_t ncurves = 2;
 
-            std::vector<std::vector<double>> xData;
-            std::vector<std::vector<double>> yData;
-            std::vector<std::vector<double>> fittedX;
-            std::vector<std::vector<double>> fittedY;
+            std::vector<FullDataCurve> curves;
 
-            std::vector<CompressedCurveData> compressed_data;
-            size_t num_parameters = 3;
-            std::vector<double> a, b, c;
-
-            bool b_renderplot = false, b_function = false;
+            bool b_renderplot = false, b_function = false, b_logistical = false;
 
             std::shared_ptr<std::function<void()>> PlotRender_func;
 
@@ -103,14 +114,31 @@ namespace ViscoCorrect
                  {378, 75},
                  {381, 71},
                  {383, 67}},
-                {
-                    // Test
-                    {242, 74},
-                    {242, 73},
-                    {246, 73},
-                    {253, 73},
-                    {255, 72},
-                }};
+                {// CV
+                 {122, 173},
+                 {143, 170},
+                 {159, 168},
+                 {177, 163},
+                 {193, 156},
+                 {202, 153},
+                 {211, 149},
+                 {228, 141},
+                 {242, 133},
+                 {262, 120},
+                 {277, 108},
+                 {293, 94},
+                 {300, 87},
+                 {310, 76},
+                 {314, 71},
+                 {319, 65},
+                 {327, 54},
+                 {330, 51},
+                 {336, 43},
+                 {344, 32},
+                 {350, 21},
+                 {356, 13},
+                 {358, 10},
+                 {363, 1}}};
         };
 
     } // namespace Debug

@@ -5,6 +5,26 @@ namespace ViscoCorrect
 {
     namespace Debug
     {
+        // FullDataCurve
+        FullDataCurve::FullDataCurve(std::map<int, int> &_data, bool _bpoly = true, int _params = 3)
+        {
+            //populate x and y Data
+            for (const auto &pair : _data)
+            {
+                xData.push_back(pair.first);
+                yData.push_back(pair.second);
+            }
+            compressed_data.dataSize = xData.size();
+            compressed_data.xData = xData.data();
+            compressed_data.yData = yData.data();
+
+            if(_bpoly)
+            {
+                compressed_data.ModelFunction = std::bind(CompressedCurveData::ModelFunctionPolynom, &compressed_data);
+                parameters.resize(_params);
+            }
+        }
+
         CurveFitting::CurveFitting()
         {
             // reserve space for x and y data
@@ -54,13 +74,17 @@ namespace ViscoCorrect
                 b_renderplot = false;
             }
 
-            if (ImGui::Button("Approximate Curve"))
+            if (ImGui::Button("Approximate Curves") && !b_function)
             {
                 for (int i = 0; i < ncurves; i++)
                 {
                     FitCurve(datas.at(i), i);
                 }
                 b_function = true;
+            }
+
+            if (ImGui::Button("Delete Curves") && b_function)
+            {
             }
             ImGui::Text("Approximated Function Q: %.20f * x^2 + %.20f * x + %.20f", a.at(0), b.at(0), c.at(0));
             ImGui::Text("Approximated Function V: %.20f * x^2 + %.20f * x + %.20f", a.at(1), b.at(1), c.at(1));
