@@ -21,6 +21,7 @@ namespace ViscoCorrect
             size_t dataSize;
             double *xData;
             double *yData;
+            bool b_poly;
             
             double ModelFunctionPolynom(double _x, const gsl_vector *_parameters)
             {
@@ -45,7 +46,23 @@ namespace ViscoCorrect
                 return L / (1 + exp(-k * (_x - x0)));
             };
 
-            std::function<double()> ModelFunction;
+            double ModelFunction(double _x, const gsl_vector *_parameters)
+            {
+                return (b_poly) ? ModelFunctionPolynom(_x, _parameters) : ModelFunctionLogistic(_x, _parameters);
+            }
+
+            double ModelFunction(double _x, const std::vector<double> &_parameters)
+            {
+                gsl_vector *_params_g = gsl_vector_alloc(_parameters.size());
+                for(int i = 0; i < _parameters.size(); i++)
+                {
+                    gsl_vector_set(_params_g, i, _parameters.at(i));
+                }
+
+                double y = this->ModelFunction(_x, _params_g);
+                gsl_vector_free(_params_g);
+                return y;
+            }
         };
 
         struct FullDataCurve
@@ -77,13 +94,13 @@ namespace ViscoCorrect
 
             size_t ncurves = 2;
 
-            std::vector<FullDataCurve> curves;
-
             bool b_renderplot = false, b_function = false, b_logistical = false;
 
             std::shared_ptr<std::function<void()>> PlotRender_func;
 
-            std::vector<std::map<int, int>> datas{
+            std::vector<FullDataCurve> curves;
+
+            std::vector<std::map<int, int>> raw_points{
                 {// CQ
                  {242, 174},
                  {242, 173}, // n
