@@ -160,6 +160,11 @@ namespace ViscoCorrect
     }
 
     //Correction
+    Correction::Correction()
+    {
+        
+    }
+
     CorrectionFactors *Correction::PopulateCorrectionFactors(CorrectionFactors *_obj, double _x)
     {
         _obj->c_v = (cv.f(_x) / (double)range_steps / 10) + 0.2;
@@ -170,6 +175,11 @@ namespace ViscoCorrect
         }
 
         return _obj;
+    }
+
+    void Correction::RenderCorrection()
+    {
+
     }
 
     // Graph
@@ -217,6 +227,7 @@ namespace ViscoCorrect
 
             // Render the different functions
             m_flowrate.RenderFlowrate();
+            m_correction_factors.RenderCorrection();
             for (const auto &_func : mvec_callbacks_plot2)
             {
                 (*_func)();

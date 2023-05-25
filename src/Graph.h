@@ -102,7 +102,7 @@ namespace ViscoCorrect
     class Correction
     {
     public:
-        Correction() {}
+        Correction();
         ~Correction() {}
 
         void RenderCorrection();
@@ -110,12 +110,12 @@ namespace ViscoCorrect
         CorrectionFactors *PopulateCorrectionFactors(CorrectionFactors *, double);
 
     private:
-        int range_qv = 176, range_steps = 22;
+        int range_steps = 22;
         Polynom cq{4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324, -1.1870337647376101, 176.52190832690891, -10276.558815133236};
         Polynom cv{2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714, -0.037300324399145976, 4.2391803778160968, -6.2364025573465849};
+        std::vector<Polynom> ch;
 
-        int range_h = 0, offset_h = 0;
-        std::vector<LogisticSigmoid> ch;
+        std::vector<double> generated_x, generated_y;
     };
 
     class Graph : public Layer
