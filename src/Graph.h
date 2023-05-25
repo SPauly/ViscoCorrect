@@ -111,8 +111,8 @@ namespace ViscoCorrect
 
     private:
         int range_qv = 176, range_steps = 22;
-        LogisticSigmoid cq{-0.0044112101570574934, 2.1335181301604491, -84.537483018941273};
-        LogisticSigmoid cv;
+        Polynom cq{4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324, -1.1870337647376101, 176.52190832690891, -10276.558815133236};
+        Polynom cv{2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714, -0.037300324399145976, 4.2391803778160968, -6.2364025573465849};
 
         int range_h = 0, offset_h = 0;
         std::vector<LogisticSigmoid> ch;
@@ -146,7 +146,7 @@ namespace ViscoCorrect
         const ImVec2 mor_plot_size1{434, 304};
         const ImVec2 mor_plot_size2{434, 284};
         double m_scalling_factor = 1.0;
-        int b_autofit = 1;
+        int b_autofit = 0;
 
         // current sizes
         ImVec2 m_win_size{mor_win_size};

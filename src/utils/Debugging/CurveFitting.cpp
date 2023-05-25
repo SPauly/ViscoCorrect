@@ -25,7 +25,7 @@ namespace ViscoCorrect
         CurveFitting::CurveFitting()
         {
             ncurves = raw_points.size();
-            curves.push_back(FullDataCurve(raw_points.at(0), false));
+            curves.push_back(FullDataCurve(raw_points.at(0), true, 6));
             curves.push_back(FullDataCurve(raw_points.at(1), true, 6));
 
             PlotRender_func = std::make_shared<std::function<void()>>(std::bind(RenderInPlot, this));

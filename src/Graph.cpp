@@ -182,6 +182,7 @@ namespace ViscoCorrect
     void Graph::OnAttach()
     {
         ImPlot::CreateContext();
+        Resize(1.0);
 
 #if defined(DEBUG_BUILD)
         m_debug_graph = std::make_shared<DebugGraph>("Graph");
