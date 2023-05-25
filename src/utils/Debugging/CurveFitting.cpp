@@ -26,7 +26,7 @@ namespace ViscoCorrect
         {
             ncurves = raw_points.size();
             curves.push_back(FullDataCurve(raw_points.at(0), false));
-            curves.push_back(FullDataCurve(raw_points.at(1), true, 4));
+            curves.push_back(FullDataCurve(raw_points.at(1), true, 6));
 
             PlotRender_func = std::make_shared<std::function<void()>>(std::bind(RenderInPlot, this));
         }
@@ -50,17 +50,24 @@ namespace ViscoCorrect
                 b_renderplot = false;
             }
 
-            if (ImGui::Button("Approximate Curves") && !b_function)
+            ImGui::RadioButton("1Polynom", &poly1, 1); ImGui::SameLine(); ImGui::RadioButton("1Logistical", &poly1, 0);
+            ImGui::InputInt("1Parameters", &param1);
+            ImGui::RadioButton("2Polynom", &poly2, 1); ImGui::SameLine(); ImGui::RadioButton("2Logistical", &poly2, 0);
+            ImGui::InputInt("2Parameters", &param2);
+
+            if (ImGui::Button("Refresh Curve"))
             {
+                if (b_function)
+                {
+                    curves.clear();
+                    curves.push_back(FullDataCurve(raw_points.at(0), (bool)poly1, param1));
+                    curves.push_back(FullDataCurve(raw_points.at(1), (bool)poly2, param2));
+                }
                 for (int i = 0; i < ncurves; i++)
                 {
                     FitCurve(curves.at(i));
                 }
                 b_function = true;
-            }
-
-            if (ImGui::Button("Delete Curves") && b_function)
-            {
             }
 
             ImGui::End();
@@ -150,7 +157,7 @@ namespace ViscoCorrect
 
             // Retrieve the optimized parameter values
             gsl_vector *solution = gsl_multifit_nlinear_position(workspace);
-            for(int i = 0; i < _initial_params->size; i++)
+            for (int i = 0; i < _initial_params->size; i++)
             {
                 _data.parameters.at(i) = gsl_vector_get(solution, i);
             }

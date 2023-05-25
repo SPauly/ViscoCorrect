@@ -93,8 +93,10 @@ namespace ViscoCorrect
             ImVec2 m_size{434, 284};
 
             size_t ncurves = 2;
+            int param1 = 3, param2 = 3;
+            int poly1 = 0, poly2 = 1;
 
-            bool b_renderplot = false, b_function = false, b_logistical = false;
+            bool b_renderplot = false, b_function = false;
 
             std::shared_ptr<std::function<void()>> PlotRender_func;
 
