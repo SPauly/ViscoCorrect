@@ -58,6 +58,8 @@ namespace ViscoCorrect
 
         void SetStyle();
 
+        void HandleEvents();
+
     private:
         // Demo dependencies
         GLFWwindow *window;
@@ -77,7 +79,7 @@ namespace ViscoCorrect
 
         std::shared_ptr<std::vector<Project>> m_projects;
         std::function<void(std::unique_ptr<utils::EventBase>)> m_event_callback;
-        
+
         std::deque<std::unique_ptr<utils::EventBase>> m_event_que;
 
 #if defined(DEBUG_BUILD)

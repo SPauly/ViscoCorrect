@@ -134,6 +134,9 @@ namespace ViscoCorrect
             // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
             glfwPollEvents();
 
+            //Handle application events
+            HandleEvents();
+
             for (auto &layer : m_layer_stack)
             {
                 layer->OnUpdate(m_TimeStep);
@@ -258,4 +261,21 @@ namespace ViscoCorrect
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
     }
 
+    void Application::HandleEvents()
+    {
+        for(int i = 0; i < m_event_que.size(); i++)
+        {
+            auto event = std::move(m_event_que.front());
+            switch (event->GetType())
+            {
+            case VCConfig::CALC_REQ:
+                m_graph->PopulateProject(event->GetData<Project>());
+                break;
+            
+            default:
+                break;
+            }
+            m_event_que.pop_front();
+        }
+    }
 }
