@@ -3,9 +3,12 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <functional>
 
 #include "imgui.h"
-#include "Layer.h"
+#include "utils/Layer.h"
+#include "utils/Event.h"
+#include "utils/vc_config.h"
 #include "Types.h"
 #include "Graph.h"
 
@@ -16,14 +19,14 @@ namespace ViscoCorrect
     {
     public:
         ProjectManager() = delete;
-        ProjectManager(std::shared_ptr<Graph> _graph);
+        ProjectManager(std::shared_ptr<std::vector<Project>> _projects, std::function<void(std::unique_ptr<utils::EventBase>)> _event_callback);
         ~ProjectManager() = default;
 
         virtual void OnUIRender() override;
 
     private:
-        std::shared_ptr<Graph> m_graph;
+        std::function<void(std::unique_ptr<utils::EventBase>)> m_event_callback;
         
-        std::vector<std::shared_ptr<Project>> m_projects;
+        std::shared_ptr<std::vector<Project>> m_projects;
     };
 }

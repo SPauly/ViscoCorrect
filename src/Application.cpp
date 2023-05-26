@@ -21,6 +21,9 @@ namespace ViscoCorrect
     Application::Application()
     {
         s_Instance = this;
+        m_projects = std::make_shared<std::vector<Project>>(1);
+        m_event_callback = std::bind(&PushEvent, this, std::placeholders::_1);
+
 #if defined(DEBUG_BUILD)
         m_debug_tools = std::make_shared<Debug::DebugTools>();
 #endif
@@ -91,7 +94,7 @@ namespace ViscoCorrect
         this->PushLayer(m_graph);
 
         // layer init Projects
-        m_project_man = std::make_shared<ProjectManager>(m_graph);
+        m_project_man = std::make_shared<ProjectManager>(m_projects, m_event_callback);
         this->PushLayer(m_project_man);
 
 #if defined(DEBUG_BUILD)
@@ -173,6 +176,11 @@ namespace ViscoCorrect
 
         // call shutdown
         Shutdown();
+    }
+
+    void Application::PushEvent(std::unique_ptr<utils::EventBase> _event)
+    {
+        utils::PushEvent(&m_event_que, std::move(_event));
     }
 
     template <typename T>

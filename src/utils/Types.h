@@ -129,6 +129,5 @@ namespace ViscoCorrect
         //render functions
         std::function<void()> *render_params = nullptr;
         std::function<void()> *render_correction = nullptr;
-    };
-    
+    };    
 }
