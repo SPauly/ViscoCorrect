@@ -67,7 +67,8 @@
         "fstream": "cpp",
         "iomanip": "cpp",
         "sstream": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "any": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "disabled"
 }
