@@ -270,7 +270,6 @@ namespace ViscoCorrect
             switch (event->GetType())
             {
             case VCConfig::CALC_REQ:
-                m_graph->PopulateProject(event->GetData<Project>());
                 m_calculator.Calculate(event->GetData<Project>());
                 break;
             

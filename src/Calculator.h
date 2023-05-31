@@ -18,7 +18,7 @@ namespace ViscoCorrect
         CorrectionFactors *GetCorrectionFactors(CorrectionFactors *_obj, const double _x);
 
     protected:
-        const double FitToScale(const std::map<int, int> &_raw_scale, const int _input, const int *_startpos = nullptr);
+        const double FitToScale(const std::map<int, int> &_raw_scale, const int _input, const int _startpos = 0);
         LinearFunction *CreateLinearF(const double _m, const double _value, bool _scale_on_x = true, const int _other_coordinate = 0);
         LinearFunction *CreateLinearF(const std::map<int, int> &_raw_scale, const double _m, const int _input, const int *_startpos = nullptr, bool _scale_on_x = true);
 

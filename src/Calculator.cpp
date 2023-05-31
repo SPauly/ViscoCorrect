@@ -14,10 +14,10 @@ namespace ViscoCorrect
 
     Project *Calculator::Calculate(Project *_prj)
     {
-        _prj->func_totalhead = CreateLinearF(m_raw_data.totalhead, m_raw_data.pitch_th, _prj->parameters.total_head_m, m_raw_data.startpos_th);
-        _prj->func_visco = CreateLinearF(m_raw_data.viscosity, m_raw_data.pitch_v, _prj->parameters.viscosity_v, m_raw_data.startpos_v, false);
+        _prj->func_totalhead = CreateLinearF(m_raw_data.totalhead, m_raw_data.pitch_th, _prj->parameters.total_head_m, m_raw_data.startpos_th, false);
+        _prj->func_visco = CreateLinearF(m_raw_data.viscosity, m_raw_data.pitch_v, _prj->parameters.viscosity_v, m_raw_data.startpos_v, true);
 
-        _prj->flow_pos = FitToScale(m_raw_data.flowrates, _prj->parameters.flowrate_q, m_raw_data.startpos_f);
+        _prj->flow_pos = FitToScale(m_raw_data.flowrates, _prj->parameters.flowrate_q, m_raw_data.startpos_f[0]);
 
         _prj->correction_x = _prj->func_visco->get_x(_prj->func_totalhead->f(_prj->flow_pos));
 
@@ -38,9 +38,9 @@ namespace ViscoCorrect
         return _obj;
     }
 
-    const double Calculator::FitToScale(const std::map<int, int> &_raw_scale, const int _input, const int *_startpos)
+    const double Calculator::FitToScale(const std::map<int, int> &_raw_scale, const int _input, const int _startpos)
     {
-        double absolute_position = (_startpos) ? (double)_startpos[0] : 0.0;
+        double absolute_position = (double)_startpos;
         int prev_value = 0;
         bool bfound = false;
 
@@ -84,7 +84,7 @@ namespace ViscoCorrect
         double pos;
         try
         {
-            pos = FitToScale(_raw_scale, _input, _startpos);
+            pos = FitToScale(_raw_scale, _input, (_scale_on_x) ? _startpos[0] : _startpos[1]); //sometimes setting it to _startpos[0] works better...
         }
         catch (const std::runtime_error &e)
         {
