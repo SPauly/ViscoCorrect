@@ -21,6 +21,7 @@
 #include "utils/Event.h"
 #include "Graph.h"
 #include "ProjectManager.h"
+#include "Calculator.h"
 
 #if defined(DEBUG_BUILD)
 #include "utils/Debugging/DebugTools.h"
@@ -81,6 +82,7 @@ namespace ViscoCorrect
         std::function<void(std::unique_ptr<utils::EventBase>)> m_event_callback;
 
         std::deque<std::unique_ptr<utils::EventBase>> m_event_que;
+        Calculator m_calculator;
 
 #if defined(DEBUG_BUILD)
         std::shared_ptr<Debug::DebugTools> m_debug_tools;

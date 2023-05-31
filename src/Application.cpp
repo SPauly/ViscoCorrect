@@ -108,6 +108,7 @@ namespace ViscoCorrect
     {
         // clear layerstack
         m_layer_stack.clear();
+        m_event_que.clear();
         
         // Cleanup
         ImGui_ImplOpenGL3_Shutdown();
@@ -270,6 +271,7 @@ namespace ViscoCorrect
             {
             case VCConfig::CALC_REQ:
                 m_graph->PopulateProject(event->GetData<Project>());
+                m_calculator.Calculate(event->GetData<Project>());
                 break;
             
             default:
