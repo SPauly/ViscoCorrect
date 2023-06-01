@@ -36,10 +36,10 @@ namespace ViscoCorrect
 
         void RenderFlowrate();
         void RenderFunctions();
-        void RenderCorrection(){};
+        void RenderCorrection();
 
         void InstanceCoords(std::unordered_map<int, LineCoordinates> *_umap, std::map<int, int> *_raw, const double _m, const int *_startpos, bool _scale_on_x = true, bool _link_x = false);
-        void InstanceCorrection(){};
+        void InstanceCorrection();
     private:
 
     private:

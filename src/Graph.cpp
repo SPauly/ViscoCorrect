@@ -1,4 +1,5 @@
 #include "Graph.h"
+
 #include "implot.h"
 
 namespace ViscoCorrect
@@ -154,6 +155,16 @@ namespace ViscoCorrect
         }
     }
 
+    void Graph::RenderCorrection()
+    {
+        ImPlot::PlotLine("##c_v", m_x_cv.data(), m_y_cv.data(), m_x_cv.size());
+        ImPlot::PlotLine("##c_q", m_x_cq.data(), m_y_cq.data(), m_x_cq.size());
+        for (int i = 0; i < m_x_ch.size(); i++)
+        {
+            ImPlot::PlotLine("##ch", m_x_ch.at(i).data(), m_y_ch.at(i).data(), m_x_ch.at(i).size());
+        }
+    }
+
     void Graph::InstanceCoords(std::unordered_map<int, LineCoordinates> *_umap, std::map<int, int> *_raw, const double _m, const int *_startpos, bool _scale_on_x, bool _link_x)
     {
         _umap->clear();
@@ -204,6 +215,25 @@ namespace ViscoCorrect
             {
                 return;
             }
+        }
+    }
+
+    void Graph::InstanceCorrection()
+    {
+        Polynom m_cv{m_raw.cv};
+        Polynom m_cq{m_raw.cq};
+        std::vector<Polynom> m_ch;
+
+        for (int i = m_raw.cutoff_cv[0]; i < m_raw.cutoff_cv[1]; i++)
+        {
+            m_x_cv.push_back(i);
+            m_y_cv.push_back(m_cv.f((double)i));
+        }
+
+        for (int i = m_raw.cutoff_cq[0]; i < m_raw.cutoff_cq[1]; i++)
+        {
+            m_x_cq.push_back(i);
+            m_y_cq.push_back(m_cq.f((double)i));
         }
     }
 } // namespace ViscoCorrect

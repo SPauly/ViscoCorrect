@@ -29,7 +29,10 @@ namespace ViscoCorrect
 
             //Correction Factors
             int stepsize_correction = 22;
+
+            const int cutoff_cq[2]{242, 384};
             std::vector<double> cq{4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324, -1.1870337647376101, 176.52190832690891, -10276.558815133236};
+            const int cutoff_cv[2]{122,363};
             std::vector<double> cv{2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714, -0.037300324399145976, 4.2391803778160968, -6.2364025573465849};
             std::vector<std::vector<double>> ch;
 
