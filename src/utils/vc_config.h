@@ -3,6 +3,8 @@
 #include <map>
 #include <vector>
 
+#include "imgui.h"
+
 namespace ViscoCorrect
 {
     namespace VCConfig
@@ -20,6 +22,11 @@ namespace ViscoCorrect
 
         struct RawData
         {
+            //Table sizes
+            const ImVec2 table_size{434,625};
+            const ImVec2 table_param_size{434, 304};
+            const ImVec2 table_correct_size{434, 284};
+
             //Correction Factors
             int stepsize_correction = 22;
             std::vector<double> cq{4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324, -1.1870337647376101, 176.52190832690891, -10276.558815133236};
