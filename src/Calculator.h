@@ -28,7 +28,5 @@ namespace ViscoCorrect
         Polynom m_cv;
         Polynom m_cq;
         std::vector<Polynom> m_ch;
-
-        std::shared_ptr<LinearFunction> current_head, current_visco;
     };
 } // namespace ViscoCorrect
