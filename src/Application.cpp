@@ -21,6 +21,9 @@ namespace ViscoCorrect
     Application::Application()
     {
         s_Instance = this;
+        m_projects = std::make_shared<std::vector<Project>>(1);
+        m_event_callback = std::bind(&PushEvent, this, std::placeholders::_1);
+
 #if defined(DEBUG_BUILD)
         m_debug_tools = std::make_shared<Debug::DebugTools>();
 #endif
@@ -91,7 +94,7 @@ namespace ViscoCorrect
         this->PushLayer(m_graph);
 
         // layer init Projects
-        m_project_man = std::make_shared<ProjectManager>(m_graph);
+        m_project_man = std::make_shared<ProjectManager>(m_projects, m_event_callback);
         this->PushLayer(m_project_man);
 
 #if defined(DEBUG_BUILD)
@@ -105,6 +108,7 @@ namespace ViscoCorrect
     {
         // clear layerstack
         m_layer_stack.clear();
+        m_event_que.clear();
         
         // Cleanup
         ImGui_ImplOpenGL3_Shutdown();
@@ -130,6 +134,9 @@ namespace ViscoCorrect
             // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
             // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
             glfwPollEvents();
+
+            //Handle application events
+            HandleEvents();
 
             for (auto &layer : m_layer_stack)
             {
@@ -173,6 +180,11 @@ namespace ViscoCorrect
 
         // call shutdown
         Shutdown();
+    }
+
+    void Application::PushEvent(std::unique_ptr<utils::EventBase> _event)
+    {
+        utils::PushEvent(&m_event_que, std::move(_event));
     }
 
     template <typename T>
@@ -250,4 +262,21 @@ namespace ViscoCorrect
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
     }
 
+    void Application::HandleEvents()
+    {
+        for(int i = 0; i < m_event_que.size(); i++)
+        {
+            auto event = std::move(m_event_que.front());
+            switch (event->GetType())
+            {
+            case VCConfig::CALC_REQ:
+                m_calculator.Calculate(event->GetData<Project>());
+                break;
+            
+            default:
+                break;
+            }
+            m_event_que.pop_front();
+        }
+    }
 }

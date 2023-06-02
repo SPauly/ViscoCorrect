@@ -1,191 +1,22 @@
 #include "Graph.h"
-#include "Application.h"
+
+#include "implot.h"
 
 namespace ViscoCorrect
 {
-    // Flowrate
-    Flowrate::Flowrate(const ImVec2 &_win_size) : m_plot_size(_win_size)
+    Graph::Graph()
     {
-        int it_total_dist = 0;
-        for (const auto &pair : raw_distances)
-        {
-            it_total_dist += pair.second * m_scaling_factor;
+        m_plot_size1 = m_raw.table_param_size;
+        m_plot_size2 = m_raw.table_correct_size;
+        // instanciate all the coordinates
+        InstanceCoords(&m_flow_points, &m_raw.flowrates, 0, m_raw.startpos_f, true, true);
+        InstanceCoords(&m_totalh_points, &m_raw.totalhead, m_raw.pitch_th, m_raw.startpos_th, false);
+        InstanceCoords(&m_visco_points, &m_raw.viscosity, m_raw.pitch_v, m_raw.startpos_v);
 
-            FlowrateLinePoints temp;
-            temp.relative_distance = pair.second;
-            temp.total_distance = it_total_dist;
-            temp.tag = pair.first;
-
-            temp.x_coords[0] = it_total_dist;
-            temp.x_coords[1] = it_total_dist;
-            temp.y_coords[0] = 0;
-            temp.y_coords[1] = m_plot_size.y * m_scaling_factor;
-
-            rates.insert(std::make_pair(pair.first, temp));
-        }
+        InstanceCorrection();
     }
 
-    Flowrate::~Flowrate()
-    {
-    }
-
-    void Flowrate::RenderFlowrate()
-    {
-        for (const auto &pair : rates)
-        {
-            ImPlot::PlotLine("##flowrates", pair.second.x_coords, pair.second.y_coords, 2);
-        }
-    }
-
-    void Flowrate::Resize(const double _scal)
-    {
-        m_scaling_factor = _scal;
-
-        int it_total_distance = 0;
-        for (auto &pair : raw_distances)
-        {
-            it_total_distance += pair.second * m_scaling_factor;
-
-            auto it = rates.find(pair.first);
-            it->second.total_distance = it_total_distance;
-            it->second.x_coords[0] = it_total_distance;
-            it->second.x_coords[1] = it_total_distance;
-            it->second.y_coords[1] = m_plot_size.y * m_scaling_factor;
-        }
-    }
-
-    const double Flowrate::ConvertFromInput(const int _input)
-    {
-        double absolute_position = 0;
-        int prev_value = 0;
-        bool bfound = false;
-
-        for(const auto &pair : raw_distances)
-        {
-            int value = pair.first;
-            
-            if(value == _input)
-            {
-                absolute_position += pair.second;
-                bfound = true;
-                break;
-            }
-            else if(value > _input)
-            {
-                int range = value - prev_value;
-                int relative_value = _input - prev_value;
-
-                absolute_position += ((double)relative_value / (double)range) * (double)pair.second;
-                bfound = true;
-                break;
-            }
-
-            absolute_position += pair.second;
-            prev_value = value;
-        }
-
-        if(bfound)
-            return absolute_position;
-        else
-            return 0.0f; //throw exception
-    }
-
-    // LinearFunctionWrapper
-    LinearFunctionWrapper::LinearFunctionWrapper(const std::map<int, int> &_raw_distances, const double _m, const ImVec2 &_starting_pos, const ImVec2 &_range, const int _xaxis, const int _yaxis) 
-        : raw_distances(_raw_distances), m(_m), starting_pos(_starting_pos), range(_range), xaxis(_xaxis), yaxis(_yaxis)
-    { 
-        int totalx = starting_pos.x;
-        int totaly = starting_pos.y;
-        for (const auto &pair : raw_distances)
-        {
-            totalx += xaxis * pair.second;
-            totaly += yaxis * pair.second;
-            functions.emplace(pair.first, LinearFunction{m, totalx, totaly});
-        }
-    }
-
-    void LinearFunctionWrapper::RenderFunctions()
-    {
-        for (auto &pair : functions)
-        {
-            ImPlot::PlotLine("##totalhead", pair.second.GetRenderCoords().x_coords, pair.second.GetRenderCoords().y_coords, 2);
-        }
-    }
-
-    void LinearFunctionWrapper::Resize(const double _scale, int _xmin, int _xmax)
-    {
-        for (auto &pair : functions)
-        {
-            pair.second.ScaleYAxis(_scale);
-            pair.second.SetRange(_xmin, _xmax);
-        }
-    }
-
-    LinearFunction *LinearFunctionWrapper::CreateFromInput(const int _input)
-    {
-        double absolute_position = starting_pos.x;
-        int prev_value = 0;
-        bool bfound = false;
-
-        for(const auto &pair : raw_distances)
-        {
-            int value = pair.first;
-            
-            if(value == _input)
-            {
-                absolute_position += pair.second;
-                bfound = true;
-                break;
-            }
-            else if(value > _input)
-            {
-                int range = value - prev_value;
-                int relative_value = _input - prev_value;
-
-                absolute_position += ((double)relative_value / (double)range) * (double)pair.second;
-                bfound = true;
-                break;
-            }
-
-            absolute_position += pair.second;
-            prev_value = value;
-        }
-
-        if(bfound)
-        {
-            return new LinearFunction(m, (xaxis > 0 ) ? absolute_position : starting_pos.x, (yaxis > 0) ? absolute_position : starting_pos.y);
-        }   
-        else
-            return nullptr; //throw exception
-    }
-
-    //Correction
-    Correction::Correction()
-    {
-        
-    }
-
-    CorrectionFactors *Correction::PopulateCorrectionFactors(CorrectionFactors *_obj, double _x)
-    {
-        _obj->c_v = (cv.f(_x) / (double)range_steps / 10) + 0.2;
-        _obj->c_q = (cq.f(_x) / (double)range_steps / 10) + 0.2;
-        for(int i = 0; i < ch.size(); i++)
-        {
-            _obj->c_h[i] = (ch.at(i).f(_x) / (double)range_steps / 10) - 0.3;
-        }
-
-        return _obj;
-    }
-
-    void Correction::RenderCorrection()
-    {
-
-    }
-
-    // Graph
-    Graph::Graph() 
-        : m_flowrate(m_win_size), m_totalhead(raw_totalhead, mth, m_startpos_th, (ImVec2){0, mor_plot_size1.x}, 0, 1), 
-        m_viscosity(raw_viscosity, mv, m_startpos_v, (ImVec2){0,mor_plot_size1.x})
+    Graph::~Graph()
     {
     }
 
@@ -193,21 +24,11 @@ namespace ViscoCorrect
     {
         ImPlot::CreateContext();
         Resize(1.0);
-
-#if defined(DEBUG_BUILD)
-        m_debug_graph = std::make_shared<DebugGraph>("Graph");
-        Application::GetInstance()->GetDebugTools()->AddTool(m_debug_graph);
-        m_debug_graph->AddCallback(m_debug_graph->GetCallback(&debug_func, this));
-#endif
     }
 
     void Graph::OnDetach()
     {
         ImPlot::DestroyContext();
-    }
-
-    void Graph::OnUpdate(float ts)
-    {
     }
 
     void Graph::OnUIRender()
@@ -226,8 +47,10 @@ namespace ViscoCorrect
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_plot_size2.y);
 
             // Render the different functions
-            m_flowrate.RenderFlowrate();
-            m_correction_factors.RenderCorrection();
+            RenderFlowrate();
+            RenderCorrection();
+
+            // Call the callbacks
             for (const auto &_func : mvec_callbacks_plot2)
             {
                 (*_func)();
@@ -245,9 +68,10 @@ namespace ViscoCorrect
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, m_plot_size1.y);
 
             // Render the different functions
-            m_flowrate.RenderFlowrate();
-            m_totalhead.RenderFunctions();
-            m_viscosity.RenderFunctions();
+            RenderFlowrate();
+            RenderFunctions();
+
+            // Call the callbacks
             for (const auto &_func : mvec_callbacks_plot1)
             {
                 (*_func)();
@@ -311,80 +135,105 @@ namespace ViscoCorrect
         }
     };
 
-    void Graph::Autofit()
+    void Graph::RenderFlowrate()
     {
-        if (ImGui::GetIO().DisplaySize.x != m_main_win_size.x || ImGui::GetIO().DisplaySize.y != m_main_win_size.y)
+        for (const auto &pair : m_flow_points)
         {
-            m_main_win_size = ImGui::GetIO().DisplaySize;
-
-            // Check the maximum size available
-            int maxWidth = m_main_win_size.x;
-            int maxHeight = m_main_win_size.y;
-
-            int targetWidth = maxHeight * m_win_ratio;
-            int targetHeight = maxWidth * m_win_invratio;
-
-            if (targetWidth <= maxWidth)
-            {
-                m_win_size.x = targetWidth;
-                m_win_size.y = maxHeight;
-            }
-            else
-            {
-                m_win_size.x = maxWidth;
-                m_win_size.y = targetHeight;
-            }
-
-            m_scalling_factor = m_win_size.x / 434;
-
-            Resize(m_scalling_factor);
+            ImPlot::PlotLine("##flowrates", pair.second.x_coords, pair.second.y_coords, 2);
         }
     }
 
-    void Graph::Resize(double _scale)
+    void Graph::RenderFunctions()
     {
-        m_scalling_factor = _scale;
-
-        m_plot_size1.x = mor_plot_size1.x * _scale;
-        m_plot_size1.y = mor_plot_size1.y * _scale;
-
-        m_plot_size2.x = mor_plot_size2.x * _scale;
-        m_plot_size2.y = mor_plot_size2.y * _scale;
-
-        m_flowrate.Resize(m_scalling_factor);
-        m_totalhead.Resize(m_scalling_factor, 0, m_plot_size1.x);
-        m_viscosity.Resize(m_scalling_factor, 0, m_plot_size1.x);
-    }
-
-    Project *Graph::PopulateProject(Project *_proj){
-        _proj->func_totalhead = m_totalhead.CreateFromInput(_proj->parameters.total_head_m);
-        _proj->func_visco = m_viscosity.CreateFromInput(_proj->parameters.viscosity_v);
-        _proj->flow_pos = m_flowrate.ConvertFromInput(_proj->parameters.flowrate_q);
-
-        _proj->correction_x = _proj->func_visco->get_x(_proj->func_totalhead->f(_proj->flow_pos)); //correction_x = x_value of Viscosity at totalhead at Flowrate
-
-        //Populate Correction values
-        m_correction_factors.PopulateCorrectionFactors(&_proj->correction, _proj->correction_x);
-        return _proj;
-    }
-
-#if defined(DEBUG_BUILD)
-    void Graph::DebugGraph::Run()
-    {
-        RunCallbacks();
-    }
-
-    void Graph::debug_func()
-    {
-        ImPlot::ShowDemoWindow();
-        ImGui::Text("Window Height: %.1f Window Width: %.1f", m_win_size.y, m_win_size.x);
-        ImGui::RadioButton("Autofit", &b_autofit, 1);
-        ImGui::RadioButton("No Autofit", &b_autofit, 0);
-        if (!b_autofit)
+        for (const auto &pair : m_totalh_points)
         {
-            ImGui::InputDouble("Scaling Factor", &m_scalling_factor);
-            Resize(m_scalling_factor);
+            ImPlot::PlotLine("##totalh", pair.second.x_coords, pair.second.y_coords, 2);
+        }
+        for (const auto &pair : m_visco_points)
+        {
+            ImPlot::PlotLine("##viscosity", pair.second.x_coords, pair.second.y_coords, 2);
         }
     }
-#endif
-}
+
+    void Graph::RenderCorrection()
+    {
+        ImPlot::PlotLine("##c_v", m_x_cv.data(), m_y_cv.data(), m_x_cv.size());
+        ImPlot::PlotLine("##c_q", m_x_cq.data(), m_y_cq.data(), m_x_cq.size());
+        for (int i = 0; i < m_x_ch.size(); i++)
+        {
+            ImPlot::PlotLine("##ch", m_x_ch.at(i).data(), m_y_ch.at(i).data(), m_x_ch.at(i).size());
+        }
+    }
+
+    void Graph::InstanceCoords(std::unordered_map<int, LineCoordinates> *_umap, std::map<int, int> *_raw, const double _m, const int *_startpos, bool _scale_on_x, bool _link_x)
+    {
+        _umap->clear();
+        bool b_set_start = false;
+        if (!_startpos)
+        {
+            _startpos = new int[2]{0, 0};
+            b_set_start = true;
+        }
+
+        double it_total_dist = (_scale_on_x) ? _startpos[0] : _startpos[1];
+
+        if (!_link_x)
+        {
+            for (const auto &pair : *_raw)
+            {
+                it_total_dist += pair.second * m_scaling_factor;
+
+                LinearFunction temp_func(_m, (_scale_on_x) ? (int)it_total_dist : _startpos[0], (_scale_on_x) ? _startpos[1] : (int)it_total_dist);
+
+                _umap->insert(std::make_pair(pair.first, temp_func.GetRenderCoords(0, m_plot_size1.x)));
+            }
+        }
+        else
+        {
+            for (const auto &pair : *_raw)
+            {
+                it_total_dist += pair.second * m_scaling_factor;
+
+                LineCoordinates temp;
+
+                temp.x_coords[0] = it_total_dist;
+                temp.x_coords[1] = it_total_dist;
+                temp.y_coords[0] = 0;
+                temp.y_coords[1] = m_plot_size1.y;
+
+                _umap->insert(std::make_pair(pair.first, temp));
+            }
+        }
+
+        if (b_set_start)
+        {
+            try
+            {
+                delete[] _startpos;
+            }
+            catch (const std::exception &e)
+            {
+                return;
+            }
+        }
+    }
+
+    void Graph::InstanceCorrection()
+    {
+        Polynom m_cv{m_raw.cv};
+        Polynom m_cq{m_raw.cq};
+        std::vector<Polynom> m_ch;
+
+        for (int i = m_raw.cutoff_cv[0]; i < m_raw.cutoff_cv[1]; i++)
+        {
+            m_x_cv.push_back(i);
+            m_y_cv.push_back(m_cv.f((double)i));
+        }
+
+        for (int i = m_raw.cutoff_cq[0]; i < m_raw.cutoff_cq[1]; i++)
+        {
+            m_x_cq.push_back(i);
+            m_y_cq.push_back(m_cq.f((double)i));
+        }
+    }
+} // namespace ViscoCorrect
