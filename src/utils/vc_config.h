@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_UTILS_VC_CONFIG_H
+#define VISCOCORRECT_SRC_UTILS_VC_CONFIG_H
 
 #include <map>
 #include <vector>
@@ -109,3 +110,6 @@ namespace ViscoCorrect
     } // namespace VCConfig
     
 } // namespace ViscoCorrect
+
+
+#endif //VISCOCORRECT_SRC_UTILS_VC_CONFIG_H

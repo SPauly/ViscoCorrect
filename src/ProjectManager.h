@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_PROJECTMANAGER_H
+#define VISCOCORRECT_SRC_PROJECTMANAGER_H
 
 #include <string>
 #include <memory>
@@ -30,3 +31,5 @@ namespace ViscoCorrect
         std::shared_ptr<std::vector<Project>> m_projects;
     };
 }
+
+#endif //VISCOCORRECT_SRC_PROJECTMANAGER_H

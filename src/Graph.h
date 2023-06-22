@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_GRAPH_H
+#define VISCOCORRECT_SRC_GRAPH_H
 
 #include <vector>
 #include <map>
@@ -65,3 +66,5 @@ namespace ViscoCorrect
     };
     
 } // namespace ViscoCorrect
+
+#endif //VISCOCORRECT_SRC_GRAPH_H

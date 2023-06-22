@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_UTILS_DEBUGGING_CURVEFITTING_H
+#define VISCOCORRECT_SRC_UTILS_DEBUGGING_CURVEFITTING_H
 
 #include "imgui.h"
 #include "implot.h"
@@ -187,3 +188,5 @@ namespace ViscoCorrect
     } // namespace Debug
 
 } // namespace ViscoCorrect
+
+#endif //VISCOCORRECT_SRC_UTILS_DEBUGGING_CURVEFITTING_H

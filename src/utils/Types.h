@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_TYPES_H
+#define VISCOCORRECT_SRC_TYPES_H
+
 #include <string>
 #include <functional>
 #include <cmath>
@@ -131,3 +133,5 @@ namespace ViscoCorrect
         std::function<void()> *render_correction = nullptr;
     };    
 }
+
+#endif //VISCOCORRECT_SRC_TYPES_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_CALCULATOR_H
+#define VISCOCORRECT_SRC_CALCULATOR_H
 
 #include <vector>
 #include <memory>
@@ -30,3 +31,5 @@ namespace ViscoCorrect
         std::vector<Polynom> m_ch;
     };
 } // namespace ViscoCorrect
+
+#endif //VISCOCORRECT_SRC_CALCULATOR_H

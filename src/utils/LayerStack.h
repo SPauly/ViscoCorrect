@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_UTILS_LAYERSTACK_H
+#define VISCOCORRECT_SRC_UTILS_LAYERSTACK_H
 
 #include "Layer.h"
 
@@ -43,3 +44,5 @@ namespace ViscoCorrect
 		unsigned int m_layer_insert_index = 0;
 	};
 }
+
+#endif //VISCOCORRECT_SRC_UTILS_LAYERSTACK_H

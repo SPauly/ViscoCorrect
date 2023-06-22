@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_APPLICATION_H
+#define VISCOCORRECT_SRC_APPLICATION_H
 
 #include <vector>
 #include <deque>
@@ -94,3 +95,5 @@ namespace ViscoCorrect
 
     Application *CreateApplication();
 }
+
+#endif //VISCOCORRECT_SRC_APPLICATION_H

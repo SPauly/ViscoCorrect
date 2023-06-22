@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_UTILS_EVENT_H
+#define VISCOCORRECT_SRC_UTILS_EVENT_H
 
 #include <deque>
 #include <memory>
@@ -53,3 +54,5 @@ namespace ViscoCorrect
         };
     }
 } // namespace ViscoCorrect
+
+#endif //VISCOCORRECT_SRC_UTILS_EVENT_H

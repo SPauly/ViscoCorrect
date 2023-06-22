@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VISCOCORRECT_SRC_UTILS_DEBUGGING_DEBUGTOOLS_H
+#define VISCOCORRECT_SRC_UTILS_DEBUGGING_DEBUGTOOLS_H
 
 #include <vector>
 #include <memory>
@@ -65,3 +66,5 @@ namespace ViscoCorrect
 
     }
 }
+
+#endif //VISCOCORRECT_SRC_UTILS_DEBUGGING_DEBUGTOOLS_H
