@@ -13,7 +13,7 @@
 #include "Types.h"
 #include "Graph.h"
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
 
     class ProjectManager : public Layer
@@ -26,9 +26,9 @@ namespace ViscoCorrect
         virtual void OnUIRender() override;
 
     private:
-        std::function<void(std::unique_ptr<utils::EventBase>)> m_event_callback;
+        std::function<void(std::unique_ptr<utils::EventBase>)> event_callback_;
         
-        std::shared_ptr<std::vector<Project>> m_projects;
+        std::shared_ptr<std::vector<Project>> projects_;
     };
 }
 

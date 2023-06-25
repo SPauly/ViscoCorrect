@@ -12,7 +12,7 @@
 
 #include "CurveFitting.h"
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     namespace Debug
     {

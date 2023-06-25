@@ -1,7 +1,7 @@
 #ifndef VISCOCORRECT_SRC_UTILS_LAYER_H
 #define VISCOCORRECT_SRC_UTILS_LAYER_H
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     class Layer
     {

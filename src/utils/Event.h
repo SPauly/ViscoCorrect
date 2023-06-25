@@ -7,7 +7,7 @@
 
 #include "vc_config.h"
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     namespace utils
     {
@@ -15,10 +15,10 @@ namespace ViscoCorrect
         {
         public:
             EventBase() = default;
-            EventBase(VCConfig::EventType _etype) : etype(_etype) {}
+            EventBase(utils::EventType etype) : event_type_(etype) {}
             virtual ~EventBase() {}
 
-            inline const VCConfig::EventType &GetType() { return etype; }
+            inline const utils::EventType &get_event_type_() { return event_type_; }
 
             template<typename T>
             T *GetData() { 
@@ -29,28 +29,28 @@ namespace ViscoCorrect
             virtual void *GetDataImpl() { return nullptr; }
             
         private:
-            VCConfig::EventType etype;
+            utils::EventType event_type_;
         };
 
         template <typename T>
         class Event : public EventBase
         {
         public:
-            Event(VCConfig::EventType _etype, T *_data, std::function<void(T)> *_callback = nullptr) 
-                : EventBase(_etype), data(_data), callback(_callback) {}
+            Event(utils::EventType etype, T *data, std::function<void(T)> *callback = nullptr) 
+                : EventBase(etype), data_(data), callback_(callback) {}
             ~Event() {}
 
         protected:
-            virtual void *GetDataImpl() override { return data;}
+            virtual void *GetDataImpl() override { return data_;}
 
         private:
-            T *data;
-            std::function<void(T)> *callback;
+            T *data_;
+            std::function<void(T)> *callback_;
         };
 
-        inline void PushEvent(std::deque<std::unique_ptr<EventBase>> *_que, std::unique_ptr<EventBase> _event)
+        inline void PushEvent(std::deque<std::unique_ptr<EventBase>> *que, std::unique_ptr<EventBase> event)
         {
-            _que->push_back(std::move(_event));
+            que->push_back(std::move(event));
         };
     }
 } // namespace ViscoCorrect

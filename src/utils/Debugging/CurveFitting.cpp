@@ -1,7 +1,7 @@
 #include "CurveFitting.h"
 #include "Application.h"
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     namespace Debug
     {
@@ -40,13 +40,13 @@ namespace ViscoCorrect
             ImGui::Begin("Curve Fitting");
             if (ImGui::Button("Enable Render") && !b_renderplot)
             {
-                Application::GetInstance()->GetGraph()->AddCallbackToPlot(PlotRender_func, 1);
+                Application::get_instance()->get_graph()->AddCallbackToPlot(PlotRender_func, 1);
                 b_renderplot = true;
             }
             ImGui::SameLine();
             if (ImGui::Button("Disable Render") && b_renderplot)
             {
-                Application::GetInstance()->GetGraph()->RemoveCallbackFromPlot(PlotRender_func, 1);
+                Application::get_instance()->get_graph()->RemoveCallbackFromPlot(PlotRender_func, 1);
                 b_renderplot = false;
             }
 
@@ -176,4 +176,4 @@ namespace ViscoCorrect
         }
     } // namespace Debug
 
-} // namespace ViscoCorrect
+} // namespace viscocorrect

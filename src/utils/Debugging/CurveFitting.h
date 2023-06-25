@@ -13,7 +13,7 @@
 #include <functional>
 #include <memory>
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     namespace Debug
     {

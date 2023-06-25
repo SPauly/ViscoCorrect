@@ -28,7 +28,7 @@
 #include "utils/Debugging/DebugTools.h"
 #endif
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     class Application
     {
@@ -43,14 +43,13 @@ namespace ViscoCorrect
         void PushLayer();
         void PushLayer(const std::shared_ptr<Layer> &);
 
-        inline std::shared_ptr<Graph> GetGraph() { return m_graph; }
-
-        static Application *GetInstance() {return s_Instance; };
+        inline std::shared_ptr<Graph> get_graph() { return graph_; }
+        static Application *get_instance() {return s_instance_; };
 
 #if defined(DEBUG_BUILD)
         inline std::shared_ptr<Debug::DebugTools> GetDebugTools()
         {
-            return m_debug_tools;
+            return debug_tools_;
         }
 #endif
         void Close();
@@ -64,33 +63,32 @@ namespace ViscoCorrect
 
     private:
         // Demo dependencies
-        GLFWwindow *window;
-        ImGuiContext *ctx;
+        GLFWwindow *window_;
 
-        float m_TimeStep = 0.0f;
-		float m_FrameTime = 0.0f;
-		float m_LastFrameTime = 0.0f;   
+        float time_step_ = 0.0f;
+		float frame_time_ = 0.0f;
+		float last_frame_time_ = 0.0f;   
 
         //Style
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-        ImVec4 *colors = nullptr;
+        ImVec4 clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        ImVec4 *colors_ = nullptr;
         
-        LayerStack m_layer_stack;  
-        std::shared_ptr<Graph> m_graph;
-        std::shared_ptr<ProjectManager> m_project_man;
+        LayerStack layer_stack_;  
+        std::shared_ptr<Graph> graph_;
+        std::shared_ptr<ProjectManager> project_manager_;
 
-        std::shared_ptr<std::vector<Project>> m_projects;
-        std::function<void(std::unique_ptr<utils::EventBase>)> m_event_callback;
+        std::shared_ptr<std::vector<Project>> projects_;
+        std::function<void(std::unique_ptr<utils::EventBase>)> event_callback_;
 
-        std::deque<std::unique_ptr<utils::EventBase>> m_event_que;
-        Calculator m_calculator;
+        std::deque<std::unique_ptr<utils::EventBase>> event_que_;
+        Calculator calculator_;
 
 #if defined(DEBUG_BUILD)
-        std::shared_ptr<Debug::DebugTools> m_debug_tools;
+        std::shared_ptr<Debug::DebugTools> debug_tools_;
 #endif
     
     private:
-        static Application *s_Instance;
+        static Application *s_instance_;
     };
 
     Application *CreateApplication();

@@ -13,7 +13,7 @@
 #include "Types.h"
 #include "vc_config.h"
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     class Graph : public Layer
     {
@@ -23,14 +23,13 @@ namespace ViscoCorrect
 
         virtual void OnAttach() override;
         virtual void OnDetach() override;
-
         virtual void OnUIRender() override;
-
-        void SetAutofit(bool _fit = false){};
-        void Resize(const float _scale = 1.0f){};
 
         void AddCallbackToPlot(std::shared_ptr<std::function<void()>>, int);
         void RemoveCallbackFromPlot(std::shared_ptr<std::function<void()>>, int);
+
+        inline bool set_use_autofit(bool fit = false){ return use_autofit_ = fit; }
+        inline const float set_scaling_factor(const float scale = 1.0f){ return scaling_factor_ = scale; }
     
     protected:
         void Autofit(){};
@@ -39,32 +38,31 @@ namespace ViscoCorrect
         void RenderFunctions();
         void RenderCorrection();
 
-        void InstanceCoords(std::unordered_map<int, LineCoordinates> *_umap, std::map<int, int> *_raw, const double _m, const int *_startpos, bool _scale_on_x = true, bool _link_x = false);
+        void InstanceCoords(std::unordered_map<int, LineCoordinates> *coords, std::map<int, int> *raw_points, const double rate, const int *startpos, bool scale_on_x, bool use_same_x);
         void InstanceCorrection();
-    private:
 
     private:
         //interface use
-        bool b_autofit = false;
-        double m_scaling_factor = 1.0f;
+        bool use_autofit_ = false;
+        double scaling_factor_ = 1.0f;
 
-        std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot1;
-        std::vector<std::shared_ptr<std::function<void()>>> mvec_callbacks_plot2;
+        std::vector<std::shared_ptr<std::function<void()>>> callbacks_plot_1_;
+        std::vector<std::shared_ptr<std::function<void()>>> callbacks_plot_2_;
         
         //internal use
-        ImVec2 m_plot_size1;
-        ImVec2 m_plot_size2;
+        ImVec2 plot_size_1_;
+        ImVec2 plot_size_2_;
 
-        VCConfig::RawData m_raw;
+        utils::RawData raw_data_;
 
-        std::unordered_map<int, LineCoordinates> m_flow_points;
-        std::unordered_map<int, LineCoordinates> m_totalh_points;
-        std::unordered_map<int, LineCoordinates> m_visco_points;
+        std::unordered_map<int, LineCoordinates> flowrate_coords_;
+        std::unordered_map<int, LineCoordinates> totalhead_coords_;
+        std::unordered_map<int, LineCoordinates> viscosity_coords_;
 
-        std::vector<double> m_x_cq, m_y_cq, m_x_cv, m_y_cv;
-        std::vector<std::vector<double>> m_x_ch, m_y_ch;
+        std::vector<double> x_coords_q_, y_coords_q_, x_coords_v_, y_coords_v_;
+        std::vector<std::vector<double>> x_coords_h_, y_coords_h_;
     };
     
-} // namespace ViscoCorrect
+} // namespace viscocorrect
 
 #endif //VISCOCORRECT_SRC_GRAPH_H

@@ -6,9 +6,9 @@
 
 #include "imgui.h"
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
-    namespace VCConfig
+    namespace utils
     {
         struct Config
         {
@@ -17,8 +17,8 @@ namespace ViscoCorrect
         
         enum EventType
         {
-            CALC_REQ,
-            REND_REQ
+            kCalcReq,
+            kRendReq
         };
 
         struct RawData
@@ -105,9 +105,9 @@ namespace ViscoCorrect
 
         static Config s_config_instance;
 
-        inline static Config &GetConfig() { return s_config_instance; }
+        inline static Config &get_config() { return s_config_instance; }
         
-    } // namespace VCConfig
+    } // namespace utils
     
 } // namespace ViscoCorrect
 

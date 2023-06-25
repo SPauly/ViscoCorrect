@@ -5,7 +5,7 @@
 #include <functional>
 #include <cmath>
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     struct CalcParameters
     {
@@ -18,76 +18,84 @@ namespace ViscoCorrect
     {
         double c_q = 0.0f;
         double c_v = 0.0f;
-        double c_h[4] = {0.0f,0.0f,0.0f,0.0f};
+        double c_h[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     };
 
     struct LineCoordinates
     {
-        int x_coords[2];
+        int x_coords[2]; //Why did I use ints here? why not float?
         int y_coords[2];
 
-        LineCoordinates(int _x1 = 0, int _x2 = 0, int _y1 = 0, int _y2 = 0) : x_coords{_x1,_x2}, y_coords{_y1, _y2} {}
+        LineCoordinates(int x1 = 0, int x2 = 0, int y1 = 0, int y2 = 0) : x_coords{x1, x2}, y_coords{y1, y2} {}
         ~LineCoordinates() = default;
-    }; 
+    };
 
     class LinearFunction
     {
     public:
-        LinearFunction(LineCoordinates, int _xmin = 0, int _xmax = 100);
-        LinearFunction(double, int, int);
+        LinearFunction(LineCoordinates coords, int xmin = 0, int xmax = 100);
+        LinearFunction(double pitch, double x, double y);
 
-        template<typename T>
-        T f(const T _x){
-            return static_cast<T>(m * (double)_x + (b*y_scale));
-        }
-
-        template<typename T>
-        T get_x(const T _y)
+        template <typename T>
+        T f(const T x)
         {
-            return static_cast<T>(((double)_y - (b*y_scale))/m);
+            return static_cast<T>(m_ * static_cast<double> x + (b_ * y_axis_scale_));
         }
 
-        inline void ScaleYAxis(double _scale) { y_scale = _scale; }
+        template <typename T>
+        T get_x(const T y)
+        {
+            return static_cast<T>((static_cast<double> y - (b_ * y_axis_scale_)) / m_);
+        }
 
-        inline void SetRange(int _xmin, int _xmax) { xmin = _xmin; xmax = _xmax; GetRenderCoords(xmin,xmax);}
-
-        inline LineCoordinates &GetRenderCoords() { return m_render_coords; }
-        LineCoordinates &GetRenderCoords(int, int);
+        inline void set_y_axis_scale(double scale = 1.0) { y_axis_scale_ = scale; }
+        inline void SetRange(int xmin, int xmax)
+        {
+            xmin_ = xmin;
+            xmax_ = xmax;
+            get_render_coords(xmin, xmax);
+        }
+        
+        //this is unclean --> has to be revised
+        inline LineCoordinates &get_render_coords() { return render_coords_; }
+        LineCoordinates &get_render_coords(int, int);
 
     private:
-        double m = 0.0, b = 0.0;
-        double y_scale = 1.0f;
-        int xmin = 0, xmax = 100;
+        double m_ = 0.0, b_ = 0.0;
+        double y_axis_scale_ = 1.0f;
+        int xmin_ = 0, xmax_ = 100;
 
-        LineCoordinates m_render_coords;
+        LineCoordinates render_coords_;
     };
 
-    class Polynom 
+    class Polynom
     {
     public:
         template <typename... Args>
-        Polynom(Args... _args) : polynoms({_args...}) {}
-        Polynom(std::vector<double> &_ply) : polynoms(_ply){}
-        ~Polynom(){}
+        Polynom(Args... _args) : coefficients_({_args...}) {}
+        Polynom(std::vector<double> &_ply) : coefficients_(_ply) {}
+        ~Polynom() {}
 
-        template<typename T>
-        T f(const T _x){
+        template <typename T>
+        T f(const T x)
+        {
             T y = 0;
-            int inv_i = polynoms.size() - 1;
+            int inverse_iter = coefficients_.size() - 1;
 
-            for(int i = 0; i < polynoms.size(); i++)
+            for (int i = 0; i < coefficients_.size(); i++)
             {
-                y += static_cast<T>(polynoms.at(i)*std::pow((double)_x, (double)inv_i));
-                --inv_i;
+                y += static_cast<T>(coefficients_.at(i) * std::pow((double)x, (double)inverse_iter));
+                --inverse_iter;
             }
 
             return y;
         }
 
     private:
-        std::vector<double> polynoms;
+        std::vector<double> coefficients_;
     };
 
+    //remove this class since no longer needed
     class LogisticSigmoid
     {
     public:
@@ -95,43 +103,46 @@ namespace ViscoCorrect
         ~LogisticSigmoid() {}
 
         template <typename T>
-        T f(const T _x){
-            return static_cast<T>(L / (1 + exp(-k*(_x-x0)))); 
+        T f(const T _x)
+        {
+            return static_cast<T>(L / (1 + exp(-k * (_x - x0))));
         }
 
     private:
         double L, k, x0;
     };
 
-    struct Project{
+    struct Project
+    {
         Project() = default;
-        ~Project() {
-            if(func_totalhead)
+        ~Project()
+        {
+            if (func_totalhead)
                 delete func_totalhead;
-            if(func_visco)
+            if (func_visco)
                 delete func_visco;
-            if(render_params)
+            if (render_params)
                 delete render_params;
-            if(render_correction)
+            if (render_correction)
                 delete render_correction;
         }
-        //metadata
+        // metadata
         std::string name = "";
 
-        //data
+        // data
         CalcParameters parameters;
-        CorrectionFactors correction; 
+        CorrectionFactors correction;
 
-        //Calculated Data
+        // Calculated Data
         LinearFunction *func_totalhead = nullptr;
         LinearFunction *func_visco = nullptr;
         double flow_pos = 0;
         double correction_x = 0;
 
-        //render functions
+        // render functions
         std::function<void()> *render_params = nullptr;
         std::function<void()> *render_correction = nullptr;
-    };    
+    };
 }
 
-#endif //VISCOCORRECT_SRC_TYPES_H
+#endif // VISCOCORRECT_SRC_TYPES_H

@@ -1,6 +1,6 @@
 #include "DebugTools.h"
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     namespace Debug
     {

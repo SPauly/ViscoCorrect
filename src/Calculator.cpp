@@ -2,22 +2,22 @@
 
 #include <stdexcept>
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
-    Calculator::Calculator() : m_cq(m_raw_data.cq), m_cv(m_raw_data.cv)
+    Calculator::Calculator() : poly_cq_(raw_data_.cq), poly_cv_(raw_data_.cv)
     {
-        for(auto &pol : m_raw_data.ch)
+        for(auto &pol : raw_data_.ch)
         {
-            m_ch.push_back(Polynom(pol));
+            poly_ch_.push_back(Polynom(pol));
         }
     }
 
     Project *Calculator::Calculate(Project *_prj)
     {
-        _prj->func_totalhead = CreateLinearF(m_raw_data.totalhead, m_raw_data.pitch_th, _prj->parameters.total_head_m, m_raw_data.startpos_th, false);
-        _prj->func_visco = CreateLinearF(m_raw_data.viscosity, m_raw_data.pitch_v, _prj->parameters.viscosity_v, m_raw_data.startpos_v, true);
+        _prj->func_totalhead = CreateLinearF(raw_data_.totalhead, raw_data_.pitch_th, _prj->parameters.total_head_m, raw_data_.startpos_th, false);
+        _prj->func_visco = CreateLinearF(raw_data_.viscosity, raw_data_.pitch_v, _prj->parameters.viscosity_v, raw_data_.startpos_v, true);
 
-        _prj->flow_pos = FitToScale(m_raw_data.flowrates, _prj->parameters.flowrate_q, m_raw_data.startpos_f[0]);
+        _prj->flow_pos = FitToScale(raw_data_.flowrates, _prj->parameters.flowrate_q, raw_data_.startpos_f[0]);
 
         _prj->correction_x = _prj->func_visco->get_x(_prj->func_totalhead->f(_prj->flow_pos));
 
@@ -28,11 +28,11 @@ namespace ViscoCorrect
 
     CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *_obj, const double _x)
     {
-        _obj->c_v = (m_cv.f(_x) / (double)m_raw_data.stepsize_correction / 10) + 0.2;
-        _obj->c_q = (m_cq.f(_x) / (double)m_raw_data.stepsize_correction / 10) + 0.2;
-        for (int i = 0; i < m_ch.size(); i++)
+        _obj->c_v = (poly_cv_.f(_x) / (double)raw_data_.stepsize_correction / 10) + 0.2;
+        _obj->c_q = (poly_cq_.f(_x) / (double)raw_data_.stepsize_correction / 10) + 0.2;
+        for (int i = 0; i < poly_ch_.size(); i++)
         {
-            _obj->c_h[i] = (m_ch.at(i).f(_x) / (double)m_raw_data.stepsize_correction / 10) - 0.3;
+            _obj->c_h[i] = (poly_ch_.at(i).f(_x) / (double)raw_data_.stepsize_correction / 10) - 0.3;
         }
 
         return _obj;
@@ -94,4 +94,4 @@ namespace ViscoCorrect
         return new LinearFunction(_m, (_scale_on_x) ? pos : _startpos[0], (!_scale_on_x) ? pos : _startpos[1]);
     }
 
-} // namespace ViscoCorrect
+} // namespace viscocorrect

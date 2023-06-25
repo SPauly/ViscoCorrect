@@ -1,7 +1,7 @@
 #include "LayerStack.h"
 #include <algorithm>
 
-namespace ViscoCorrect
+namespace viscocorrect
 {
     LayerStack::~LayerStack()
 	{
@@ -10,41 +10,41 @@ namespace ViscoCorrect
 
 	void LayerStack::PushLayer(const std::shared_ptr<Layer> &layer)
 	{
-		mvec_layers.emplace(mvec_layers.begin() + m_layer_insert_index, layer);
-		m_layer_insert_index++;
+		layers_.emplace(layers_.begin() + layer_insert_index_, layer);
+		layer_insert_index_++;
 		layer->OnAttach();
 	}
 
 	void LayerStack::PushOverlay(const std::shared_ptr<Layer> &overlay)
 	{
-		mvec_layers.emplace_back(overlay);
+		layers_.emplace_back(overlay);
 		overlay->OnAttach();
 	}
 
 	void LayerStack::PopLayer(std::shared_ptr<Layer> layer)
 	{
-		auto it = std::find(mvec_layers.begin(), mvec_layers.begin() + m_layer_insert_index, layer);
-		if (it != mvec_layers.begin() + m_layer_insert_index)
+		auto it = std::find(layers_.begin(), layers_.begin() + layer_insert_index_, layer);
+		if (it != layers_.begin() + layer_insert_index_)
 		{
 			layer->OnDetach();
-			mvec_layers.erase(it);
-			m_layer_insert_index--;
+			layers_.erase(it);
+			layer_insert_index_--;
 		}
 	}
 
 	void LayerStack::PopOverlay(std::shared_ptr<Layer> overlay)
 	{
-		auto it = std::find(mvec_layers.begin() + m_layer_insert_index, mvec_layers.end(), overlay);
-		if (it != mvec_layers.end())
+		auto it = std::find(layers_.begin() + layer_insert_index_, layers_.end(), overlay);
+		if (it != layers_.end())
 		{
 			overlay->OnDetach();
-			mvec_layers.erase(it);
+			layers_.erase(it);
 		}
 	}
 
 	void LayerStack::clear()
 	{
-		for (std::shared_ptr<Layer> layer : mvec_layers)
+		for (std::shared_ptr<Layer> layer : layers_)
 		{
 			layer->OnDetach();
 			layer.reset();
