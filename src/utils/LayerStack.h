@@ -1,10 +1,10 @@
 #ifndef VISCOCORRECT_SRC_UTILS_LAYERSTACK_H
 #define VISCOCORRECT_SRC_UTILS_LAYERSTACK_H
 
-#include "Layer.h"
-
 #include <vector>
 #include <memory>
+
+#include "layer.h"
 
 namespace viscocorrect
 {
@@ -45,4 +45,4 @@ namespace viscocorrect
 	};
 }
 
-#endif //VISCOCORRECT_SRC_UTILS_LAYERSTACK_H
+#endif // VISCOCORRECT_SRC_UTILS_LAYERSTACK_H

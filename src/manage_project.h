@@ -1,17 +1,17 @@
 #ifndef VISCOCORRECT_SRC_PROJECTMANAGER_H
 #define VISCOCORRECT_SRC_PROJECTMANAGER_H
 
-#include <string>
 #include <memory>
 #include <vector>
 #include <functional>
 
 #include "imgui.h"
-#include "utils/Layer.h"
-#include "utils/Event.h"
-#include "utils/vc_config.h"
-#include "Types.h"
-#include "Graph.h"
+
+#include "graph.h"
+#include "utils/types.h"
+#include "utils/layer.h"
+#include "utils/event.h"
+#include "utils/properties.h"
 
 namespace viscocorrect
 {
@@ -27,9 +27,9 @@ namespace viscocorrect
 
     private:
         std::function<void(std::unique_ptr<utils::EventBase>)> event_callback_;
-        
+
         std::shared_ptr<std::vector<Project>> projects_;
     };
 }
 
-#endif //VISCOCORRECT_SRC_PROJECTMANAGER_H
+#endif // VISCOCORRECT_SRC_PROJECTMANAGER_H

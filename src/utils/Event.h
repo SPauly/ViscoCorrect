@@ -3,9 +3,8 @@
 
 #include <deque>
 #include <memory>
-#include <any>
 
-#include "vc_config.h"
+#include "properties.h"
 
 namespace viscocorrect
 {
@@ -20,14 +19,15 @@ namespace viscocorrect
 
             inline const utils::EventType &get_event_type_() { return event_type_; }
 
-            template<typename T>
-            T *GetData() { 
-                return static_cast<T*>(GetDataImpl());
-            } 
+            template <typename T>
+            T *GetData()
+            {
+                return static_cast<T *>(GetDataImpl());
+            }
 
-        protected:  
+        protected:
             virtual void *GetDataImpl() { return nullptr; }
-            
+
         private:
             utils::EventType event_type_;
         };
@@ -36,12 +36,12 @@ namespace viscocorrect
         class Event : public EventBase
         {
         public:
-            Event(utils::EventType etype, T *data, std::function<void(T)> *callback = nullptr) 
+            Event(utils::EventType etype, T *data, std::function<void(T)> *callback = nullptr)
                 : EventBase(etype), data_(data), callback_(callback) {}
             ~Event() {}
 
         protected:
-            virtual void *GetDataImpl() override { return data_;}
+            virtual void *GetDataImpl() override { return data_; }
 
         private:
             T *data_;
@@ -55,4 +55,4 @@ namespace viscocorrect
     }
 } // namespace ViscoCorrect
 
-#endif //VISCOCORRECT_SRC_UTILS_EVENT_H
+#endif // VISCOCORRECT_SRC_UTILS_EVENT_H

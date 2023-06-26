@@ -1,4 +1,4 @@
-#include "Calculator.h"
+#include "calculator.h"
 
 #include <stdexcept>
 
@@ -6,7 +6,7 @@ namespace viscocorrect
 {
     Calculator::Calculator() : poly_cq_(raw_data_.cq), poly_cv_(raw_data_.cv)
     {
-        for(auto &pol : raw_data_.ch)
+        for (auto &pol : raw_data_.ch)
         {
             poly_ch_.push_back(Polynom(pol));
         }
@@ -84,7 +84,7 @@ namespace viscocorrect
         double pos;
         try
         {
-            pos = FitToScale(_raw_scale, _input, (_scale_on_x) ? _startpos[0] : _startpos[1]); //sometimes setting it to _startpos[0] works better...
+            pos = FitToScale(_raw_scale, _input, (_scale_on_x) ? _startpos[0] : _startpos[1]); // sometimes setting it to _startpos[0] works better...
         }
         catch (const std::runtime_error &e)
         {

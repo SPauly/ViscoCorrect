@@ -9,9 +9,9 @@
 
 #include "imgui.h"
 
-#include "Layer.h"
-#include "Types.h"
-#include "vc_config.h"
+#include "layer.h"
+#include "types.h"
+#include "properties.h"
 
 namespace viscocorrect
 {

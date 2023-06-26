@@ -1,7 +1,7 @@
-#include "Application.h"
+#include "application.h"
 
-
-int main(){
+int main()
+{
     viscocorrect::Application *app = viscocorrect::CreateApplication();
     app->Run();
     delete app;

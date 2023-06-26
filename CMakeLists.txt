@@ -62,13 +62,13 @@ target_link_libraries(implot imgui)
 
 #Application
 add_executable(ViscoCorrect
-    "${PROJECT_SOURCE_DIR}/src/utils/Types.cpp"
-    "${PROJECT_SOURCE_DIR}/src/utils/LayerStack.cpp"
+    "${PROJECT_SOURCE_DIR}/src/utils/types.cpp"
+    "${PROJECT_SOURCE_DIR}/src/utils/layerStack.cpp"
     "${PROJECT_SOURCE_DIR}/src/main.cpp"
-    "${PROJECT_SOURCE_DIR}/src/Application.cpp"    
-    "${PROJECT_SOURCE_DIR}/src/Graph.cpp"
-    "${PROJECT_SOURCE_DIR}/src/Calculator.cpp"
-    "${PROJECT_SOURCE_DIR}/src/ProjectManager.cpp"
+    "${PROJECT_SOURCE_DIR}/src/application.cpp"    
+    "${PROJECT_SOURCE_DIR}/src/graph.cpp"
+    "${PROJECT_SOURCE_DIR}/src/calculator.cpp"
+    "${PROJECT_SOURCE_DIR}/src/manage_project.cpp"
 )
 
 target_include_directories(ViscoCorrect PUBLIC

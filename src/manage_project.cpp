@@ -1,8 +1,8 @@
-#include "ProjectManager.h"
+#include "manage_project.h"
 
 namespace viscocorrect
 {
-    ProjectManager::ProjectManager(std::shared_ptr<std::vector<Project>> projects, std::function<void(std::unique_ptr<utils::EventBase>)> event_callback) 
+    ProjectManager::ProjectManager(std::shared_ptr<std::vector<Project>> projects, std::function<void(std::unique_ptr<utils::EventBase>)> event_callback)
         : projects_(projects), event_callback_(event_callback)
     {
     }
@@ -13,11 +13,11 @@ namespace viscocorrect
 
         for (auto &proj : *projects_)
         {
-            //start new heading et.
+            // start new heading et.
             ImGui::InputInt("Flowrate Q", &proj.parameters.flowrate_q);
             ImGui::InputInt("Total head H in m", &proj.parameters.total_head_m);
             ImGui::InputInt("Kinematic viscosity v in mm^2/s", &proj.parameters.viscosity_v);
-            if(ImGui::Button("Calculate"))
+            if (ImGui::Button("Calculate"))
             {
                 event_callback_(std::make_unique<utils::Event<Project>>(utils::EventType::kCalcReq, &proj));
             }

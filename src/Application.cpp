@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "application.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
@@ -109,7 +109,7 @@ namespace viscocorrect
         // clear layerstack
         layer_stack_.clear();
         event_que_.clear();
-        
+
         // Cleanup
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
@@ -135,7 +135,7 @@ namespace viscocorrect
             // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
             glfwPollEvents();
 
-            //Handle application events
+            // Handle application events
             HandleEvents();
 
             for (auto &layer : layer_stack_)
@@ -203,7 +203,7 @@ namespace viscocorrect
         ImGuiStyle &style = ImGui::GetStyle();
         style.WindowRounding = 3.0f;
 
-        //Set the colors
+        // Set the colors
         colors_ = ImGui::GetStyle().Colors;
         colors_[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
         colors_[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
@@ -264,7 +264,7 @@ namespace viscocorrect
 
     void Application::HandleEvents()
     {
-        for(int i = 0; i < event_que_.size(); i++)
+        for (int i = 0; i < event_que_.size(); i++)
         {
             auto event = std::move(event_que_.front());
             switch (event->get_event_type_())
@@ -272,7 +272,7 @@ namespace viscocorrect
             case utils::kCalcReq:
                 calculator_.Calculate(event->GetData<Project>());
                 break;
-            
+
             default:
                 break;
             }

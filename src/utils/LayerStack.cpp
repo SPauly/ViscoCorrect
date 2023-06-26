@@ -1,9 +1,10 @@
-#include "LayerStack.h"
+#include "layerstack.h"
+
 #include <algorithm>
 
 namespace viscocorrect
 {
-    LayerStack::~LayerStack()
+	LayerStack::~LayerStack()
 	{
 		clear();
 	}
