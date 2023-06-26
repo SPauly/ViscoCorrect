@@ -26,7 +26,7 @@ namespace viscocorrect
         LinearFunction *CreateLinearF(const std::map<int, int> &_raw_scale, const double _m, const int _input, const int *_startpos = nullptr, bool _scale_on_x = true);
 
     private:
-        utils::RawData raw_data_;
+        util::RawData raw_data_;
 
         PolynomialFunction poly_cv_;
         PolynomialFunction poly_cq_;

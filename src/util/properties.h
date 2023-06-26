@@ -1,5 +1,5 @@
-#ifndef VISCOCORRECT_SRC_UTILS_VC_CONFIG_H
-#define VISCOCORRECT_SRC_UTILS_VC_CONFIG_H
+#ifndef VISCOCORRECT_SRC_UTIL_PROPERTIES_H
+#define VISCOCORRECT_SRC_UTIL_PROPERTIES_H
 
 #include <map>
 #include <vector>
@@ -8,38 +8,30 @@
 
 namespace viscocorrect
 {
-    namespace utils
+    namespace internal
     {
-        struct Config
-        {
+        // Table sizes
+        const ImVec2 kTableSize{434, 625};
+        const ImVec2 kTableParameterSize{434, 304};
+        const ImVec2 kTableCorrectionSize{434, 284};
 
-        };
-        
-        enum EventType
-        {
-            kCalcReq,
-            kRendReq
-        };
+        // Correction Factors
+        const int kCorrectionScale = 22; // pixels between each correction factor
+        const int kCutoffQ[2]{242, 384};
+        const int kCutoffV[2]{122, 363};
+        const int kCutoffH[2]{0, 1};
+        const std::vector<double> kCoefficientsQ{4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324, -1.1870337647376101, 176.52190832690891, -10276.558815133236};
+        const std::vector<double> kCoefficientsV{2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714, -0.037300324399145976, 4.2391803778160968, -6.2364025573465849};
+        const std::vector<double> kCoefficientsH;
 
-        struct RawData
-        {
-            //Table sizes
-            const ImVec2 table_size{434,625};
-            const ImVec2 table_param_size{434, 304};
-            const ImVec2 table_correct_size{434, 284};
+        // Parameters
+        const int kStartFlowrate[2]{0, 0};
+        const int kStartTotalH[2]{4, 1};    // have to check if that is correct
+        const int kStartVisco[2]{105, 304}; // have to check this
+        const double kPitchTotalH = (553.0 - 327.0) / 430.0;
+        const double kPitchVisco = (31.0 - 304.0) / (377.0 - 234.0);
 
-            //Correction Factors
-            int stepsize_correction = 22;
-
-            const int cutoff_cq[2]{242, 384};
-            std::vector<double> cq{4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324, -1.1870337647376101, 176.52190832690891, -10276.558815133236};
-            const int cutoff_cv[2]{122,363};
-            std::vector<double> cv{2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714, -0.037300324399145976, 4.2391803778160968, -6.2364025573465849};
-            std::vector<std::vector<double>> ch;
-
-            //flowrate
-            int startpos_f[2]{0,0};
-            std::map<int, int> flowrates{
+        const std::map<int, int> kFlowrateScale{
             {6, 0},
             {7, 14},
             {8, 9},
@@ -68,10 +60,7 @@ namespace viscocorrect
             {1500, 30},
             {2000, 22}};
 
-            //total head
-            int startpos_th[2]{4, 1}; // have to check if that is correct
-            const double pitch_th = (553.0 - 327.0) / 430.0;
-            std::map<int, int> totalhead{
+        const std::map<int, int> kTotalHeadScale{
             {5, 0},
             {10, 15},
             {20, 12},
@@ -80,10 +69,7 @@ namespace viscocorrect
             {100, 9},
             {200, 13}};
 
-            //viscosity
-            int startpos_v[2] {105, 304}; // have to check this
-            const double pitch_v = (31.0 - 304.0) / (377.0 - 234.0);
-            std::map<int, int> viscosity{
+        std::map<int, int> kViscoScale{
             {10, 0},
             {20, 27},
             {30, 16},
@@ -101,15 +87,9 @@ namespace viscocorrect
             {2000, 26},
             {3000, 14},
             {4000, 10}};
-        };
 
-        static Config s_config_instance;
+    } // namespace internal
 
-        inline static Config &get_config() { return s_config_instance; }
-        
-    } // namespace utils
-    
 } // namespace ViscoCorrect
 
-
-#endif //VISCOCORRECT_SRC_UTILS_VC_CONFIG_H
+#endif // VISCOCORRECT_SRC_UTIL_PROPERTIES_H

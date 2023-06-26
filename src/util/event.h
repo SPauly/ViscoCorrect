@@ -8,16 +8,22 @@
 
 namespace viscocorrect
 {
-    namespace utils
+    namespace util
     {
+        enum EventType
+        {
+            kCalcReq,
+            kRendReq
+        };
+
         class EventBase
         {
         public:
             EventBase() = default;
-            EventBase(utils::EventType etype) : event_type_(etype) {}
+            EventBase(util::EventType etype) : event_type_(etype) {}
             virtual ~EventBase() {}
 
-            inline const utils::EventType &get_event_type_() { return event_type_; }
+            inline const util::EventType &get_event_type_() { return event_type_; }
 
             template <typename T>
             T *GetData()
@@ -29,14 +35,14 @@ namespace viscocorrect
             virtual void *GetDataImpl() { return nullptr; }
 
         private:
-            utils::EventType event_type_;
+            util::EventType event_type_;
         };
 
         template <typename T>
         class Event : public EventBase
         {
         public:
-            Event(utils::EventType etype, T *data, std::function<void(T)> *callback = nullptr)
+            Event(util::EventType etype, T *data, std::function<void(T)> *callback = nullptr)
                 : EventBase(etype), data_(data), callback_(callback) {}
             ~Event() {}
 

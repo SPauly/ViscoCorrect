@@ -53,7 +53,7 @@ namespace viscocorrect
         ImVec2 plot_size_1_;
         ImVec2 plot_size_2_;
 
-        utils::RawData raw_data_;
+        util::RawData raw_data_;
 
         std::unordered_map<int, LineCoordinates> flowrate_coords_;
         std::unordered_map<int, LineCoordinates> totalhead_coords_;

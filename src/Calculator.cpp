@@ -4,7 +4,7 @@
 
 namespace viscocorrect
 {
-    Calculator::Calculator() : poly_cq_(raw_data_.cq), poly_cv_(raw_data_.cv)
+    Calculator::Calculator() : poly_cq_(raw_data_.kCoefficientsQ), poly_cv_(raw_data_.kCoefficientsV)
     {
         for (auto &pol : raw_data_.ch)
         {
@@ -14,10 +14,10 @@ namespace viscocorrect
 
     Project *Calculator::Calculate(Project *_prj)
     {
-        _prj->func_totalhead = CreateLinearF(raw_data_.totalhead, raw_data_.pitch_th, _prj->parameters.total_head_m, raw_data_.startpos_th, false);
-        _prj->func_visco = CreateLinearF(raw_data_.viscosity, raw_data_.pitch_v, _prj->parameters.viscosity_v, raw_data_.startpos_v, true);
+        _prj->func_totalhead = CreateLinearF(raw_data_.kTotalHeadScale, raw_data_.kPitchTotalH, _prj->parameters.total_head_m, raw_data_.kStartTotalH, false);
+        _prj->func_visco = CreateLinearF(raw_data_.kViscoScale, raw_data_.kPitchVisco, _prj->parameters.viscosity_v, raw_data_.kStartVisco, true);
 
-        _prj->flow_pos = FitToScale(raw_data_.flowrates, _prj->parameters.flowrate_q, raw_data_.startpos_f[0]);
+        _prj->flow_pos = FitToScale(raw_data_.kFlowrateScale, _prj->parameters.flowrate_q, raw_data_.kStartFlowrate[0]);
 
         _prj->correction_x = _prj->func_visco->get_x(_prj->func_totalhead->f(_prj->flow_pos));
 
@@ -28,11 +28,11 @@ namespace viscocorrect
 
     CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *_obj, const double _x)
     {
-        _obj->c_v = (poly_cv_.f(_x) / (double)raw_data_.stepsize_correction / 10) + 0.2;
-        _obj->c_q = (poly_cq_.f(_x) / (double)raw_data_.stepsize_correction / 10) + 0.2;
+        _obj->c_v = (poly_cv_.f(_x) / (double)raw_data_.kCorrectionScale / 10) + 0.2;
+        _obj->c_q = (poly_cq_.f(_x) / (double)raw_data_.kCorrectionScale / 10) + 0.2;
         for (int i = 0; i < poly_ch_.size(); i++)
         {
-            _obj->c_h[i] = (poly_ch_.at(i).f(_x) / (double)raw_data_.stepsize_correction / 10) - 0.3;
+            _obj->c_h[i] = (poly_ch_.at(i).f(_x) / (double)raw_data_.kCorrectionScale / 10) - 0.3;
         }
 
         return _obj;

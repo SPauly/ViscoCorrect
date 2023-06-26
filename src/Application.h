@@ -35,7 +35,7 @@ namespace viscocorrect
         ~Application() = default;
 
         void Run();
-        void PushEvent(std::unique_ptr<utils::EventBase> _event);
+        void PushEvent(std::unique_ptr<util::EventBase> _event);
 
         template <typename T>
         void PushLayer();
@@ -77,9 +77,9 @@ namespace viscocorrect
         std::shared_ptr<ProjectManager> project_manager_;
 
         std::shared_ptr<std::vector<Project>> projects_;
-        std::function<void(std::unique_ptr<utils::EventBase>)> event_callback_;
+        std::function<void(std::unique_ptr<util::EventBase>)> event_callback_;
 
-        std::deque<std::unique_ptr<utils::EventBase>> event_que_;
+        std::deque<std::unique_ptr<util::EventBase>> event_que_;
         Calculator calculator_;
 
 #if defined(DEBUG_BUILD)

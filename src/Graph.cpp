@@ -6,12 +6,12 @@ namespace viscocorrect
 {
     Graph::Graph()
     {
-        plot_size_1_ = raw_data_.table_param_size;
-        plot_size_2_ = raw_data_.table_correct_size;
+        plot_size_1_ = raw_data_.kTableParameterSize;
+        plot_size_2_ = raw_data_.kTableCorrectionSize;
         // instanciate all the coordinates
-        CreateLineCoords(&flowrate_coords_, &raw_data_.flowrates, 0, raw_data_.startpos_f, true, true);
-        CreateLineCoords(&totalhead_coords_, &raw_data_.totalhead, raw_data_.pitch_th, raw_data_.startpos_th, false);
-        CreateLineCoords(&viscosity_coords_, &raw_data_.viscosity, raw_data_.pitch_v, raw_data_.startpos_v);
+        CreateLineCoords(&flowrate_coords_, &raw_data_.kFlowrateScale, 0, raw_data_.kStartFlowrate, true, true);
+        CreateLineCoords(&totalhead_coords_, &raw_data_.kTotalHeadScale, raw_data_.kPitchTotalH, raw_data_.kStartTotalH, false);
+        CreateLineCoords(&viscosity_coords_, &raw_data_.kViscoScale, raw_data_.kPitchVisco, raw_data_.kStartVisco);
 
         CreateCorrectionPoints();
     }
@@ -221,17 +221,17 @@ namespace viscocorrect
 
     void Graph::CreateCorrectionPoints()
     {
-        PolynomialFunction correct_v{raw_data_.cv};
-        PolynomialFunction correct_q{raw_data_.cq};
+        PolynomialFunction correct_v{raw_data_.kCoefficientsV};
+        PolynomialFunction correct_q{raw_data_.kCoefficientsQ};
         std::vector<PolynomialFunction> correct_h;
 
-        for (int i = raw_data_.cutoff_cv[0]; i < raw_data_.cutoff_cv[1]; i++)
+        for (int i = raw_data_.kCutoffV[0]; i < raw_data_.kCutoffV[1]; i++)
         {
             x_coords_v_.push_back(i);
             y_coords_v_.push_back(correct_v.f((double)i));
         }
 
-        for (int i = raw_data_.cutoff_cq[0]; i < raw_data_.cutoff_cq[1]; i++)
+        for (int i = raw_data_.kCutoffQ[0]; i < raw_data_.kCutoffQ[1]; i++)
         {
             x_coords_q_.push_back(i);
             y_coords_q_.push_back(correct_q.f((double)i));

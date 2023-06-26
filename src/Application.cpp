@@ -182,9 +182,9 @@ namespace viscocorrect
         Shutdown();
     }
 
-    void Application::PushEvent(std::unique_ptr<utils::EventBase> _event)
+    void Application::PushEvent(std::unique_ptr<util::EventBase> _event)
     {
-        utils::PushEvent(&event_que_, std::move(_event));
+        util::PushEvent(&event_que_, std::move(_event));
     }
 
     template <typename T>
@@ -269,7 +269,7 @@ namespace viscocorrect
             auto event = std::move(event_que_.front());
             switch (event->get_event_type_())
             {
-            case utils::kCalcReq:
+            case util::kCalcReq:
                 calculator_.Calculate(event->GetData<Project>());
                 break;
 
