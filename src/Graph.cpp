@@ -9,11 +9,11 @@ namespace viscocorrect
         plot_size_1_ = raw_data_.table_param_size;
         plot_size_2_ = raw_data_.table_correct_size;
         // instanciate all the coordinates
-        InstanceCoords(&flowrate_coords_, &raw_data_.flowrates, 0, raw_data_.startpos_f, true, true);
-        InstanceCoords(&totalhead_coords_, &raw_data_.totalhead, raw_data_.pitch_th, raw_data_.startpos_th, false);
-        InstanceCoords(&viscosity_coords_, &raw_data_.viscosity, raw_data_.pitch_v, raw_data_.startpos_v);
+        CreateLineCoords(&flowrate_coords_, &raw_data_.flowrates, 0, raw_data_.startpos_f, true, true);
+        CreateLineCoords(&totalhead_coords_, &raw_data_.totalhead, raw_data_.pitch_th, raw_data_.startpos_th, false);
+        CreateLineCoords(&viscosity_coords_, &raw_data_.viscosity, raw_data_.pitch_v, raw_data_.startpos_v);
 
-        InstanceCorrection();
+        CreateCorrectionPoints();
     }
 
     Graph::~Graph()
@@ -165,11 +165,11 @@ namespace viscocorrect
         }
     }
 
-    void Graph::InstanceCoords(std::unordered_map<int, LineCoordinates> *coords, std::map<int, int> *raw_points, const double rate, const int *startpos, bool scale_on_x, bool use_same_x)
+    void Graph::CreateLineCoords(std::unordered_map<int, LineCoordinates> *coords, std::map<int, int> *raw_points, const double rate, const int *startpos, bool scale_on_x, bool use_same_x)
     {
         coords->clear();
         bool set_start = false;
-        
+
         if (!startpos)
         {
             startpos = new int[2]{0, 0};
@@ -219,7 +219,7 @@ namespace viscocorrect
         }
     }
 
-    void Graph::InstanceCorrection()
+    void Graph::CreateCorrectionPoints()
     {
         Polynom correct_v{raw_data_.cv};
         Polynom correct_q{raw_data_.cq};

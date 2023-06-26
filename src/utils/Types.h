@@ -23,7 +23,7 @@ namespace viscocorrect
 
     struct LineCoordinates
     {
-        int x_coords[2]; //Why did I use ints here? why not float?
+        int x_coords[2]; // Why did I use ints here? why not float?
         int y_coords[2];
 
         LineCoordinates(int x1 = 0, int x2 = 0, int y1 = 0, int y2 = 0) : x_coords{x1, x2}, y_coords{y1, y2} {}
@@ -39,13 +39,13 @@ namespace viscocorrect
         template <typename T>
         T f(const T x)
         {
-            return static_cast<T>(m_ * static_cast<double> x + (b_ * y_axis_scale_));
+            return static_cast<T>(m_ * static_cast<double>(x) + (b_ * y_axis_scale_));
         }
 
         template <typename T>
         T get_x(const T y)
         {
-            return static_cast<T>((static_cast<double> y - (b_ * y_axis_scale_)) / m_);
+            return static_cast<T>((static_cast<double>(y) - (b_ * y_axis_scale_)) / m_);
         }
 
         inline void set_y_axis_scale(double scale = 1.0) { y_axis_scale_ = scale; }
@@ -55,8 +55,8 @@ namespace viscocorrect
             xmax_ = xmax;
             get_render_coords(xmin, xmax);
         }
-        
-        //this is unclean --> has to be revised
+
+        // this is unclean --> has to be revised
         inline LineCoordinates &get_render_coords() { return render_coords_; }
         LineCoordinates &get_render_coords(int, int);
 
@@ -95,7 +95,7 @@ namespace viscocorrect
         std::vector<double> coefficients_;
     };
 
-    //remove this class since no longer needed
+    // remove this class since no longer needed
     class LogisticSigmoid
     {
     public:
