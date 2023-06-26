@@ -186,7 +186,7 @@ namespace viscocorrect
 
                 LinearFunction temp_func(rate, (scale_on_x) ? (int)it_total_dist : startpos[0], (scale_on_x) ? startpos[1] : (int)it_total_dist);
 
-                coords->insert(std::make_pair(pair.first, temp_func.get_render_coords(0, plot_size_1_.x)));
+                coords->insert(std::make_pair(pair.first, temp_func.CreateLineCoordinates(0, plot_size_1_.x)));
             }
         }
         else
@@ -221,9 +221,9 @@ namespace viscocorrect
 
     void Graph::CreateCorrectionPoints()
     {
-        Polynom correct_v{raw_data_.cv};
-        Polynom correct_q{raw_data_.cq};
-        std::vector<Polynom> correct_h;
+        PolynomialFunction correct_v{raw_data_.cv};
+        PolynomialFunction correct_q{raw_data_.cq};
+        std::vector<PolynomialFunction> correct_h;
 
         for (int i = raw_data_.cutoff_cv[0]; i < raw_data_.cutoff_cv[1]; i++)
         {

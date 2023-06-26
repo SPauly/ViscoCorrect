@@ -28,9 +28,9 @@ namespace viscocorrect
     private:
         utils::RawData raw_data_;
 
-        Polynom poly_cv_;
-        Polynom poly_cq_;
-        std::vector<Polynom> poly_ch_;
+        PolynomialFunction poly_cv_;
+        PolynomialFunction poly_cq_;
+        std::vector<PolynomialFunction> poly_ch_;
     };
 } // namespace viscocorrect
 

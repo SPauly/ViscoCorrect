@@ -8,7 +8,7 @@ namespace viscocorrect
     {
         for (auto &pol : raw_data_.ch)
         {
-            poly_ch_.push_back(Polynom(pol));
+            poly_ch_.push_back(PolynomialFunction(pol));
         }
     }
 
