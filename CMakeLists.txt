@@ -62,18 +62,18 @@ target_link_libraries(implot imgui)
 
 #Application
 add_executable(ViscoCorrect
-    "${PROJECT_SOURCE_DIR}/src/utils/types.cpp"
-    "${PROJECT_SOURCE_DIR}/src/utils/layerStack.cpp"
     "${PROJECT_SOURCE_DIR}/src/main.cpp"
     "${PROJECT_SOURCE_DIR}/src/application.cpp"    
     "${PROJECT_SOURCE_DIR}/src/graph.cpp"
     "${PROJECT_SOURCE_DIR}/src/calculator.cpp"
     "${PROJECT_SOURCE_DIR}/src/manage_project.cpp"
+    "${PROJECT_SOURCE_DIR}/src/util/layerstack.cpp"
+    "${PROJECT_SOURCE_DIR}/src/util/properties.cpp"
 )
 
 target_include_directories(ViscoCorrect PUBLIC
     "${PROJECT_SOURCE_DIR}/src/"    
-    "${PROJECT_SOURCE_DIR}/src/utils/"    
+    "${PROJECT_SOURCE_DIR}/src/util/"    
     "${PROJECT_SOURCE_DIR}/external/imgui"
     "${PROJECT_SOURCE_DIR}/external/imgui/backends"
     "${PROJECT_SOURCE_DIR}/external/implot"
@@ -99,14 +99,14 @@ if(BUILD_DEBUG_FEATURES)
     add_subdirectory(external/gsl)
 
     add_library(debug_tools 
-        "${PROJECT_SOURCE_DIR}/src/utils/Debugging/DebugTools.cpp"
-        "${PROJECT_SOURCE_DIR}/src/utils/Debugging/CurveFitting.cpp"
+        "${PROJECT_SOURCE_DIR}/src/debug/DebugTools.cpp"
+        "${PROJECT_SOURCE_DIR}/src/debug/CurveFitting.cpp"
     )
 
     target_include_directories(debug_tools PUBLIC
         "${PROJECT_SOURCE_DIR}/src/"   
-        "${PROJECT_SOURCE_DIR}/src/utils/"
-        "${PROJECT_SOURCE_DIR}/src/utils/Debug"
+        "${PROJECT_SOURCE_DIR}/src/util/"
+        "${PROJECT_SOURCE_DIR}/src/debug"
         "${PROJECT_SOURCE_DIR}/external/imgui"
         "${PROJECT_SOURCE_DIR}/external/imgui/backends"
         "${PROJECT_SOURCE_DIR}/external/implot"

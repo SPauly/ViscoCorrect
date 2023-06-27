@@ -5,8 +5,8 @@
 #include <memory>
 #include <map>
 
-#include "utils/types.h"
-#include "utils/properties.h"
+#include "project.h"
+#include "util/mathematical_functions.h"
 
 namespace viscocorrect
 {
@@ -22,15 +22,13 @@ namespace viscocorrect
     protected:
         // have to make these more convenient anyways
         const double FitToScale(const std::map<int, int> &raw_scale_units, const int input, const int startpos = 0);
-        LinearFunction *CreateLinearF(const double rate, const double pos_var, bool _scale_on_x = true, const int _other_coordinate = 0);
-        LinearFunction *CreateLinearF(const std::map<int, int> &_raw_scale, const double _m, const int _input, const int *_startpos = nullptr, bool _scale_on_x = true);
+        util::LinearFunction *CreateLinearF(const double rate, const double pos_var, bool _scale_on_x = true, const int _other_coordinate = 0);
+        util::LinearFunction *CreateLinearF(const std::map<int, int> &_raw_scale, const double _m, const int _input, const int *_startpos = nullptr, bool _scale_on_x = true);
 
     private:
-        util::RawData raw_data_;
-
-        PolynomialFunction poly_cv_;
-        PolynomialFunction poly_cq_;
-        std::vector<PolynomialFunction> poly_ch_;
+        util::PolynomialFunction poly_cv_;
+        util::PolynomialFunction poly_cq_;
+        std::vector<util::PolynomialFunction> poly_ch_;
     };
 } // namespace viscocorrect
 

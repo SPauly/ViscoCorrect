@@ -20,10 +20,10 @@
 #include "graph.h"
 #include "manage_project.h"
 #include "calculator.h"
-#include "utils/layerstack.h"
-#include "utils/event.h"
+#include "util/layerstack.h"
+#include "util/event.h"
 #if defined(DEBUG_BUILD)
-#include "utils/Debugging/DebugTools.h"
+#include "debug/DebugTools.h"
 #endif
 
 namespace viscocorrect
@@ -39,7 +39,7 @@ namespace viscocorrect
 
         template <typename T>
         void PushLayer();
-        void PushLayer(const std::shared_ptr<Layer> &);
+        void PushLayer(const std::shared_ptr<util::Layer> &);
 
         inline std::shared_ptr<Graph> get_graph() { return graph_; }
         static Application *get_instance() { return s_instance_; };
@@ -72,7 +72,7 @@ namespace viscocorrect
         ImVec4 clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
         ImVec4 *colors_ = nullptr;
 
-        LayerStack layer_stack_;
+        util::LayerStack layer_stack_;
         std::shared_ptr<Graph> graph_;
         std::shared_ptr<ProjectManager> project_manager_;
 

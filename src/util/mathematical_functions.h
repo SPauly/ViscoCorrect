@@ -2,6 +2,7 @@
 #define VISCOCORRECT_SRC_UTIL_MATHEMATICAL_FUNCTIONS_H
 
 #include <vector>
+#include <cmath>
 
 namespace viscocorrect
 {
@@ -17,6 +18,7 @@ namespace viscocorrect
         class LineCoordinates
         {
         public:
+            LineCoordinates();
             LineCoordinates(const std::vector<T> &x, const std::vector<T> &y);
             ~LineCoordinates();
 
@@ -30,27 +32,29 @@ namespace viscocorrect
             };
             typedef std::vector<std::pair<T, T>> PairNotation; // PairNotation is an array of x and y values
 
-            inline const StorageNotation &get() { return storage_notation_; }
-            inline const ArrayNotation &get_array_notation() { return array_notation_; }
-            inline const PairNotation &get_pair_notation() { return pair_notation_; }
-            inline const size_t get_number_coordinates() { return x_coords_.size(); }
+            inline const StorageNotation &get() const { return storage_notation_; }
+            inline ArrayNotation &get_array_notation() { return array_notation_; }
+            inline const PairNotation &get_pair_notation() const { return pair_notation_; }
+            inline const size_t get_number_coordinates() const { return number_coordinates_; }
 
         private:
             StorageNotation storage_notation_;
             ArrayNotation array_notation_;
             PairNotation pair_notation_;
+
+            size_t number_coordinates_;
         };
 
         class LinearFunction
         {
         public:
-            LinearFunction::LinearFunction(LineCoordinates<float> coords)
+            LinearFunction(LineCoordinates<float> coords)
             {
                 m_ = static_cast<double>(coords.get().x_coords[1] - coords.get().y_coords[0]) / (coords.get().x_coords[1] - coords.get().x_coords[0]);
                 b_ = static_cast<double>(coords.get().y_coords[0] - (coords.get().x_coords[0] * m_));
             }
 
-            LinearFunction::LinearFunction(double pitch, double x, double y) : m_(pitch)
+            LinearFunction(double pitch, double x, double y) : m_(pitch)
             {
                 b_ = static_cast<double>(y - (m_ * x));
             }
@@ -96,14 +100,19 @@ namespace viscocorrect
         //----------------------------------------------------------
         // template functions implementation
         template <typename T>
+        LineCoordinates<T>::LineCoordinates() : LineCoordinates<T>({0}, {0}) {}
+
+        template <typename T>
         LineCoordinates<T>::LineCoordinates(const std::vector<T> &x, const std::vector<T> &y) : storage_notation_{x, y}
         {
-            array_notation_.x_coords = storage_notation_.x_coords_.data();
-            array_notation_.y_coords = storage_notation_.y_coords_.data();
+            number_coordinates_ = storage_notation_.x_coords.size();
+
+            array_notation_.x_coords = storage_notation_.x_coords.data();
+            array_notation_.y_coords = storage_notation_.y_coords.data();
 
             for (int i = 0; i < number_coordinates_; i++)
             {
-                pair_notation_.push_back(std::make_pair<T, T>(storage_notation_.x_coords_.at(i), storage_notation_.y_coords_.at(i)));
+                pair_notation_.push_back(std::make_pair(storage_notation_.x_coords.at(i), storage_notation_.y_coords.at(i)));
             }
         }
 
@@ -114,8 +123,8 @@ namespace viscocorrect
             array_notation_.y_coords = nullptr;
 
             pair_notation_.clear();
-            storage_notation_.x_coords_.clear();
-            storage_notation_.y_coords_.clear();
+            storage_notation_.x_coords.clear();
+            storage_notation_.y_coords.clear();
         }
 
         template <typename T>

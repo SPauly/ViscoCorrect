@@ -3,17 +3,20 @@
 
 namespace viscocorrect
 {
-    class Layer
+    namespace util
     {
-    public:
-        virtual ~Layer() = default;
+        class Layer
+        {
+        public:
+            virtual ~Layer() = default;
 
-        virtual void OnAttach(){};
-        virtual void OnDetach(){};
+            virtual void OnAttach(){};
+            virtual void OnDetach(){};
 
-        virtual void OnUpdate(float ts){};
-        virtual void OnUIRender(){};
-    };
-}
+            virtual void OnUpdate(float ts){};
+            virtual void OnUIRender(){};
+        };
+    } // namespace util
+} // namespace viscocorrect
 
-#endif //VISCOCORRECT_SRC_UTILS_LAYER_H
+#endif // VISCOCORRECT_SRC_UTILS_LAYER_H

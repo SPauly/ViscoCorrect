@@ -1,5 +1,6 @@
-#include "CurveFitting.h"
-#include "Application.h"
+#include "debug/CurveFitting.h"
+
+#include "application.h"
 
 namespace viscocorrect
 {
@@ -50,9 +51,13 @@ namespace viscocorrect
                 b_renderplot = false;
             }
 
-            ImGui::RadioButton("1Polynom", &poly1, 1); ImGui::SameLine(); ImGui::RadioButton("1Logistical", &poly1, 0);
+            ImGui::RadioButton("1Polynom", &poly1, 1);
+            ImGui::SameLine();
+            ImGui::RadioButton("1Logistical", &poly1, 0);
             ImGui::InputInt("1Parameters", &param1);
-            ImGui::RadioButton("2Polynom", &poly2, 1); ImGui::SameLine(); ImGui::RadioButton("2Logistical", &poly2, 0);
+            ImGui::RadioButton("2Polynom", &poly2, 1);
+            ImGui::SameLine();
+            ImGui::RadioButton("2Logistical", &poly2, 0);
             ImGui::InputInt("2Parameters", &param2);
 
             if (ImGui::Button("Refresh Curve"))

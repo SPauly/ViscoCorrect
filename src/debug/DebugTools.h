@@ -6,17 +6,17 @@
 #include <functional>
 #include <string>
 
-#include "Layer.h"
-#include "LayerStack.h"
 #include "imgui.h"
 
-#include "CurveFitting.h"
+#include "debug/CurveFitting.h"
+#include "util/layer.h"
+#include "util/layerstack.h"
 
 namespace viscocorrect
 {
     namespace Debug
     {
-        class DebugTools : public Layer
+        class DebugTools : public util::Layer
         {
         public:
             DebugTools();
@@ -31,11 +31,11 @@ namespace viscocorrect
             }
 
         private:
-            LayerStack mvec_tools;
+            util::LayerStack mvec_tools;
             CurveFitting m_debug_curve;
         };
 
-        class DebugToolBase : public Layer
+        class DebugToolBase : public util::Layer
         {
         public:
             DebugToolBase() = default;
@@ -46,7 +46,7 @@ namespace viscocorrect
 
             // overload this function
             virtual void Run(){};
-            
+
             template <typename Func, typename Obj>
             std::unique_ptr<std::function<void()>> GetCallback(Func func, Obj *obj)
             {
@@ -60,6 +60,7 @@ namespace viscocorrect
             std::vector<std::unique_ptr<std::function<void()>>> mvec_callbacks;
 
             void RunCallbacks();
+
         private:
             std::string m_name;
         };
@@ -67,4 +68,4 @@ namespace viscocorrect
     }
 }
 
-#endif //VISCOCORRECT_SRC_UTILS_DEBUGGING_DEBUGTOOLS_H
+#endif // VISCOCORRECT_SRC_UTILS_DEBUGGING_DEBUGTOOLS_H

@@ -44,8 +44,8 @@ namespace viscocorrect
         CorrectionFactors correction;
 
         // Calculated Data
-        util::LinearFunction<float> *func_totalhead = nullptr;
-        util::LinearFunction<float> *func_visco = nullptr;
+        util::LinearFunction *func_totalhead = nullptr;
+        util::LinearFunction *func_visco = nullptr;
         double flow_pos = 0;
         double correction_x = 0;
 

@@ -1,6 +1,8 @@
 #ifndef VISCOCORRECT_SRC_PROJECTMANAGER_H
 #define VISCOCORRECT_SRC_PROJECTMANAGER_H
 
+#include "project.h"
+
 #include <memory>
 #include <vector>
 #include <functional>
@@ -8,15 +10,13 @@
 #include "imgui.h"
 
 #include "graph.h"
-#include "utils/types.h"
-#include "utils/layer.h"
-#include "utils/event.h"
-#include "utils/properties.h"
+#include "util/layer.h"
+#include "util/event.h"
 
 namespace viscocorrect
 {
 
-    class ProjectManager : public Layer
+    class ProjectManager : public util::Layer
     {
     public:
         ProjectManager() = delete;

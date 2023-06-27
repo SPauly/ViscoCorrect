@@ -2,16 +2,18 @@
 
 #include "implot.h"
 
+#include "util/properties.h"
+
 namespace viscocorrect
 {
     Graph::Graph()
     {
-        plot_size_1_ = raw_data_.kTableParameterSize;
-        plot_size_2_ = raw_data_.kTableCorrectionSize;
+        plot_size_1_ = internal::kProperties.kTableParameterSize;
+        plot_size_2_ = internal::kProperties.kTableCorrectionSize;
         // instanciate all the coordinates
-        CreateLineCoords(&flowrate_coords_, &raw_data_.kFlowrateScale, 0, raw_data_.kStartFlowrate, true, true);
-        CreateLineCoords(&totalhead_coords_, &raw_data_.kTotalHeadScale, raw_data_.kPitchTotalH, raw_data_.kStartTotalH, false);
-        CreateLineCoords(&viscosity_coords_, &raw_data_.kViscoScale, raw_data_.kPitchVisco, raw_data_.kStartVisco);
+        CreateLineCoords(&flowrate_coords_, &internal::kProperties.kFlowrateScale, 0, internal::kProperties.kStartFlowrate, true, true);
+        CreateLineCoords(&totalhead_coords_, &internal::kProperties.kTotalHeadScale, internal::kProperties.kPitchTotalH, internal::kProperties.kStartTotalH, false);
+        CreateLineCoords(&viscosity_coords_, &internal::kProperties.kViscoScale, internal::kProperties.kPitchVisco, internal::kProperties.kStartVisco);
 
         CreateCorrectionPoints();
     }
@@ -137,21 +139,21 @@ namespace viscocorrect
 
     void Graph::RenderFlowrate()
     {
-        for (const auto &pair : flowrate_coords_)
+        for (auto &pair : flowrate_coords_)
         {
-            ImPlot::PlotLine("##flowrates", pair.second.x_coords, pair.second.y_coords, 2);
+            ImPlot::PlotLine("##flowrates", pair.second.get_array_notation().x_coords, pair.second.get_array_notation().y_coords, 2);
         }
     }
 
     void Graph::RenderFunctions()
     {
-        for (const auto &pair : totalhead_coords_)
+        for (auto &pair : totalhead_coords_)
         {
-            ImPlot::PlotLine("##totalh", pair.second.x_coords, pair.second.y_coords, 2);
+            ImPlot::PlotLine("##totalh", pair.second.get_array_notation().x_coords, pair.second.get_array_notation().y_coords, 2);
         }
-        for (const auto &pair : viscosity_coords_)
+        for (auto &pair : viscosity_coords_)
         {
-            ImPlot::PlotLine("##viscosity", pair.second.x_coords, pair.second.y_coords, 2);
+            ImPlot::PlotLine("##viscosity", pair.second.get_array_notation().x_coords, pair.second.get_array_notation().y_coords, 2);
         }
     }
 
@@ -165,7 +167,7 @@ namespace viscocorrect
         }
     }
 
-    void Graph::CreateLineCoords(std::unordered_map<int, LineCoordinates> *coords, std::map<int, int> *raw_points, const double rate, const int *startpos, bool scale_on_x, bool use_same_x)
+    void Graph::CreateLineCoords(std::unordered_map<int, util::LineCoordinates<int>> *coords, const std::map<int, int> *raw_points, const double rate, const int *startpos, bool scale_on_x, bool use_same_x)
     {
         coords->clear();
         bool set_start = false;
@@ -184,9 +186,9 @@ namespace viscocorrect
             {
                 it_total_dist += pair.second * scaling_factor_;
 
-                LinearFunction temp_func(rate, (scale_on_x) ? (int)it_total_dist : startpos[0], (scale_on_x) ? startpos[1] : (int)it_total_dist);
+                util::LinearFunction temp_func(rate, (scale_on_x) ? (int)it_total_dist : startpos[0], (scale_on_x) ? startpos[1] : (int)it_total_dist);
 
-                coords->insert(std::make_pair(pair.first, temp_func.CreateLineCoordinates(0, plot_size_1_.x)));
+                coords->insert(std::make_pair(pair.first, temp_func.CreateLineCoordinates(0, static_cast<int>(plot_size_1_.x))));
             }
         }
         else
@@ -195,12 +197,12 @@ namespace viscocorrect
             {
                 it_total_dist += pair.second * scaling_factor_;
 
-                LineCoordinates temp;
+                util::LineCoordinates<int> temp;
 
-                temp.x_coords[0] = it_total_dist;
-                temp.x_coords[1] = it_total_dist;
-                temp.y_coords[0] = 0;
-                temp.y_coords[1] = plot_size_1_.y;
+                temp.get_array_notation().x_coords[0] = it_total_dist;
+                temp.get_array_notation().x_coords[1] = it_total_dist;
+                temp.get_array_notation().y_coords[0] = 0;
+                temp.get_array_notation().y_coords[1] = static_cast<int>(plot_size_1_.y);
 
                 coords->insert(std::make_pair(pair.first, temp));
             }
@@ -221,17 +223,17 @@ namespace viscocorrect
 
     void Graph::CreateCorrectionPoints()
     {
-        PolynomialFunction correct_v{raw_data_.kCoefficientsV};
-        PolynomialFunction correct_q{raw_data_.kCoefficientsQ};
-        std::vector<PolynomialFunction> correct_h;
+        util::PolynomialFunction correct_v{internal::kProperties.kCoefficientsV};
+        util::PolynomialFunction correct_q{internal::kProperties.kCoefficientsQ};
+        std::vector<util::PolynomialFunction> correct_h;
 
-        for (int i = raw_data_.kCutoffV[0]; i < raw_data_.kCutoffV[1]; i++)
+        for (int i = internal::kProperties.kCutoffV[0]; i < internal::kProperties.kCutoffV[1]; i++)
         {
             x_coords_v_.push_back(i);
             y_coords_v_.push_back(correct_v.f((double)i));
         }
 
-        for (int i = raw_data_.kCutoffQ[0]; i < raw_data_.kCutoffQ[1]; i++)
+        for (int i = internal::kProperties.kCutoffQ[0]; i < internal::kProperties.kCutoffQ[1]; i++)
         {
             x_coords_q_.push_back(i);
             y_coords_q_.push_back(correct_q.f((double)i));

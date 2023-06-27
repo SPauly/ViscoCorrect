@@ -193,7 +193,7 @@ namespace viscocorrect
         layer_stack_.PushLayer<T>();
     }
 
-    void Application::PushLayer(const std::shared_ptr<Layer> &layer)
+    void Application::PushLayer(const std::shared_ptr<util::Layer> &layer)
     {
         layer_stack_.PushLayer(layer);
     }

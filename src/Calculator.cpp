@@ -2,22 +2,24 @@
 
 #include <stdexcept>
 
+#include "util/properties.h"
+
 namespace viscocorrect
 {
-    Calculator::Calculator() : poly_cq_(raw_data_.kCoefficientsQ), poly_cv_(raw_data_.kCoefficientsV)
+    Calculator::Calculator() : poly_cq_(internal::kProperties.kCoefficientsQ), poly_cv_(internal::kProperties.kCoefficientsV)
     {
-        for (auto &pol : raw_data_.ch)
+        for (auto &pol : internal::kProperties.kCoefficientsH)
         {
-            poly_ch_.push_back(PolynomialFunction(pol));
+            poly_ch_.push_back(util::PolynomialFunction(pol));
         }
     }
 
     Project *Calculator::Calculate(Project *_prj)
     {
-        _prj->func_totalhead = CreateLinearF(raw_data_.kTotalHeadScale, raw_data_.kPitchTotalH, _prj->parameters.total_head_m, raw_data_.kStartTotalH, false);
-        _prj->func_visco = CreateLinearF(raw_data_.kViscoScale, raw_data_.kPitchVisco, _prj->parameters.viscosity_v, raw_data_.kStartVisco, true);
+        _prj->func_totalhead = CreateLinearF(internal::kProperties.kTotalHeadScale, internal::kProperties.kPitchTotalH, _prj->parameters.total_head_m, internal::kProperties.kStartTotalH, false);
+        _prj->func_visco = CreateLinearF(internal::kProperties.kViscoScale, internal::kProperties.kPitchVisco, _prj->parameters.viscosity_v, internal::kProperties.kStartVisco, true);
 
-        _prj->flow_pos = FitToScale(raw_data_.kFlowrateScale, _prj->parameters.flowrate_q, raw_data_.kStartFlowrate[0]);
+        _prj->flow_pos = FitToScale(internal::kProperties.kFlowrateScale, _prj->parameters.flowrate_q, internal::kProperties.kStartFlowrate[0]);
 
         _prj->correction_x = _prj->func_visco->get_x(_prj->func_totalhead->f(_prj->flow_pos));
 
@@ -28,11 +30,11 @@ namespace viscocorrect
 
     CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *_obj, const double _x)
     {
-        _obj->c_v = (poly_cv_.f(_x) / (double)raw_data_.kCorrectionScale / 10) + 0.2;
-        _obj->c_q = (poly_cq_.f(_x) / (double)raw_data_.kCorrectionScale / 10) + 0.2;
+        _obj->c_v = (poly_cv_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) + 0.2;
+        _obj->c_q = (poly_cq_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) + 0.2;
         for (int i = 0; i < poly_ch_.size(); i++)
         {
-            _obj->c_h[i] = (poly_ch_.at(i).f(_x) / (double)raw_data_.kCorrectionScale / 10) - 0.3;
+            _obj->c_h[i] = (poly_ch_.at(i).f(_x) / (double)internal::kProperties.kCorrectionScale / 10) - 0.3;
         }
 
         return _obj;
@@ -74,12 +76,12 @@ namespace viscocorrect
             throw std::runtime_error("Input not in range of scale");
     }
 
-    LinearFunction *Calculator::CreateLinearF(const double _m, const double _value, bool _scale_on_x, const int _other_coordinate)
+    util::LinearFunction *Calculator::CreateLinearF(const double _m, const double _value, bool _scale_on_x, const int _other_coordinate)
     {
-        return new LinearFunction(_m, (_scale_on_x) ? _value : _other_coordinate, (!_scale_on_x) ? _value : _other_coordinate);
+        return new util::LinearFunction(_m, (_scale_on_x) ? _value : _other_coordinate, (!_scale_on_x) ? _value : _other_coordinate);
     }
 
-    LinearFunction *Calculator::CreateLinearF(const std::map<int, int> &_raw_scale, const double _m, const int _input, const int *_startpos, bool _scale_on_x)
+    util::LinearFunction *Calculator::CreateLinearF(const std::map<int, int> &_raw_scale, const double _m, const int _input, const int *_startpos, bool _scale_on_x)
     {
         double pos;
         try
@@ -91,7 +93,7 @@ namespace viscocorrect
             return nullptr;
         }
 
-        return new LinearFunction(_m, (_scale_on_x) ? pos : _startpos[0], (!_scale_on_x) ? pos : _startpos[1]);
+        return new util::LinearFunction(_m, (_scale_on_x) ? pos : _startpos[0], (!_scale_on_x) ? pos : _startpos[1]);
     }
 
 } // namespace viscocorrect

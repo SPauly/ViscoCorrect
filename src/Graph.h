@@ -9,13 +9,12 @@
 
 #include "imgui.h"
 
-#include "layer.h"
-#include "types.h"
-#include "properties.h"
+#include "util/layer.h"
+#include "util/mathematical_functions.h"
 
 namespace viscocorrect
 {
-    class Graph : public Layer
+    class Graph : public util::Layer
     {
     public:
         Graph();
@@ -38,7 +37,7 @@ namespace viscocorrect
         void RenderFunctions();
         void RenderCorrection();
 
-        void CreateLineCoords(std::unordered_map<int, LineCoordinates> *coords, std::map<int, int> *raw_points, const double rate, const int *startpos, bool scale_on_x = true, bool use_same_x = false);
+        void CreateLineCoords(std::unordered_map<int, util::LineCoordinates<int>> *coords, const std::map<int, int> *raw_points, const double rate, const int *startpos, bool scale_on_x = true, bool use_same_x = false);
         void CreateCorrectionPoints();
 
     private:
@@ -53,16 +52,13 @@ namespace viscocorrect
         ImVec2 plot_size_1_;
         ImVec2 plot_size_2_;
 
-        util::RawData raw_data_;
-
-        std::unordered_map<int, LineCoordinates> flowrate_coords_;
-        std::unordered_map<int, LineCoordinates> totalhead_coords_;
-        std::unordered_map<int, LineCoordinates> viscosity_coords_;
+        std::unordered_map<int, util::LineCoordinates<int>> flowrate_coords_;
+        std::unordered_map<int, util::LineCoordinates<int>> totalhead_coords_;
+        std::unordered_map<int, util::LineCoordinates<int>> viscosity_coords_;
 
         std::vector<double> x_coords_q_, y_coords_q_, x_coords_v_, y_coords_v_;
         std::vector<std::vector<double>> x_coords_h_, y_coords_h_;
     };
-
 } // namespace viscocorrect
 
 #endif // VISCOCORRECT_SRC_GRAPH_H

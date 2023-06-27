@@ -1,17 +1,17 @@
 #ifndef VISCOCORRECT_SRC_UTILS_DEBUGGING_CURVEFITTING_H
 #define VISCOCORRECT_SRC_UTILS_DEBUGGING_CURVEFITTING_H
 
-#include "imgui.h"
-#include "implot.h"
+#include <vector>
+#include <map>
+#include <functional>
+#include <memory>
 
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_multifit_nlinear.h>
 #include <gsl/gsl_blas.h>
 
-#include <vector>
-#include <map>
-#include <functional>
-#include <memory>
+#include "imgui.h"
+#include "implot.h"
 
 namespace viscocorrect
 {
@@ -23,7 +23,7 @@ namespace viscocorrect
             double *xData;
             double *yData;
             bool b_poly;
-            
+
             double ModelFunctionPolynom(double _x, const gsl_vector *_parameters)
             {
                 double y = 0;
@@ -55,7 +55,7 @@ namespace viscocorrect
             double ModelFunction(double _x, const std::vector<double> &_parameters)
             {
                 gsl_vector *_params_g = gsl_vector_alloc(_parameters.size());
-                for(int i = 0; i < _parameters.size(); i++)
+                for (int i = 0; i < _parameters.size(); i++)
                 {
                     gsl_vector_set(_params_g, i, _parameters.at(i));
                 }
@@ -68,11 +68,11 @@ namespace viscocorrect
 
         struct FullDataCurve
         {
-            FullDataCurve(std::map<int, int>& _data, bool _bpoly = true, int _params = 3);
+            FullDataCurve(std::map<int, int> &_data, bool _bpoly = true, int _params = 3);
 
             std::vector<double> xData, yData, fittedX, fittedY;
             std::vector<double> parameters;
-            
+
             CompressedCurveData compressed_data;
         };
 
@@ -83,7 +83,7 @@ namespace viscocorrect
             ~CurveFitting();
 
             void Render();
-            void FitCurve(FullDataCurve&);
+            void FitCurve(FullDataCurve &);
 
         private:
             static int ResidualFunction(const gsl_vector *, void *, gsl_vector *);
@@ -159,34 +159,34 @@ namespace viscocorrect
                  {356, 13},
                  {358, 10},
                  {363, 1}}
-                 //{ //1.2 Qopt
-                 //   {146, 283},
-                 //   {159, 282},
-                 //   {172, 281},
-                 //   {184, 280},
-                 //   {193, 279},
-                 //   {202, 278},
-                 //   {211, 276},
-                 //   {238, 271},
-                 //   {241, 270},
-                 //   {262, 266},
-                 //   {276, 262},
-                 //   {291, 257},
-                 //   {313, 248},
-                 //   {330, 239},
-                 //   {344, 229},
-                 //   {355, 221},
-                 //   {361, 217},
-                 //   {364, 213},
-                 //   {373, 205},
-                 //   {381, 199},
-                 //   {382, 198}
-                 //}    
-                 };
+                //{ //1.2 Qopt
+                //   {146, 283},
+                //   {159, 282},
+                //   {172, 281},
+                //   {184, 280},
+                //   {193, 279},
+                //   {202, 278},
+                //   {211, 276},
+                //   {238, 271},
+                //   {241, 270},
+                //   {262, 266},
+                //   {276, 262},
+                //   {291, 257},
+                //   {313, 248},
+                //   {330, 239},
+                //   {344, 229},
+                //   {355, 221},
+                //   {361, 217},
+                //   {364, 213},
+                //   {373, 205},
+                //   {381, 199},
+                //   {382, 198}
+                //}
+            };
         };
 
     } // namespace Debug
 
 } // namespace ViscoCorrect
 
-#endif //VISCOCORRECT_SRC_UTILS_DEBUGGING_CURVEFITTING_H
+#endif // VISCOCORRECT_SRC_UTILS_DEBUGGING_CURVEFITTING_H
