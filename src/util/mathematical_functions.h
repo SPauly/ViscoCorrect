@@ -18,7 +18,7 @@ namespace viscocorrect
         class LineCoordinates
         {
         public:
-            LineCoordinates();
+            LineCoordinates() = delete;
             LineCoordinates(const std::vector<T> &x, const std::vector<T> &y);
             ~LineCoordinates();
 
@@ -30,17 +30,19 @@ namespace viscocorrect
             {
                 T *x_coords, *y_coords;
             };
-            typedef std::vector<std::pair<T, T>> PairNotation; // PairNotation is an array of x and y values
 
             inline const StorageNotation &get() const { return storage_notation_; }
-            inline ArrayNotation &get_array_notation() { return array_notation_; }
-            inline const PairNotation &get_pair_notation() const { return pair_notation_; }
+            inline ArrayNotation &get_array_notation()
+            {
+                array_notation_.x_coords = storage_notation_.x_coords.data();
+                array_notation_.y_coords = storage_notation_.y_coords.data();
+                return array_notation_;
+            }
             inline const size_t get_number_coordinates() const { return number_coordinates_; }
 
         private:
             StorageNotation storage_notation_;
             ArrayNotation array_notation_;
-            PairNotation pair_notation_;
 
             size_t number_coordinates_;
         };
@@ -100,20 +102,12 @@ namespace viscocorrect
         //----------------------------------------------------------
         // template functions implementation
         template <typename T>
-        LineCoordinates<T>::LineCoordinates() : LineCoordinates<T>({0}, {0}) {}
-
-        template <typename T>
         LineCoordinates<T>::LineCoordinates(const std::vector<T> &x, const std::vector<T> &y) : storage_notation_{x, y}
         {
             number_coordinates_ = storage_notation_.x_coords.size();
 
             array_notation_.x_coords = storage_notation_.x_coords.data();
             array_notation_.y_coords = storage_notation_.y_coords.data();
-
-            for (int i = 0; i < number_coordinates_; i++)
-            {
-                pair_notation_.push_back(std::make_pair(storage_notation_.x_coords.at(i), storage_notation_.y_coords.at(i)));
-            }
         }
 
         template <typename T>
@@ -122,7 +116,6 @@ namespace viscocorrect
             array_notation_.x_coords = nullptr;
             array_notation_.y_coords = nullptr;
 
-            pair_notation_.clear();
             storage_notation_.x_coords.clear();
             storage_notation_.y_coords.clear();
         }

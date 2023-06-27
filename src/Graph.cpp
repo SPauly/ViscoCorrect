@@ -197,7 +197,7 @@ namespace viscocorrect
             {
                 it_total_dist += pair.second * scaling_factor_;
 
-                util::LineCoordinates<int> temp;
+                util::LineCoordinates<int> temp({0, 0}, {1, 1});
 
                 temp.get_array_notation().x_coords[0] = it_total_dist;
                 temp.get_array_notation().x_coords[1] = it_total_dist;
