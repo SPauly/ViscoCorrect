@@ -3,7 +3,7 @@
 
 namespace viscocorrect
 {
-    namespace util
+    namespace util_frontend
     {
         class Layer
         {
@@ -16,7 +16,7 @@ namespace viscocorrect
             virtual void OnUpdate(float ts){};
             virtual void OnUIRender(){};
         };
-    } // namespace util
+    } // namespace util_frontend
 } // namespace viscocorrect
 
 #endif // VISCOCORRECT_SRC_UTILS_LAYER_H

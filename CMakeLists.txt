@@ -74,6 +74,7 @@ add_executable(ViscoCorrect
 target_include_directories(ViscoCorrect PUBLIC
     "${PROJECT_SOURCE_DIR}/src/"    
     "${PROJECT_SOURCE_DIR}/src/util/"    
+    "${PROJECT_SOURCE_DIR}/src/frontends/imgui"    
     "${PROJECT_SOURCE_DIR}/external/imgui"
     "${PROJECT_SOURCE_DIR}/external/imgui/backends"
     "${PROJECT_SOURCE_DIR}/external/implot"

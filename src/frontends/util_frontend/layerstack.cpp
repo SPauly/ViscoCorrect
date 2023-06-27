@@ -4,7 +4,7 @@
 
 namespace viscocorrect
 {
-	namespace util
+	namespace util_frontend
 	{
 		LayerStack::~LayerStack()
 		{
@@ -53,5 +53,5 @@ namespace viscocorrect
 				layer.reset();
 			}
 		}
-	} // namespace util
+	} // namespace util_frontend
 } // namespace viscocorrect

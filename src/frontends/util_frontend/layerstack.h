@@ -8,7 +8,7 @@
 
 namespace viscocorrect
 {
-	namespace util
+	namespace util_frontend
 	{
 		class LayerStack
 		{
@@ -45,7 +45,7 @@ namespace viscocorrect
 			std::vector<std::shared_ptr<Layer>> layers_;
 			unsigned int layer_insert_index_ = 0;
 		};
-	} // namespace util
+	} // namespace util_frontend
 }
 
 #endif // VISCOCORRECT_SRC_UTIL_LAYERSTACK_H

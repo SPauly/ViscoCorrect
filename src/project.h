@@ -5,6 +5,7 @@
 #include <functional>
 
 #include "util/mathematical_functions.h"
+#include "util/input_units.h"
 
 namespace viscocorrect
 {
@@ -13,6 +14,8 @@ namespace viscocorrect
         int flowrate_q = 0;
         int total_head_m = 0;
         int viscosity_v = 0;
+        util::ViscoUnits visco_unit = util::ViscoUnits::kMilliPascalSeconds;
+        util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kLitersPerMinute;
     };
 
     struct CorrectionFactors
