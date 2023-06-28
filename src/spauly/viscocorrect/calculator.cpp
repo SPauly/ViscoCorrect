@@ -1,8 +1,8 @@
-#include "calculator.h"
+#include "spauly/viscocorrect/calculator.h"
 
 #include <stdexcept>
 
-#include "util/properties.h"
+#include "spauly/viscocorrect/util/properties.h"
 
 namespace viscocorrect
 {

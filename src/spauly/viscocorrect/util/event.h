@@ -1,10 +1,10 @@
-#ifndef VISCOCORRECT_SRC_UTILS_EVENT_H
-#define VISCOCORRECT_SRC_UTILS_EVENT_H
+#ifndef SPAULY_VISCOCORRECT_SRC_UTILS_EVENT_H
+#define SPAULY_VISCOCORRECT_SRC_UTILS_EVENT_H
 
 #include <deque>
 #include <memory>
 
-#include "properties.h"
+#include "spauly/viscocorrect/util/properties.h"
 
 namespace viscocorrect
 {
@@ -61,4 +61,4 @@ namespace viscocorrect
     }
 } // namespace ViscoCorrect
 
-#endif // VISCOCORRECT_SRC_UTILS_EVENT_H
+#endif // SPAULY_VISCOCORRECT_SRC_UTILS_EVENT_H

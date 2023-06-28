@@ -1,17 +1,14 @@
-#ifndef VISCOCORRECT_SRC_PROJECTMANAGER_H
-#define VISCOCORRECT_SRC_PROJECTMANAGER_H
+#ifndef SPAULY_VISCOCORRECT_SRC_PROJECTMANAGER_H
+#define SPAULY_VISCOCORRECT_SRC_PROJECTMANAGER_H
 
-#include "project.h"
+#include "spauly/viscocorrect/project.h"
 
 #include <memory>
 #include <vector>
 #include <functional>
 
-#include "imgui.h"
-
-#include "graph.h"
-#include "util/layer.h"
-#include "util/event.h"
+#include "spauly/viscocorrect/graph.h"
+#include "spauly/viscocorrect/util/event.h"
 
 namespace viscocorrect
 {
@@ -32,4 +29,4 @@ namespace viscocorrect
     };
 }
 
-#endif // VISCOCORRECT_SRC_PROJECTMANAGER_H
+#endif // SPAULY_VISCOCORRECT_SRC_PROJECTMANAGER_H

@@ -1,4 +1,4 @@
-#include "application.h"
+#include "spauly/viscocorrect/application.h"
 
 namespace viscocorrect
 {

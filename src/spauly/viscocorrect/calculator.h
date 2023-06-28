@@ -1,11 +1,11 @@
-#ifndef VISCOCORRECT_SRC_CALCULATOR_H
-#define VISCOCORRECT_SRC_CALCULATOR_H
+#ifndef SPAULY_VISCOCORRECT_SRC_CALCULATOR_H
+#define SPAULY_VISCOCORRECT_SRC_CALCULATOR_H
 
 #include <vector>
 #include <memory>
 #include <map>
 
-#include "project.h"
+#include "spauly/viscocorrect/project.h"
 #include "util/mathematical_functions.h"
 
 namespace viscocorrect
@@ -32,4 +32,4 @@ namespace viscocorrect
     };
 } // namespace viscocorrect
 
-#endif // VISCOCORRECT_SRC_CALCULATOR_H
+#endif // SPAULY_VISCOCORRECT_SRC_CALCULATOR_H

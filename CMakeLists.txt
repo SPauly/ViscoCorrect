@@ -14,13 +14,10 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g -fno-omit-fram
 option(BUILD_DEBUG_FEATURES "Build with debug features" ON)
 
 # Load file lists
-include(${PROJECT_SOURCE_DIR}/cmake/file_lists.cmake)
+include(${PROJECT_SOURCE_DIR}/src/file_lists.cmake)
 
 # Set frontend variable
 set(_visco_FRONTEND "imgui_glfw") # Change this to the desired frontend
-
-# Set frontend-specific directory
-set(_visco_FRONTEND_DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/")
 
 # Construct the target-specific variable names
 set(_visco_TARGET_SRC "_visco_${_visco_FRONTEND}_srcs")
@@ -32,7 +29,7 @@ set(_visco_TARGET_CMAKE_FILE "target_${_visco_FRONTEND}.cmake")
 
 # send Status
 message(STATUS "Building with frontend: ${_visco_FRONTEND}")
-message(STATUS "Using Sources and headers: ${_visco_TARGET_SRC} ${_visco_TARGET_INCLUDES}")
+message(STATUS "Using Sources and headers: ${_visco_includes} ${${_visco_TARGET_INCLUDES}}")
 
 # Include target-specific CMake file 
 include(${PROJECT_SOURCE_DIR}/cmake/${_visco_TARGET_CMAKE_FILE})
@@ -44,7 +41,7 @@ add_executable( ViscoCorrect
     ${${_visco_TARGET_SRC}}
 )
 
-target_include_directories( ViscoCorrect PUBLIC
+target_include_directories( ViscoCorrect PRIVATE
     ${_visco_includes}
     ${${_visco_TARGET_INCLUDES}}
 )

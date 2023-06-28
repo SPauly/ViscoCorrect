@@ -1,5 +1,5 @@
-#ifndef VISCOCORRECT_SRC_GRAPH_H
-#define VISCOCORRECT_SRC_GRAPH_H
+#ifndef SPAULY_VISCOCORRECT_SRC_GRAPH_H
+#define SPAULY_VISCOCORRECT_SRC_GRAPH_H
 
 #include <vector>
 #include <map>
@@ -9,8 +9,8 @@
 
 #include "imgui.h"
 
-#include "util/layer.h"
-#include "util/mathematical_functions.h"
+#include "spauly/viscocorrect/util/layer.h"
+#include "spauly/viscocorrect/util/mathematical_functions.h"
 
 namespace viscocorrect
 {
@@ -61,4 +61,4 @@ namespace viscocorrect
     };
 } // namespace viscocorrect
 
-#endif // VISCOCORRECT_SRC_GRAPH_H
+#endif // SPAULY_VISCOCORRECT_SRC_GRAPH_H

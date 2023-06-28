@@ -1,13 +1,15 @@
-#ifndef VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
-#define VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
+#ifndef SPAULY_VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
+#define SPAULY_VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
 
-#include "application_base.h"
+#include "spauly/viscocorrect/application_base.h"
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
+
+#include "spauly/viscocorrect/frontend/util_frontend/layerstack.h"
 
 namespace viscocorrect
 {
@@ -21,7 +23,7 @@ namespace viscocorrect
                 ApplicationImplImguiGlfw();
                 ~ApplicationImplImguiGlfw();
 
-                virtual void Init() override;
+                virtual bool Init() override;
                 virtual void Shutdown() override;
 
                 virtual bool Render() override;
@@ -39,4 +41,4 @@ namespace viscocorrect
 
 } // namespace viscocorrect
 
-#endif // VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
+#endif // SPAULY_VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H

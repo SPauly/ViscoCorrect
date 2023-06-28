@@ -1,16 +1,16 @@
-#ifndef VISCOCORRECT_SRC_APPLICATION_H
-#define VISCOCORRECT_SRC_APPLICATION_H
+#ifndef SPAULY_VISCOCORRECT_SRC_APPLICATION_H
+#define SPAULY_VISCOCORRECT_SRC_APPLICATION_H
 
-#include "application_base.h"
+#include "spauly/viscocorrect/application_base.h"
 
 #include <vector>
 #include <functional>
 #include <deque>
 
-#include "calculator.h"
-#include "manage_project.h"
-#include "project.h"
-#include "util/event.h"
+#include "spauly/viscocorrect/calculator.h"
+#include "spauly/viscocorrect/manage_project.h"
+#include "spauly/viscocorrect/project.h"
+#include "spauly/viscocorrect/util/event.h"
 
 namespace viscocorrect
 {
@@ -39,4 +39,4 @@ namespace viscocorrect
     };
 } // namespace viscocorrect
 
-#endif // VISCOCORRECT_SRC_APPLICATION_H
+#endif // SPAULY_VISCOCORRECT_SRC_APPLICATION_H

@@ -1,5 +1,5 @@
-#ifndef VISCOCORRECT_SRC_APPLICATION_BASE_H
-#define VISCOCORRECT_SRC_APPLICATION_BASE_H
+#ifndef SPAULY_VISCOCORRECT_SRC_APPLICATION_BASE_H
+#define SPAULY_VISCOCORRECT_SRC_APPLICATION_BASE_H
 
 #include <memory>
 #include <functional>
@@ -18,7 +18,7 @@ namespace viscocorrect
         ApplicationBase();
         virtual ~ApplicationBase() = 0;
 
-        virtual void Init(){};
+        virtual bool Init(){};
         virtual void Shutdown(){};
 
         virtual bool Render(){};
@@ -48,4 +48,4 @@ namespace viscocorrect
 
 } // namespace viscocorrect
 
-#endif // VISCOCORRECT_SRC_APPLICATION_BASE_H
+#endif // SPAULY_VISCOCORRECT_SRC_APPLICATION_BASE_H

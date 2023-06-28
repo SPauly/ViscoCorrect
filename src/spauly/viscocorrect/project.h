@@ -1,11 +1,11 @@
-#ifndef VISCOCORRECT_SRC_PROJECT_H
-#define VISCOCORRECT_SRC_PROJECT_H
+#ifndef SPAULY_VISCOCORRECT_PROJECT_H
+#define SPAULY_VISCOCORRECT_PROJECT_H
 
 #include <string>
 #include <functional>
 
-#include "util/mathematical_functions.h"
-#include "util/input_units.h"
+#include "spauly/viscocorrect/util/mathematical_functions.h"
+#include "spauly/viscocorrect/util/input_units.h"
 
 namespace viscocorrect
 {
@@ -58,4 +58,4 @@ namespace viscocorrect
     };
 }
 
-#endif // VISCOCORRECT_SRC_PROJECT_H
+#endif // SPAULY_VISCOCORRECT_PROJECT_H

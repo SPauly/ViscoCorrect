@@ -1,4 +1,4 @@
-#include "util/properties.h"
+#include "spauly/viscocorrect/util/properties.h"
 
 namespace viscocorrect
 {

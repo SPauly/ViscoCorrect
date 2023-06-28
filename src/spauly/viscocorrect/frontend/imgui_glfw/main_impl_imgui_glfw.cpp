@@ -1,5 +1,5 @@
-#include "frontend/imgui_glfw/application_impl_imgui_glfw.h"
-#include "frontend/imgui_glfw/graph_impl_imgui_glfw.h"
+#include "spauly/viscocorrect/frontend/imgui_glfw/application_impl_imgui_glfw.h"
+#include "spauly/viscocorrect/frontend/imgui_glfw/graph_impl_imgui_glfw.h"
 
 namespace viscocorrect
 {

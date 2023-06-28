@@ -1,7 +1,8 @@
-#include "frontends/imgui_glfw/application_impl_imgui_glfw.h"
+#include "frontend/imgui_glfw/application_impl_imgui_glfw.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 namespace viscocorrect
 {
@@ -9,6 +10,9 @@ namespace viscocorrect
     {
         namespace imgui_glfw
         {
+            ApplicationImplImguiGlfw::ApplicationImplImguiGlfw()
+            {
+            }
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
@@ -18,7 +22,7 @@ namespace viscocorrect
                 fprintf(stderr, "Glfw Error %d: %s\n", error, description);
             }
 
-            void ApplicationImplImguiGlfw::Init()
+            bool ApplicationImplImguiGlfw::Init()
             {
                 // Begin: ImGui Window Init
 
@@ -70,6 +74,8 @@ namespace viscocorrect
                 ImGui_ImplOpenGL3_Init(glsl_version);
 
                 // End ImGui Window Init
+
+                return true;
             }
 
             void ApplicationImplImguiGlfw::Shutdown()

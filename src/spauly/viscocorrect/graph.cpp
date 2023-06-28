@@ -1,8 +1,8 @@
-#include "graph.h"
+#include "spauly/viscocorrect/graph.h"
 
 #include "implot.h"
 
-#include "util/properties.h"
+#include "spauly/viscocorrect/util/properties.h"
 
 namespace viscocorrect
 {
