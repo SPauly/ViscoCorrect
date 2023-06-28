@@ -24,11 +24,15 @@ set(_visco_FRONTEND_DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/")
 
 # Construct the target-specific variable names
 set(_visco_TARGET_SRC "_visco_${_visco_FRONTEND}_srcs")
-set(_visco_TARGET_HDR "_visco_${_visco_FRONTEND}_hdrs")
+set(_visco_TARGET_INCLUDES "_visco_${_visco_FRONTEND}_includes")
 set(_visco_TARGET_MAIN "_visco_${_visco_FRONTEND}_main")
 
 # Set the target-specific CMake file based on the chosen frontend
 set(_visco_TARGET_CMAKE_FILE "target_${_visco_FRONTEND}.cmake")
+
+# send Status
+message(STATUS "Building with frontend: ${_visco_FRONTEND}")
+message(STATUS "Using Sources and headers: ${_visco_TARGET_SRC} ${_visco_TARGET_INCLUDES}")
 
 # Include target-specific CMake file 
 include(${PROJECT_SOURCE_DIR}/cmake/${_visco_TARGET_CMAKE_FILE})
@@ -41,8 +45,8 @@ add_executable( ViscoCorrect
 )
 
 target_include_directories( ViscoCorrect PUBLIC
-    ${_visco_hdrs}
-    ${${_visco_TARGET_HDR}}
+    ${_visco_includes}
+    ${${_visco_TARGET_INCLUDES}}
 )
 
 target_link_libraries( ViscoCorrect

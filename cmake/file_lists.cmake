@@ -22,6 +22,11 @@ set(_visco_hdrs
     ${PROJECT_SOURCE_DIR}/src/util/properties.h
 )
 
+set(_visco_includes
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src/util
+)
+
 set(_visco_imgui_glfw_srcs
     ${PROJECT_SOURCE_DIR}/src/frontend/imgui_glfw/application_impl_imgui_glfw.cpp
     ${PROJECT_SOURCE_DIR}/src/frontend/imgui_glfw/graph_impl_imgui_glfw.cpp
@@ -33,6 +38,14 @@ set(_visco_imgui_glfw_hdrs
     ${PROJECT_SOURCE_DIR}/src/frontend/imgui_glfw/graph_impl_imgui_glfw.h
     ${PROJECT_SOURCE_DIR}/src/frontend/util_frontend/layer.h
     ${PROJECT_SOURCE_DIR}/src/frontend/util_frontend/layerstack.h
+    ${PROJECT_SOURCE_DIR}/external/imgui
+    ${PROJECT_SOURCE_DIR}/external/imgui/backends
+    ${PROJECT_SOURCE_DIR}/external/implot
+)
+
+set(_visco_imgui_glfw_includes
+    ${PROJECT_SOURCE_DIR}/src/frontend
+    ${PROJECT_SOURCE_DIR}/src/frontend/util_frontend
     ${PROJECT_SOURCE_DIR}/external/imgui
     ${PROJECT_SOURCE_DIR}/external/imgui/backends
     ${PROJECT_SOURCE_DIR}/external/implot

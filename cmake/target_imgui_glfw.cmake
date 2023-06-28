@@ -44,8 +44,9 @@ target_include_directories( implot PUBLIC
 add_dependencies(imgui glfw)
 add_dependencies(implot imgui)
 
-# set the libraries for linking
+target_link_libraries(implot imgui)
 
+# set the libraries for linking
 set(_visco_TARGET_LIBRARIES 
     implot    
     imgui
