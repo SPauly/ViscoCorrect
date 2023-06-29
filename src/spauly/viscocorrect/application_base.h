@@ -15,8 +15,8 @@ namespace viscocorrect
     class ApplicationBase
     {
     public:
-        ApplicationBase();
-        virtual ~ApplicationBase() = 0;
+        ApplicationBase(){};
+        virtual ~ApplicationBase(){};
 
         virtual bool Init(){};
         virtual void Shutdown(){};
@@ -31,6 +31,11 @@ namespace viscocorrect
         }
 
     protected:
+        inline std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> get_event_callback()
+        {
+            return event_callback_;
+        }
+
         inline bool set_should_close(bool close = true) { return should_close_ = close; }
         inline bool get_should_close() { return should_close_; }
 

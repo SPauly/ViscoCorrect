@@ -8,44 +8,47 @@
 
 namespace viscocorrect
 {
-	namespace util_frontend
+	namespace frontend
 	{
-		class LayerStack
+		namespace util_frontend
 		{
-		public:
-			LayerStack() = default;
-			~LayerStack();
-
-			template <typename T>
-			void PushLayer()
+			class LayerStack
 			{
-				static_assert(std::is_base_of<Layer, T>::value, "Pushed type is not subclass of Layer!");
-				layers_.emplace_back(std::make_shared<T>());
-				layers_.back()->OnAttach();
-			}
+			public:
+				LayerStack() = default;
+				~LayerStack();
 
-			void PushLayer(const std::shared_ptr<Layer> &layer);
-			void PushOverlay(const std::shared_ptr<Layer> &overlay);
-			void PopLayer(std::shared_ptr<Layer> layer);
-			void PopOverlay(std::shared_ptr<Layer> overlay);
+				template <typename T>
+				void PushLayer()
+				{
+					static_assert(std::is_base_of<Layer, T>::value, "Pushed type is not subclass of Layer!");
+					layers_.emplace_back(std::make_shared<T>());
+					layers_.back()->OnAttach();
+				}
 
-			void clear();
+				void PushLayer(const std::shared_ptr<Layer> &layer);
+				void PushOverlay(const std::shared_ptr<Layer> &overlay);
+				void PopLayer(std::shared_ptr<Layer> layer);
+				void PopOverlay(std::shared_ptr<Layer> overlay);
 
-			std::vector<std::shared_ptr<Layer>>::iterator begin() { return layers_.begin(); }
-			std::vector<std::shared_ptr<Layer>>::iterator end() { return layers_.end(); }
-			std::vector<std::shared_ptr<Layer>>::reverse_iterator rbegin() { return layers_.rbegin(); }
-			std::vector<std::shared_ptr<Layer>>::reverse_iterator rend() { return layers_.rend(); }
+				void clear();
 
-			std::vector<std::shared_ptr<Layer>>::const_iterator begin() const { return layers_.begin(); }
-			std::vector<std::shared_ptr<Layer>>::const_iterator end() const { return layers_.end(); }
-			std::vector<std::shared_ptr<Layer>>::const_reverse_iterator rbegin() const { return layers_.rbegin(); }
-			std::vector<std::shared_ptr<Layer>>::const_reverse_iterator rend() const { return layers_.rend(); }
+				std::vector<std::shared_ptr<Layer>>::iterator begin() { return layers_.begin(); }
+				std::vector<std::shared_ptr<Layer>>::iterator end() { return layers_.end(); }
+				std::vector<std::shared_ptr<Layer>>::reverse_iterator rbegin() { return layers_.rbegin(); }
+				std::vector<std::shared_ptr<Layer>>::reverse_iterator rend() { return layers_.rend(); }
 
-		private:
-			std::vector<std::shared_ptr<Layer>> layers_;
-			unsigned int layer_insert_index_ = 0;
-		};
-	} // namespace util_frontend
-}
+				std::vector<std::shared_ptr<Layer>>::const_iterator begin() const { return layers_.begin(); }
+				std::vector<std::shared_ptr<Layer>>::const_iterator end() const { return layers_.end(); }
+				std::vector<std::shared_ptr<Layer>>::const_reverse_iterator rbegin() const { return layers_.rbegin(); }
+				std::vector<std::shared_ptr<Layer>>::const_reverse_iterator rend() const { return layers_.rend(); }
+
+			private:
+				std::vector<std::shared_ptr<Layer>> layers_;
+				unsigned int layer_insert_index_ = 0;
+			};
+		} // namespace util_frontend
+	}	  // namespace frontend
+} // namespace viscocorrect
 
 #endif // SPAULY_VISCOCORRECT_SRC_UTIL_LAYERSTACK_H

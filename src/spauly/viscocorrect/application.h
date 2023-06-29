@@ -14,6 +14,10 @@
 
 namespace viscocorrect
 {
+    // defined in this file
+    class Application;
+    inline Application *CreateApplication(ApplicationBase *frontend_impl);
+
     class Application
     {
     public:
@@ -21,6 +25,8 @@ namespace viscocorrect
         ~Application();
 
         void Run();
+
+        void PushEvent(std::unique_ptr<util::EventBase> event);
 
     private:
         void Shutdown();
@@ -30,6 +36,7 @@ namespace viscocorrect
     private:
         ApplicationBase *frontend_impl;
 
+        Calculator calculator_;
         std::shared_ptr<ProjectManager> project_manager_;
 
         std::shared_ptr<std::vector<Project>> projects_;
@@ -37,6 +44,11 @@ namespace viscocorrect
 
         std::deque<std::unique_ptr<util::EventBase>> event_que_;
     };
+
+    Application *CreateApplication(ApplicationBase *frontend_impl)
+    {
+        return new Application(frontend_impl);
+    }
 } // namespace viscocorrect
 
 #endif // SPAULY_VISCOCORRECT_SRC_APPLICATION_H

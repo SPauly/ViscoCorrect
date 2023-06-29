@@ -6,7 +6,7 @@
 #include <map>
 
 #include "spauly/viscocorrect/project.h"
-#include "util/mathematical_functions.h"
+#include "spauly/viscocorrect/util/mathematical_functions.h"
 
 namespace viscocorrect
 {

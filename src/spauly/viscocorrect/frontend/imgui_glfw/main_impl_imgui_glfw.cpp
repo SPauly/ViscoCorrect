@@ -1,5 +1,6 @@
 #include "spauly/viscocorrect/frontend/imgui_glfw/application_impl_imgui_glfw.h"
 #include "spauly/viscocorrect/frontend/imgui_glfw/graph_impl_imgui_glfw.h"
+#include "spauly/viscocorrect/application.h"
 
 namespace viscocorrect
 {
@@ -10,19 +11,20 @@ namespace viscocorrect
     {
         namespace imgui_glfw
         {
-            int ViscoCorrectMainImGuiGlfw()
+            void ViscoCorrectMainImGuiGlfw()
             {
-                viscocorrect::Application *app = viscocorrect::CreateApplication();
+                viscocorrect::frontend::imgui_glfw::ApplicationImplImguiGlfw frontend_impl;
+                viscocorrect::Application *app = viscocorrect::CreateApplication(&frontend_impl);
                 app->Run();
                 delete app;
             }
         } // namespace imgui_glfw
 
     } // namespace frontend
-
-    int main()
-    {
-        return frontend::imgui_glfw::ViscoCorrectMainImGuiGlfw();
-    }
-
 } // namespace viscocorrect
+
+int main()
+{
+    viscocorrect::frontend::imgui_glfw::ViscoCorrectMainImGuiGlfw();
+    return 0;
+}

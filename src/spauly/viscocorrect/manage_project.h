@@ -13,7 +13,7 @@
 namespace viscocorrect
 {
 
-    class ProjectManager : public util::Layer
+    class ProjectManager : public frontend::util_frontend::Layer
     {
     public:
         ProjectManager() = delete;

@@ -9,12 +9,12 @@
 
 #include "imgui.h"
 
-#include "spauly/viscocorrect/util/layer.h"
+#include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 #include "spauly/viscocorrect/util/mathematical_functions.h"
 
 namespace viscocorrect
 {
-    class Graph : public util::Layer
+    class Graph : public frontend::util_frontend::Layer
     {
     public:
         Graph();

@@ -3,20 +3,23 @@
 
 namespace viscocorrect
 {
-    namespace util_frontend
+    namespace frontend
     {
-        class Layer
+        namespace util_frontend
         {
-        public:
-            virtual ~Layer() = default;
+            class Layer
+            {
+            public:
+                virtual ~Layer() = default;
 
-            virtual void OnAttach(){};
-            virtual void OnDetach(){};
+                virtual void OnAttach(){};
+                virtual void OnDetach(){};
 
-            virtual void OnUpdate(float ts){};
-            virtual void OnUIRender(){};
-        };
-    } // namespace util_frontend
+                virtual void OnUpdate(float ts){};
+                virtual void OnUIRender(){};
+            };
+        } // namespace util_frontend
+    }     // namespace frontend
 } // namespace viscocorrect
 
 #endif // SPAULY_VISCOCORRECT_SRC_UTILS_LAYER_H
