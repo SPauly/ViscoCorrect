@@ -3,7 +3,7 @@
 set(_visco_srcs
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/application.cpp
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/calculator.cpp    
-    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/graph.cpp
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/graph_base.cpp
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/manage_project.cpp
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/project.cpp
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util/properties.cpp
@@ -13,7 +13,7 @@ set(_visco_hdrs
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/application.h
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/application_base.h
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/calculator.h    
-    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/graph.h
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/graph_base.h
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/manage_project.h
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/project.h
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util/event.h

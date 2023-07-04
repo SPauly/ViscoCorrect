@@ -6,7 +6,7 @@
 
 namespace viscocorrect
 {
-    class GraphBase; // defined in graph_base.h
+    class GraphImplBase; // defined in graph_base.h
     namespace util
     {
         class EventBase; // defined in util/event.h
@@ -23,7 +23,7 @@ namespace viscocorrect
 
         virtual bool Render(){};
 
-        inline std::shared_ptr<GraphBase> get_graph() { return graph_base_; }
+        inline std::shared_ptr<GraphImplBase> get_graph() { return graph_base_; }
 
         inline void set_event_callback(std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> callback)
         {
@@ -48,7 +48,7 @@ namespace viscocorrect
 
         std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> event_callback_;
 
-        std::shared_ptr<GraphBase> graph_base_;
+        std::shared_ptr<GraphImplBase> graph_base_;
     };
 
 } // namespace viscocorrect

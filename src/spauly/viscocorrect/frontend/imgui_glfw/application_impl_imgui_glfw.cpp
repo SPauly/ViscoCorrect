@@ -77,7 +77,7 @@ namespace viscocorrect
                 // End ImGui Window Init
 
                 // layer init graph
-                graph_ = std::make_shared<::viscocorrect::Graph>();
+                graph_ = std::make_shared<GraphImplImGuiGlfw>();
                 layer_stack_.PushLayer(graph_);
 
                 // layer init Projects
@@ -125,9 +125,8 @@ namespace viscocorrect
 
                 // Rendering
                 ImGui::Render();
-                int display_w, display_h;
-                glfwGetFramebufferSize(window_, &display_w, &display_h);
-                glViewport(0, 0, display_w, display_h);
+                glfwGetFramebufferSize(window_, &display_w_, &display_h_);
+                glViewport(0, 0, display_w_, display_h_);
                 glClearColor(clear_color_.x * clear_color_.w, clear_color_.y * clear_color_.w, clear_color_.z * clear_color_.w, clear_color_.w);
                 glClear(GL_COLOR_BUFFER_BIT);
                 ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

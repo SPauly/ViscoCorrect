@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
-#define SPAULY_VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
+#ifndef SPAULY_VISCOCORRECT_FRONTEND_IMGUI_GLFW_APPLICATION_IMPL_IMGUI_GLFW_H
+#define SPAULY_VISCOCORRECT_FRONTEND_IMGUI_GLFW_APPLICATION_IMPL_IMGUI_GLFW_H
 
 #include "spauly/viscocorrect/application_base.h"
 
@@ -10,9 +10,9 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include "imgui.h"
 
-#include "spauly/viscocorrect/graph.h"
 #include "spauly/viscocorrect/project.h"
 #include "spauly/viscocorrect/manage_project.h"
+#include "spauly/viscocorrect/frontend/imgui_glfw/graph_impl_imgui_glfw.h"
 #include "spauly/viscocorrect/frontend/util_frontend/layerstack.h"
 
 namespace viscocorrect
@@ -37,6 +37,7 @@ namespace viscocorrect
 
             private:
                 GLFWwindow *window_;
+                int display_w_, display_h_;
                 ImGuiIO *io_;
 
                 // Style
@@ -47,7 +48,7 @@ namespace viscocorrect
                 util_frontend::LayerStack layer_stack_;
 
                 // for now
-                std::shared_ptr<Graph> graph_;
+                std::shared_ptr<GraphImplImGuiGlfw> graph_;
                 std::shared_ptr<ProjectManager> project_manager_;
 
                 std::shared_ptr<std::vector<Project>> projects_;
@@ -59,4 +60,4 @@ namespace viscocorrect
 
 } // namespace viscocorrect
 
-#endif // SPAULY_VISCOCORRECT_FRONTEND_IMGUI_APPLICATION_IMPL_IMGUI_GLFW_H
+#endif // SPAULY_VISCOCORRECT_FRONTEND_IMGUI_GLFW_APPLICATION_IMPL_IMGUI_GLFW_H

@@ -13,7 +13,10 @@ namespace viscocorrect
         enum EventType
         {
             kCalcReq,
-            kRendReq
+            kGraphDataReq,
+            kGraphProjectDataReq,
+            kManageProjectReq,
+            kGetProjectReq
         };
 
         class EventBase

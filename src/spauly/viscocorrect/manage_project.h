@@ -7,8 +7,8 @@
 #include <vector>
 #include <functional>
 
-#include "spauly/viscocorrect/graph.h"
 #include "spauly/viscocorrect/util/event.h"
+#include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 
 namespace viscocorrect
 {

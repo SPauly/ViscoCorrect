@@ -18,7 +18,7 @@ namespace viscocorrect
         class LineCoordinates
         {
         public:
-            LineCoordinates() = delete;
+            LineCoordinates() : number_coordinates_(0) {}
             LineCoordinates(const std::vector<T> &x, const std::vector<T> &y);
             ~LineCoordinates();
 
