@@ -13,6 +13,7 @@ namespace viscocorrect
             ApplicationImplImguiGlfw::ApplicationImplImguiGlfw()
             {
             }
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
@@ -80,10 +81,8 @@ namespace viscocorrect
                 graph_ = std::make_shared<GraphImplImGuiGlfw>();
                 layer_stack_.PushLayer(graph_);
 
-                // layer init Projects
-                projects_ = std::make_shared<std::vector<Project>>(1);
-                project_manager_ = std::make_shared<ProjectManager>(projects_, *this->get_event_callback());
-                layer_stack_.PushLayer(project_manager_);
+                // get the projects
+                (*register_event_)(std::make_unique<util::Event<std::shared_ptr<std::vector<Project>>>>(util::EventType::kProjectListReq, &projects_));
 
                 return true;
             }
@@ -123,6 +122,8 @@ namespace viscocorrect
                     layer->OnUIRender();
                 }
 
+                RenderProjectManager();
+
                 // Rendering
                 ImGui::Render();
                 glfwGetFramebufferSize(window_, &display_w_, &display_h_);
@@ -145,6 +146,31 @@ namespace viscocorrect
                 glfwSwapBuffers(window_);
 
                 return true;
+            }
+
+            void ApplicationImplImguiGlfw::RenderProjectManager()
+            {
+                ImGui::Begin("Project");
+
+                for (auto &proj : *projects_) // leads to segmentation fault if projects is not created
+                {
+                    // start new heading et.
+                    ImGui::InputInt("Flowrate Q", &proj.parameters.flowrate_q);
+                    ImGui::InputInt("Total head H in m", &proj.parameters.total_head_m);
+                    ImGui::InputInt("Kinematic viscosity v in mm^2/s", &proj.parameters.viscosity_v);
+                    if (ImGui::Button("Calculate"))
+                    {
+                        (*register_event_)(std::make_unique<util::Event<Project>>(util::EventType::kCalcReq, &proj));
+                    }
+                    ImGui::Text("Correction Q: %.2f", proj.correction.c_q);
+                    ImGui::Text("Correction V: %.2f", proj.correction.c_v);
+                    ImGui::Text("Correction C_H 0.6: %.2f", proj.correction.c_h[0]);
+                    ImGui::Text("Correction C_H 0.8: %.2f", proj.correction.c_h[1]);
+                    ImGui::Text("Correction C_H 1.0: %.2f", proj.correction.c_h[2]);
+                    ImGui::Text("Correction C_H 1.2: %.2f", proj.correction.c_h[3]);
+                }
+
+                ImGui::End();
             }
 
             void ApplicationImplImguiGlfw::SetStyle()

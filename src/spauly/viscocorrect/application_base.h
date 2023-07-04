@@ -1,12 +1,14 @@
 #ifndef SPAULY_VISCOCORRECT_SRC_APPLICATION_BASE_H
 #define SPAULY_VISCOCORRECT_SRC_APPLICATION_BASE_H
 
-#include <memory>
 #include <functional>
+#include <memory>
+#include <vector>
 
 namespace viscocorrect
 {
     class GraphImplBase; // defined in graph_base.h
+    struct Project;      // defined in project.h
     namespace util
     {
         class EventBase; // defined in util/event.h
@@ -15,7 +17,7 @@ namespace viscocorrect
     class ApplicationBase
     {
     public:
-        ApplicationBase(){};
+        ApplicationBase() {}
         virtual ~ApplicationBase(){};
 
         virtual bool Init(){};
@@ -23,21 +25,25 @@ namespace viscocorrect
 
         virtual bool Render(){};
 
-        inline std::shared_ptr<GraphImplBase> get_graph() { return graph_base_; }
+        virtual std::shared_ptr<GraphImplBase> get_graph() { return nullptr; } // mainly used for debugging
 
         inline void set_event_callback(std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> callback)
         {
-            event_callback_ = callback;
+            register_event_ = callback;
+        }
+
+        inline std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> get_register_event()
+        {
+            return register_event_;
         }
 
     protected:
-        inline std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> get_event_callback()
-        {
-            return event_callback_;
-        }
-
         inline bool set_should_close(bool close = true) { return should_close_ = close; }
         inline bool get_should_close() { return should_close_; }
+
+    protected:
+        std::shared_ptr<std::vector<Project>> projects_;
+        std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> register_event_;
 
     private:
         bool should_close_ = false;
@@ -45,10 +51,6 @@ namespace viscocorrect
         float time_step_ = 0.0f;
         float frame_time_ = 0.0f;
         float last_frame_time_ = 0.0f;
-
-        std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> event_callback_;
-
-        std::shared_ptr<GraphImplBase> graph_base_;
     };
 
 } // namespace viscocorrect

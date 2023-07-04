@@ -9,6 +9,8 @@ namespace viscocorrect
 
         frontend_impl->set_event_callback(event_callback_);
         frontend_impl->Init();
+
+        HandleEvents(); // Handle events registered during initialization so that the process is completed
     }
 
     Application::~Application()
@@ -46,6 +48,10 @@ namespace viscocorrect
             {
             case util::kCalcReq:
                 calculator_.Calculate(event->GetData<Project>());
+                break;
+
+            case util::kProjectListReq:
+                *event->GetData<std::shared_ptr<std::vector<Project>>>() = projects_;
                 break;
 
             default:

@@ -32,7 +32,10 @@ namespace viscocorrect
 
                 virtual bool Render() override;
 
+                virtual std::shared_ptr<GraphImplBase> get_graph() override { return graph_; }
+
             private:
+                void RenderProjectManager();
                 void SetStyle();
 
             private:
@@ -46,12 +49,7 @@ namespace viscocorrect
 
                 // utils
                 util_frontend::LayerStack layer_stack_;
-
-                // for now
                 std::shared_ptr<GraphImplImGuiGlfw> graph_;
-                std::shared_ptr<ProjectManager> project_manager_;
-
-                std::shared_ptr<std::vector<Project>> projects_;
             };
 
         } // namespace imgui_glfw
