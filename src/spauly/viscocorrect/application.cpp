@@ -8,7 +8,6 @@ namespace viscocorrect
         projects_ = std::make_shared<std::vector<Project>>(1);
 
         frontend_impl->set_event_callback(event_callback_);
-        frontend_impl->Init();
 
         HandleEvents(); // Handle events registered during initialization so that the process is completed
     }
@@ -20,6 +19,15 @@ namespace viscocorrect
 
     void Application::Run()
     {
+        if (!frontend_impl->Init())
+        {
+            event_que_.clear();
+            projects_->clear();
+            return;
+        }
+
+        HandleEvents(); // Handle events registered during initialization so that the process is completed
+
         while (frontend_impl->Render())
         {
             HandleEvents();
