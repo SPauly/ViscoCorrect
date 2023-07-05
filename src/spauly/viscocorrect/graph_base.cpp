@@ -19,17 +19,17 @@ namespace viscocorrect
     }
 
     //-----------------------------
-    // GraphInternal
-    GraphInternal::GraphInternal()
+    // GraphContext
+    GraphContext::GraphContext()
     {
         InitData();
     }
 
-    GraphInternal::~GraphInternal()
+    GraphContext::~GraphContext()
     {
     }
 
-    GraphCoordsStorage &GraphInternal::GetGraphCoords(const float scale)
+    GraphCoordsStorage &GraphContext::GetGraphCoords(const float scale)
     {
         if (scale == scaling_factor_)
             return data_;
@@ -40,8 +40,10 @@ namespace viscocorrect
         return InitData();
     }
 
-    GraphCoordsStorage &GraphInternal::InitData()
+    GraphCoordsStorage &GraphContext::InitData()
     {
+        data_.scaling_factor = scaling_factor_;
+
         // create data to share with GraphImplBase
         CreateLineCoords(&data_.flowrate_coords, &internal::kProperties.kFlowrateScale, 0.0f, internal::kProperties.kStartFlowrate, true, true);
         CreateLineCoords(&data_.totalhead_coords, &internal::kProperties.kTotalHeadScale, internal::kProperties.kPitchTotalH, internal::kProperties.kStartTotalH, false, false);
@@ -52,7 +54,7 @@ namespace viscocorrect
         return data_;
     }
 
-    void GraphInternal::CreateLineCoords(GraphLineStorage *coords, const std::map<int, int> *raw_points, const double pitch, const int *startpos, bool scale_on_x, bool use_same_x)
+    void GraphContext::CreateLineCoords(GraphLineStorage *coords, const std::map<int, int> *raw_points, const double pitch, const int *startpos, bool scale_on_x, bool use_same_x)
     {
         bool set_start = false;
 
@@ -72,7 +74,7 @@ namespace viscocorrect
 
                 util::LinearFunction temp_func(pitch, (scale_on_x) ? it_total_dist : startpos[0], (scale_on_x) ? startpos[1] : it_total_dist);
 
-                coords->insert(std::make_pair(pair.first, temp_func.CreateLineCoordinates<GraphCoordType>(0.0f, static_cast<GraphCoordType>(internal::kProperties.kTableSize.x) * scaling_factor_)));
+                coords->insert(std::make_pair(pair.first, temp_func.CreateLineCoordinates<GraphCoordType>(0.0f, static_cast<GraphCoordType>(internal::kProperties.kTableWidth) * scaling_factor_)));
             }
         }
         else
@@ -86,7 +88,7 @@ namespace viscocorrect
                 temp.get_array_notation().x_coords[0] = it_total_dist;
                 temp.get_array_notation().x_coords[1] = it_total_dist;
                 temp.get_array_notation().y_coords[0] = .0f;
-                temp.get_array_notation().y_coords[1] = static_cast<GraphCoordType>(internal::kProperties.kTableParameterSize.x);
+                temp.get_array_notation().y_coords[1] = static_cast<GraphCoordType>(internal::kProperties.kTableWidth);
 
                 coords->insert(std::make_pair(pair.first, temp));
             }
@@ -105,7 +107,7 @@ namespace viscocorrect
         }
     }
 
-    void GraphInternal::CreateCorrectionPoints()
+    void GraphContext::CreateCorrectionPoints()
     {
         // have to implement the scaling_factor here!
         util::PolynomialFunction correct_v{internal::kProperties.kCoefficientsV};
@@ -139,7 +141,7 @@ namespace viscocorrect
     void GraphImplBase::DisplayProject(std::shared_ptr<Project> project)
     {
         project_ = project;
-        project_coords_ = graph_interface_.GetProjectCoords(*project_);
+        project_coords_ = graph_ctx_.GetProjectCoords(*project_);
         set_show_project(true);
     }
 

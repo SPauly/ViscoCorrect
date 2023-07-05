@@ -1,5 +1,5 @@
-#ifndef VISCOCORRECT_SRC_APPLICATION_H
-#define VISCOCORRECT_SRC_APPLICATION_H
+#ifndef VISCOCORRECT_APPLICATION_H
+#define VISCOCORRECT_APPLICATION_H
 
 #include <stdio.h>
 
@@ -93,4 +93,4 @@ namespace viscocorrect
     Application *CreateApplication();
 }
 
-#endif // VISCOCORRECT_SRC_APPLICATION_H
+#endif // VISCOCORRECT_APPLICATION_H

@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_SRC_APPLICATION_H
-#define SPAULY_VISCOCORRECT_SRC_APPLICATION_H
+#ifndef SPAULY_VISCOCORRECT_APPLICATION_H
+#define SPAULY_VISCOCORRECT_APPLICATION_H
 
 #include "spauly/viscocorrect/application_base.h"
 
@@ -51,4 +51,4 @@ namespace viscocorrect
     }
 } // namespace viscocorrect
 
-#endif // SPAULY_VISCOCORRECT_SRC_APPLICATION_H
+#endif // SPAULY_VISCOCORRECT_APPLICATION_H

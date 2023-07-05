@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_SRC_UTILS_EVENT_H
-#define SPAULY_VISCOCORRECT_SRC_UTILS_EVENT_H
+#ifndef SPAULY_VISCOCORRECT_UTILS_EVENT_H
+#define SPAULY_VISCOCORRECT_UTILS_EVENT_H
 
 #include <deque>
 #include <memory>
@@ -63,4 +63,4 @@ namespace viscocorrect
     }
 } // namespace ViscoCorrect
 
-#endif // SPAULY_VISCOCORRECT_SRC_UTILS_EVENT_H
+#endif // SPAULY_VISCOCORRECT_UTILS_EVENT_H

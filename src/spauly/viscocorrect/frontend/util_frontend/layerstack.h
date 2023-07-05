@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_SRC_UTIL_LAYERSTACK_H
-#define SPAULY_VISCOCORRECT_SRC_UTIL_LAYERSTACK_H
+#ifndef SPAULY_VISCOCORRECT_UTIL_LAYERSTACK_H
+#define SPAULY_VISCOCORRECT_UTIL_LAYERSTACK_H
 
 #include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 
@@ -51,4 +51,4 @@ namespace viscocorrect
 	}	  // namespace frontend
 } // namespace viscocorrect
 
-#endif // SPAULY_VISCOCORRECT_SRC_UTIL_LAYERSTACK_H
+#endif // SPAULY_VISCOCORRECT_UTIL_LAYERSTACK_H

@@ -27,18 +27,6 @@ namespace viscocorrect
 
     struct Project
     {
-        Project() = default;
-        ~Project()
-        {
-            if (func_totalhead)
-                delete func_totalhead;
-            if (func_visco)
-                delete func_visco;
-            if (render_params)
-                delete render_params;
-            if (render_correction)
-                delete render_correction;
-        }
         // metadata
         std::string name = "";
 
@@ -55,6 +43,20 @@ namespace viscocorrect
         // render functions
         std::function<void()> *render_params = nullptr;
         std::function<void()> *render_correction = nullptr;
+
+        // Ctor and dtor
+        Project() = default;
+        ~Project()
+        {
+            if (func_totalhead)
+                delete func_totalhead;
+            if (func_visco)
+                delete func_visco;
+            if (render_params)
+                delete render_params;
+            if (render_correction)
+                delete render_correction;
+        }
     };
 }
 

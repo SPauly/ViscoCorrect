@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_SRC_UTILS_LAYER_H
-#define SPAULY_VISCOCORRECT_SRC_UTILS_LAYER_H
+#ifndef SPAULY_VISCOCORRECT_UTILS_LAYER_H
+#define SPAULY_VISCOCORRECT_UTILS_LAYER_H
 
 namespace viscocorrect
 {
@@ -22,4 +22,4 @@ namespace viscocorrect
     }     // namespace frontend
 } // namespace viscocorrect
 
-#endif // SPAULY_VISCOCORRECT_SRC_UTILS_LAYER_H
+#endif // SPAULY_VISCOCORRECT_UTILS_LAYER_H

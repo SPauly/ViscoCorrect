@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_SRC_PROJECTMANAGER_H
-#define SPAULY_VISCOCORRECT_SRC_PROJECTMANAGER_H
+#ifndef SPAULY_VISCOCORRECT_PROJECTMANAGER_H
+#define SPAULY_VISCOCORRECT_PROJECTMANAGER_H
 
 #include "spauly/viscocorrect/project.h"
 
@@ -8,19 +8,16 @@
 #include <functional>
 
 #include "spauly/viscocorrect/util/event.h"
-#include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 
 namespace viscocorrect
 {
 
-    class ProjectManager : public frontend::util_frontend::Layer
+    class ProjectManager
     {
     public:
         ProjectManager() = delete;
         ProjectManager(std::shared_ptr<std::vector<Project>> _projects, std::function<void(std::unique_ptr<util::EventBase>)> _event_callback);
         ~ProjectManager() = default;
-
-        virtual void OnUIRender() override;
 
     private:
         std::function<void(std::unique_ptr<util::EventBase>)> event_callback_;
@@ -29,4 +26,4 @@ namespace viscocorrect
     };
 }
 
-#endif // SPAULY_VISCOCORRECT_SRC_PROJECTMANAGER_H
+#endif // SPAULY_VISCOCORRECT_PROJECTMANAGER_H

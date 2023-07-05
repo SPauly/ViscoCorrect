@@ -5,7 +5,6 @@ set(_visco_srcs
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/calculator.cpp    
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/graph_base.cpp
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/manage_project.cpp
-    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/project.cpp
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util/properties.cpp
 )
 

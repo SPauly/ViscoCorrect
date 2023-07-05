@@ -2,7 +2,7 @@
 
 #include "implot.h"
 
-#include "spauly/viscocorrect/util/properties.h"
+#include "spauly/viscocorrect/util/properties.h" // remove it
 
 namespace viscocorrect
 {
@@ -12,10 +12,11 @@ namespace viscocorrect
         {
             GraphImplImGuiGlfw::GraphImplImGuiGlfw()
             {
-                plot_size_1_ = internal::kProperties.kTableParameterSize;
-                plot_size_2_ = internal::kProperties.kTableCorrectionSize;
+                // this has to be changed internal:: should not be accessed here
+                plot_size_1_ = ImVec2(graph_ctx_.GetTableWith(), graph_ctx_.GetTableParameterHeight());
+                plot_size_2_ = ImVec2(graph_ctx_.GetTableWith(), graph_ctx_.GetTableCorrectionHeight());
 
-                graph_coords_ = &graph_interface_.GetGraphCoords(scaling_factor_);
+                graph_coords_ = &graph_ctx_.GetGraphCoords(scaling_factor_);
             }
 
             GraphImplImGuiGlfw::~GraphImplImGuiGlfw()
@@ -25,7 +26,7 @@ namespace viscocorrect
             void GraphImplImGuiGlfw::OnAttach()
             {
                 ImPlot::CreateContext();
-                graph_interface_.set_scaling_factor(1.0);
+                graph_ctx_.set_scaling_factor(1.0);
             }
 
             void GraphImplImGuiGlfw::OnDetach()
@@ -81,7 +82,7 @@ namespace viscocorrect
 
             void GraphImplImGuiGlfw::RenderFlowrate()
             {
-                for (auto &pair : graph_interface_.GetGraphCoords(scaling_factor_).flowrate_coords)
+                for (auto &pair : graph_ctx_.GetGraphCoords(scaling_factor_).flowrate_coords)
                 {
                     ImPlot::PlotLine("##flowrates", pair.second.get_array_notation().x_coords, pair.second.get_array_notation().y_coords, 2);
                 }
@@ -89,11 +90,11 @@ namespace viscocorrect
 
             void GraphImplImGuiGlfw::RenderFunctions()
             {
-                for (auto &pair : graph_interface_.GetGraphCoords(scaling_factor_).totalhead_coords)
+                for (auto &pair : graph_ctx_.GetGraphCoords(scaling_factor_).totalhead_coords)
                 {
                     ImPlot::PlotLine("##totalh", pair.second.get_array_notation().x_coords, pair.second.get_array_notation().y_coords, 2);
                 }
-                for (auto &pair : graph_interface_.GetGraphCoords(scaling_factor_).viscosity_coords)
+                for (auto &pair : graph_ctx_.GetGraphCoords(scaling_factor_).viscosity_coords)
                 {
                     ImPlot::PlotLine("##viscosity", pair.second.get_array_notation().x_coords, pair.second.get_array_notation().y_coords, 2);
                 }

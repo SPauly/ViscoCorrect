@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_SRC_CALCULATOR_H
-#define SPAULY_VISCOCORRECT_SRC_CALCULATOR_H
+#ifndef SPAULY_VISCOCORRECT_CALCULATOR_H
+#define SPAULY_VISCOCORRECT_CALCULATOR_H
 
 #include <vector>
 #include <memory>
@@ -32,4 +32,4 @@ namespace viscocorrect
     };
 } // namespace viscocorrect
 
-#endif // SPAULY_VISCOCORRECT_SRC_CALCULATOR_H
+#endif // SPAULY_VISCOCORRECT_CALCULATOR_H

@@ -1,5 +1,5 @@
-#ifndef SPAULY_VISCOCORRECT_SRC_GRAPH_H
-#define SPAULY_VISCOCORRECT_SRC_GRAPH_H
+#ifndef SPAULY_VISCOCORRECT_GRAPH_H
+#define SPAULY_VISCOCORRECT_GRAPH_H
 
 #include <functional>
 #include <vector>
@@ -15,8 +15,8 @@
 namespace viscocorrect
 {
     // declared in this file
+    class GraphContext;
     class GraphImplBase;
-    class GraphInternal;
     struct GraphCoordsStorage;        // helper for sharing data with the gui
     struct GraphProjectCoordsStorage; // helper for sharing project data with the gui
 
@@ -54,18 +54,22 @@ namespace viscocorrect
         GraphExactLineType prj_calculated_x_coords;
     };
 
-    class GraphInternal
+    class GraphContext
     {
     public:
-        GraphInternal();
-        virtual ~GraphInternal();
+        GraphContext();
+        virtual ~GraphContext();
 
         GraphCoordsStorage &GetGraphCoords(const float scale = 1.0f);
         GraphProjectCoordsStorage &GetProjectCoords(const Project &project) {}
 
+        inline const float GetTableWith() { return internal::kProperties.kTableWidth; }
+        inline const float GetTableParameterHeight() { return internal::kProperties.kTableParameterHeight; }
+        inline const float GetTableCorrectionHeight() { return internal::kProperties.kTableCorrectionHeight; }
+
         inline const float CalcScalingFactorX(const float &x)
         {
-            return (x / internal::kProperties.kTableSize.x);
+            return (x / internal::kProperties.kTableWidth);
         }
         inline const float set_scaling_factor(const float scale = 1.0f) { return scaling_factor_ = scale; }
 
@@ -105,7 +109,7 @@ namespace viscocorrect
         inline const GraphProjectCoordsStorage &get_project_coords() { return project_coords_; }
 
     protected:
-        GraphInternal graph_interface_;
+        GraphContext graph_ctx_;
 
     private:
         bool show_project_ = false;
@@ -118,4 +122,4 @@ namespace viscocorrect
 
 } // namespace viscocorrect
 
-#endif // SPAULY_VISCOCORRECT_SRC_GRAPH_H
+#endif // SPAULY_VISCOCORRECT_GRAPH_H

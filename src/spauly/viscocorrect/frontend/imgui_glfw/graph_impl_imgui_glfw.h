@@ -47,7 +47,7 @@ namespace viscocorrect
                 float scaling_factor_ = 1.0f;
 
                 // internal use
-                ImVec2 plot_size_1_;
+                ImVec2 plot_size_1_; // gotta change these names to be more convinient
                 ImVec2 plot_size_2_;
 
                 GraphCoordsStorage *graph_coords_;
