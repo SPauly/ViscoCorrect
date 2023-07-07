@@ -5,14 +5,12 @@
 #include <memory>
 #include <vector>
 
+#include "spauly/viscocorrect/util/event.h"
+
 namespace viscocorrect
 {
     class GraphImplBase; // defined in graph_base.h
     struct Project;      // defined in project.h
-    namespace util
-    {
-        class EventBase; // defined in util/event.h
-    }
 
     class ApplicationBase
     {
@@ -27,14 +25,14 @@ namespace viscocorrect
 
         virtual std::shared_ptr<GraphImplBase> get_graph() { return nullptr; } // overload this for debugging purposes
 
-        inline void set_event_callback(std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> callback)
+        inline void set_event_callback(std::shared_ptr<EventCallbackType> callback)
         {
             register_event_ = callback;
         }
 
     protected:
-        inline std::shared_ptr<std::vector<Project>> get_projects() { return projects_; }
-        inline std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> get_register_event()
+        inline std::shared_ptr<std::vector<Project>> &get_projects() { return projects_; }
+        inline std::shared_ptr<EventCallbackType> &get_register_event()
         {
             return register_event_;
         }
@@ -50,7 +48,7 @@ namespace viscocorrect
         float last_frame_time_ = 0.0f;
 
         std::shared_ptr<std::vector<Project>> projects_;
-        std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> register_event_;
+        std::shared_ptr<EventCallbackType> register_event_;
     };
 
 } // namespace viscocorrect

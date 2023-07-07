@@ -41,7 +41,7 @@ namespace viscocorrect
         std::shared_ptr<ProjectManager> project_manager_;
         std::shared_ptr<std::vector<Project>> projects_;
 
-        std::shared_ptr<std::function<void(std::unique_ptr<util::EventBase>)>> event_callback_;
+        std::shared_ptr<EventCallbackType> event_callback_;
         std::deque<std::unique_ptr<util::EventBase>> event_que_;
     };
 

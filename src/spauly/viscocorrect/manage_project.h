@@ -16,11 +16,11 @@ namespace viscocorrect
     {
     public:
         ProjectManager() = delete;
-        ProjectManager(std::shared_ptr<std::vector<Project>> _projects, std::function<void(std::unique_ptr<util::EventBase>)> _event_callback);
+        ProjectManager(std::shared_ptr<std::vector<Project>> _projects, std::shared_ptr<EventCallbackType> _event_callback);
         ~ProjectManager() = default;
 
     private:
-        std::function<void(std::unique_ptr<util::EventBase>)> event_callback_;
+        std::shared_ptr<EventCallbackType> event_callback_;
 
         std::shared_ptr<std::vector<Project>> projects_;
     };

@@ -2,12 +2,23 @@
 #define SPAULY_VISCOCORRECT_UTILS_EVENT_H
 
 #include <deque>
+#include <functional>
 #include <memory>
 
 #include "spauly/viscocorrect/util/properties.h"
 
 namespace viscocorrect
 {
+    // defined in this file
+    namespace util
+    {
+        class EventBase;
+        template <typename T>
+        class Event;
+    }
+
+    using EventCallbackType = std::function<void(std::unique_ptr<util::EventBase>)>;
+
     namespace util
     {
         enum EventType
