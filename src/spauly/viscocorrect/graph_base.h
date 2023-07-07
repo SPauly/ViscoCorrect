@@ -106,12 +106,12 @@ namespace viscocorrect
         inline bool get_show_project() { return show_project_; }
         inline bool set_show_project(bool show = true) { return show_project_ = show; }
 
+        inline GraphContext &get_graph_ctx() { return graph_ctx_; }
         inline const GraphProjectCoordsStorage &get_project_coords() { return project_coords_; }
 
-    protected:
+    private:
         GraphContext graph_ctx_;
 
-    private:
         bool show_project_ = false;
         std::shared_ptr<Project> project_;
         GraphProjectCoordsStorage project_coords_;

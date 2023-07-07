@@ -82,7 +82,7 @@ namespace viscocorrect
                 layer_stack_.PushLayer(graph_);
 
                 // get the projects
-                (*register_event_)(std::make_unique<util::Event<std::shared_ptr<std::vector<Project>>>>(util::EventType::kProjectListReq, &projects_));
+                (*get_register_event())(std::make_unique<util::Event<std::shared_ptr<std::vector<Project>>>>(util::EventType::kProjectListReq, &get_projects()));
 
                 return true;
             }
@@ -152,7 +152,7 @@ namespace viscocorrect
             {
                 ImGui::Begin("Project");
 
-                for (auto &proj : *projects_) // leads to segmentation fault if projects is not created
+                for (auto &proj : *get_projects()) // leads to segmentation fault if projects is not created
                 {
                     // start new heading et.
                     ImGui::InputInt("Flowrate Q", &proj.parameters.flowrate_q);
@@ -160,7 +160,7 @@ namespace viscocorrect
                     ImGui::InputInt("Kinematic viscosity v in mm^2/s", &proj.parameters.viscosity_v);
                     if (ImGui::Button("Calculate"))
                     {
-                        (*register_event_)(std::make_unique<util::Event<Project>>(util::EventType::kCalcReq, &proj));
+                        (*get_register_event())(std::make_unique<util::Event<Project>>(util::EventType::kCalcReq, &proj));
                     }
                     ImGui::Text("Correction Q: %.2f", proj.correction.c_q);
                     ImGui::Text("Correction V: %.2f", proj.correction.c_v);
