@@ -20,9 +20,7 @@ namespace viscocorrect
         CorrectionFactors *GetCorrectionFactors(CorrectionFactors *cor_factors, const double x_pos);
 
     protected:
-        // have to make these more convenient anyways
         const double FitToScale(const std::map<int, int> &raw_scale_units, const int input, const int startpos = 0);
-        util::LinearFunction *CreateLinearF(const double rate, const double pos_var, bool _scale_on_x = true, const int _other_coordinate = 0);
         util::LinearFunction *CreateLinearF(const std::map<int, int> &_raw_scale, const double _m, const int _input, const int *_startpos = nullptr, bool _scale_on_x = true);
 
     private:
