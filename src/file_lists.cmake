@@ -28,6 +28,28 @@ set(_visco_includes
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util
 )
 
+set(_visco_debug_srcs
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/debug/debug_tools.cpp
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/debug/curve_fitting.cpp
+)
+
+set(_visco_debug_hdrs
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/debug/debug_tools.h
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/debug/curve_fitting.h
+)
+
+set(_visco_debug_includes
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src/spauly/
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/debug
+    ${PROJECT_SOURCE_DIR}/external/imgui
+    ${PROJECT_SOURCE_DIR}/external/imgui/backends
+    ${PROJECT_SOURCE_DIR}/external/implot
+    ${PROJECT_SOURCE_DIR}/external/gsl
+)
+
 set(_visco_imgui_glfw_srcs
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/frontend/imgui_glfw/application_impl_imgui_glfw.cpp
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/frontend/imgui_glfw/graph_impl_imgui_glfw.cpp

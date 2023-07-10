@@ -1,8 +1,8 @@
-#include "DebugTools.h"
+#include "spauly/viscocorrect/debug/debug_tools.h"
 
 namespace viscocorrect
 {
-    namespace Debug
+    namespace debug
     {
         DebugTools::DebugTools()
         {
@@ -45,7 +45,6 @@ namespace viscocorrect
         {
             mvec_callbacks.push_back(std::move(_callback));
         }
-
 
         void DebugToolBase::RunCallbacks()
         {

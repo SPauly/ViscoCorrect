@@ -2,12 +2,12 @@
 
 namespace viscocorrect
 {
-    Application::Application(ApplicationBase *application_implementaion) : frontend_impl{application_implementaion}
+    Application::Application(ApplicationBase *application_implementaion) : frontend_impl_{application_implementaion}
     {
         event_callback_ = std::make_shared<EventCallbackType>(std::bind(&PushEvent, this, std::placeholders::_1));
         projects_ = std::make_shared<std::vector<Project>>(1);
 
-        frontend_impl->set_event_callback(event_callback_);
+        frontend_impl_->set_event_callback(event_callback_);
 
         HandleEvents(); // Handle events registered during initialization so that the process is completed
     }
@@ -19,7 +19,7 @@ namespace viscocorrect
 
     void Application::Run()
     {
-        if (!frontend_impl->Init())
+        if (!frontend_impl_->Init())
         {
             event_que_.clear();
             projects_->clear();
@@ -28,7 +28,7 @@ namespace viscocorrect
 
         HandleEvents(); // Handle events registered during initialization so that the process is completed
 
-        while (frontend_impl->Render())
+        while (frontend_impl_->Render())
         {
             HandleEvents();
         }
@@ -38,7 +38,7 @@ namespace viscocorrect
     void Application::Shutdown()
     {
         event_que_.clear();
-        frontend_impl->Shutdown();
+        frontend_impl_->Shutdown();
         projects_->clear();
     }
 
@@ -60,6 +60,10 @@ namespace viscocorrect
 
             case util::kProjectListReq:
                 *event->GetData<std::shared_ptr<std::vector<Project>>>() = projects_;
+                break;
+
+            case util::kGetGraphInstance:
+                *event->GetData<std::shared_ptr<GraphImplBase>>() = frontend_impl_->get_graph();
                 break;
 
             default:

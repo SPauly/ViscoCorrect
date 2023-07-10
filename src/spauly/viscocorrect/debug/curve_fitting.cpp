@@ -1,10 +1,8 @@
-#include "debug/CurveFitting.h"
-
-#include "application.h"
+#include "spauly/viscocorrect/debug/curve_fitting.h"
 
 namespace viscocorrect
 {
-    namespace Debug
+    namespace debug
     {
         // FullDataCurve
         FullDataCurve::FullDataCurve(std::map<int, int> &_data, bool _bpoly, int _params)
@@ -23,8 +21,12 @@ namespace viscocorrect
             parameters.resize(_params);
         }
 
-        CurveFitting::CurveFitting()
+        CurveFitting::CurveFitting(std::shared_ptr<EventCallbackType> callback)
+            : event_callback_(callback)
         {
+            // request graph instance
+            (*event_callback_)(std::make_unique<util::Event<std::shared_ptr<GraphImplBase>>>(util::EventType::kGetGraphInstance, &graph_instance_));
+
             ncurves = raw_points.size();
             curves.push_back(FullDataCurve(raw_points.at(0), true, 6));
             curves.push_back(FullDataCurve(raw_points.at(1), true, 6));
@@ -41,13 +43,13 @@ namespace viscocorrect
             ImGui::Begin("Curve Fitting");
             if (ImGui::Button("Enable Render") && !b_renderplot)
             {
-                Application::get_instance()->get_graph()->AddCallbackToPlot(PlotRender_func, 1);
+                graph_instance_->AddCallbackToPlot(PlotRender_func, 1);
                 b_renderplot = true;
             }
             ImGui::SameLine();
             if (ImGui::Button("Disable Render") && b_renderplot)
             {
-                Application::get_instance()->get_graph()->RemoveCallbackFromPlot(PlotRender_func, 1);
+                graph_instance_->RemoveCallbackFromPlot(PlotRender_func, 1);
                 b_renderplot = false;
             }
 
@@ -179,6 +181,6 @@ namespace viscocorrect
             gsl_vector_free(_initial_params);
             gsl_multifit_nlinear_free(workspace);
         }
-    } // namespace Debug
+    } // namespace debug
 
 } // namespace viscocorrect

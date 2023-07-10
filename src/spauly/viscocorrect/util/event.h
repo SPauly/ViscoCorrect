@@ -26,7 +26,8 @@ namespace viscocorrect
             kCalcReq,
             kManageProjectReq,
             kGetProjectReq,
-            kProjectListReq
+            kProjectListReq,
+            kGetGraphInstance
         };
 
         class EventBase

@@ -52,3 +52,32 @@ target_link_libraries( ViscoCorrect
 
 # Add dependencies to ViscoCorrect
 add_dependencies(ViscoCorrect ${_visco_TARGET_LIBRARIES})
+
+# Debugtools
+if(BUILD_DEBUG_FEATURES)
+    set (BUILDLIBS "multifit_nlinear" CACHE STRING "")
+    set (NO_AMPL_BINDINGS ON CACHE BOOL "")
+    set (GSL_DISABLE_TESTS ON CACHE BOOL "")
+
+    add_subdirectory(external/gsl)
+
+    add_library(debug_tools 
+    ${_visco_debug_srcs}
+)
+
+    target_include_directories(debug_tools PUBLIC
+        ${_visco_debug_includes}
+    )
+
+    add_dependencies(debug_tools gsl)
+    target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)
+
+    target_link_libraries(debug_tools PUBLIC glfw gsl gslcblas)
+    target_link_libraries(ViscoCorrect debug_tools)
+
+    set_target_properties(debug_tools PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
+    )
+endif()

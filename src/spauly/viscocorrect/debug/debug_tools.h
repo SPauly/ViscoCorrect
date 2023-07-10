@@ -1,5 +1,5 @@
-#ifndef VISCOCORRECT_UTILS_DEBUGGING_DEBUGTOOLS_H
-#define VISCOCORRECT_UTILS_DEBUGGING_DEBUGTOOLS_H
+#ifndef SPAULY_VISCOCORRECT_DEBUG_DEBUG_TOOLS_H
+#define SPAULY_VISCOCORRECT_DEBUG_DEBUG_TOOLS_H
 
 #include <vector>
 #include <memory>
@@ -8,15 +8,15 @@
 
 #include "imgui.h"
 
-#include "debug/CurveFitting.h"
-#include "util/layer.h"
-#include "util/layerstack.h"
+#include "spauly/viscocorreect/debug/curve_fitting.h"
+#include "spauly/viscocorrect/frontend/util_frontend/layer.h"
+#include "spauly/viscocorrect/frontend/util_frontend/layerstack.h"
 
 namespace viscocorrect
 {
-    namespace Debug
+    namespace debug
     {
-        class DebugTools : public util::Layer
+        class DebugTools : public util_frontend::Layer
         {
         public:
             DebugTools();
@@ -35,7 +35,7 @@ namespace viscocorrect
             CurveFitting m_debug_curve;
         };
 
-        class DebugToolBase : public util::Layer
+        class DebugToolBase : public util_frontend::Layer
         {
         public:
             DebugToolBase() = default;
@@ -68,4 +68,4 @@ namespace viscocorrect
     }
 }
 
-#endif // VISCOCORRECT_UTILS_DEBUGGING_DEBUGTOOLS_H
+#endif // SPAULY_VISCOCORRECT_DEBUG_DEBUG_TOOLS_H

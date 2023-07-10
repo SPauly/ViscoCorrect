@@ -1,5 +1,5 @@
-#ifndef VISCOCORRECT_UTILS_DEBUGGING_CURVEFITTING_H
-#define VISCOCORRECT_UTILS_DEBUGGING_CURVEFITTING_H
+#ifndef SPAULY_VISCOCORRECT_DEBUG_CURVE_FITTING_H
+#define SPAULY_VISCOCORRECT_DEBUG_CURVE_FITTING_H
 
 #include <vector>
 #include <map>
@@ -13,9 +13,12 @@
 #include "imgui.h"
 #include "implot.h"
 
+#include "spauly/viscocorrect/graph_base.h"
+#include "spauly/viscocorrect/util/event.h"
+
 namespace viscocorrect
 {
-    namespace Debug
+    namespace debug
     {
         struct CompressedCurveData
         {
@@ -79,7 +82,7 @@ namespace viscocorrect
         class CurveFitting
         {
         public:
-            CurveFitting();
+            CurveFitting(std::shared_ptr<EventCallbackType> callback);
             ~CurveFitting();
 
             void Render();
@@ -92,6 +95,8 @@ namespace viscocorrect
 
         private:
             ImVec2 m_size{434, 284};
+            std::shared_ptr<EventCallbackType> event_callback_;
+            std::shared_ptr<GraphImplBase> graph_instance_;
 
             size_t ncurves = 2;
             int param1 = 6, param2 = 6;
@@ -189,4 +194,4 @@ namespace viscocorrect
 
 } // namespace ViscoCorrect
 
-#endif // VISCOCORRECT_UTILS_DEBUGGING_CURVEFITTING_H
+#endif // SPAULY_VISCOCORRECT_DEBUG_CURVE_FITTING_H

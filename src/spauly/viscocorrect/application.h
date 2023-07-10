@@ -34,7 +34,7 @@ namespace viscocorrect
         void HandleEvents();
 
     private:
-        ApplicationBase *frontend_impl;
+        ApplicationBase *frontend_impl_;
 
         Calculator calculator_;
 
