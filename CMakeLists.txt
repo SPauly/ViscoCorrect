@@ -77,8 +77,6 @@ if(BUILD_DEBUG_FEATURES)
     target_link_libraries(ViscoCorrect debug_tools)
 
     set_target_properties(debug_tools PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
-    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
-    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/Debug"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/debug"
     )
 endif()
