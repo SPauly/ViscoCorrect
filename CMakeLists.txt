@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g -fno-omit-frame-pointer -rdynamic")
 
+
 # option for building with debug features
 option(BUILD_DEBUG_FEATURES "Build with debug features" ON)
 
@@ -41,7 +42,7 @@ add_executable( ViscoCorrect
     ${${_visco_TARGET_SRC}}
 )
 
-target_include_directories( ViscoCorrect PRIVATE
+target_include_directories( ViscoCorrect PUBLIC
     ${_visco_includes}
     ${${_visco_TARGET_INCLUDES}}
 )
@@ -63,16 +64,16 @@ if(BUILD_DEBUG_FEATURES)
 
     add_library(debug_tools 
     ${_visco_debug_srcs}
-)
+    )
 
     target_include_directories(debug_tools PUBLIC
         ${_visco_debug_includes}
     )
 
-    add_dependencies(debug_tools gsl)
+    add_dependencies(debug_tools gsl ${_visco_TARGET_LIBRARIES})
     target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)
 
-    target_link_libraries(debug_tools PUBLIC glfw gsl gslcblas)
+    target_link_libraries(debug_tools PUBLIC gsl gslcblas)
     target_link_libraries(ViscoCorrect debug_tools)
 
     set_target_properties(debug_tools PROPERTIES

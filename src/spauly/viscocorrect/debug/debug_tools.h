@@ -8,7 +8,8 @@
 
 #include "imgui.h"
 
-#include "spauly/viscocorreect/debug/curve_fitting.h"
+#include "spauly/viscocorrect/util/event.h"
+#include "spauly/viscocorrect/debug/curve_fitting.h"
 #include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 #include "spauly/viscocorrect/frontend/util_frontend/layerstack.h"
 
@@ -16,10 +17,10 @@ namespace viscocorrect
 {
     namespace debug
     {
-        class DebugTools : public util_frontend::Layer
+        class DebugTools : public viscocorrect::frontend::util_frontend::Layer
         {
         public:
-            DebugTools();
+            DebugTools(std::shared_ptr<EventCallbackType> callback);
             virtual ~DebugTools();
 
             virtual void OnUIRender() override;
@@ -27,15 +28,15 @@ namespace viscocorrect
             template <typename T>
             void AddTool(const std::shared_ptr<T> &_t)
             {
-                mvec_tools.PushLayer(_t);
+                tool_stack_.PushLayer(_t);
             }
 
         private:
-            util::LayerStack mvec_tools;
-            CurveFitting m_debug_curve;
+            viscocorrect::frontend::util_frontend::LayerStack tool_stack_;
+            CurveFitting curve_fitting_;
         };
 
-        class DebugToolBase : public util_frontend::Layer
+        class DebugToolBase : public viscocorrect::frontend::util_frontend::Layer
         {
         public:
             DebugToolBase() = default;
@@ -57,12 +58,12 @@ namespace viscocorrect
             void AddCallback(std::unique_ptr<std::function<void()>>);
 
         protected:
-            std::vector<std::unique_ptr<std::function<void()>>> mvec_callbacks;
+            std::vector<std::unique_ptr<std::function<void()>>> callbacks_;
 
             void RunCallbacks();
 
         private:
-            std::string m_name;
+            std::string name_;
         };
 
     }

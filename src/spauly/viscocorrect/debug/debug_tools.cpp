@@ -4,23 +4,23 @@ namespace viscocorrect
 {
     namespace debug
     {
-        DebugTools::DebugTools()
+        DebugTools::DebugTools(std::shared_ptr<EventCallbackType> callback) : curve_fitting_(callback)
         {
         }
 
         DebugTools::~DebugTools()
         {
-            mvec_tools.clear();
+            tool_stack_.clear();
         }
 
         void DebugTools::OnUIRender()
         {
-            ImGui::ShowDemoWindow();
-            m_debug_curve.Render();
+            //ImGui::ShowDemoWindow();  //this leads to an error fix in #8
+            curve_fitting_.Render();
 
             ImGui::Begin("Debugging");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            for (auto &layer : mvec_tools)
+            for (auto &layer : tool_stack_)
             {
                 layer->OnUIRender();
             }
@@ -28,13 +28,13 @@ namespace viscocorrect
         }
 
         // DebugToolBase
-        DebugToolBase::DebugToolBase(const std::string &_name) : m_name(_name)
+        DebugToolBase::DebugToolBase(const std::string &_name) : name_(_name)
         {
         }
 
         void DebugToolBase::OnUIRender()
         {
-            if (ImGui::CollapsingHeader(m_name.c_str()))
+            if (ImGui::CollapsingHeader(name_.c_str()))
             {
                 Run();
                 return;
@@ -43,12 +43,12 @@ namespace viscocorrect
 
         void DebugToolBase::AddCallback(std::unique_ptr<std::function<void()>> _callback)
         {
-            mvec_callbacks.push_back(std::move(_callback));
+            callbacks_.push_back(std::move(_callback));
         }
 
         void DebugToolBase::RunCallbacks()
         {
-            for (const auto &_func : mvec_callbacks)
+            for (const auto &_func : callbacks_)
             {
                 (*_func)();
             }

@@ -15,6 +15,10 @@
 #include "spauly/viscocorrect/frontend/imgui_glfw/graph_impl_imgui_glfw.h"
 #include "spauly/viscocorrect/frontend/util_frontend/layerstack.h"
 
+#ifdef DEBUG_BUILD
+#include "spauly/viscocorrect/debug/debug_tools.h"
+#endif
+
 namespace viscocorrect
 {
     namespace frontend
@@ -50,6 +54,9 @@ namespace viscocorrect
                 // utils
                 util_frontend::LayerStack layer_stack_;
                 std::shared_ptr<GraphImplImGuiGlfw> graph_;
+                #ifdef DEBUG_BUILD
+                std::shared_ptr<debug::DebugTools> debug_tools_;
+                #endif
             };
 
         } // namespace imgui_glfw

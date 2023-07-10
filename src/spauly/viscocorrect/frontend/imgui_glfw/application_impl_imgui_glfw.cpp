@@ -84,6 +84,12 @@ namespace viscocorrect
                 // get the projects
                 (*get_register_event())(std::make_unique<util::Event<std::shared_ptr<std::vector<Project>>>>(util::EventType::kProjectListReq, &get_projects()));
 
+                //enable debugging 
+                #ifdef DEBUG_BUILD
+                debug_tools_ = std::make_shared<debug::DebugTools>(get_register_event());
+                layer_stack_.PushLayer(debug_tools_);
+                #endif
+                
                 return true;
             }
 
