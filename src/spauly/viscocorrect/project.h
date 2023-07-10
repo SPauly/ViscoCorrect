@@ -11,9 +11,9 @@ namespace viscocorrect
 {
     struct CalcParameters
     {
-        int flowrate_q = 0;
-        int total_head_m = 0;
-        int viscosity_v = 0;
+        float flowrate_q = 0;
+        float total_head_m = 0;
+        float viscosity_v = 0;
         util::ViscoUnits visco_unit = util::ViscoUnits::kMilliPascalSeconds;
         util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kLitersPerMinute;
     };

@@ -155,9 +155,9 @@ namespace viscocorrect
                 for (auto &proj : *get_projects()) // leads to segmentation fault if projects is not created
                 {
                     // start new heading et.
-                    ImGui::InputInt("Flowrate Q", &proj.parameters.flowrate_q);
-                    ImGui::InputInt("Total head H in m", &proj.parameters.total_head_m);
-                    ImGui::InputInt("Kinematic viscosity v in mm^2/s", &proj.parameters.viscosity_v);
+                    ImGui::InputFloat("Flowrate Q", &proj.parameters.flowrate_q);
+                    ImGui::InputFloat("Total head H in m", &proj.parameters.total_head_m);
+                    ImGui::InputFloat("Kinematic viscosity v in mm^2/s", &proj.parameters.viscosity_v);
                     if (ImGui::Button("Calculate"))
                     {
                         (*get_register_event())(std::make_unique<util::Event<Project>>(util::EventType::kCalcReq, &proj));

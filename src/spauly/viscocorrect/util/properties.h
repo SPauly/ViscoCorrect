@@ -11,9 +11,9 @@ namespace viscocorrect
         struct Properties
         {
             // Table sizes
-            const float kTableWidth = 434;
-            const float kTableParameterHeight = 304;
-            const float kTableCorrectionHeight = 284;
+            const float kTableWidth = 434.0f;
+            const float kTableParameterHeight = 304.0f;
+            const float kTableCorrectionHeight = 284.0f;
 
             // Correction Factors
             const int kCorrectionScale = 22; // pixels between each correction factor on scale
