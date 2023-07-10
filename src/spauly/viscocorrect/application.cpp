@@ -4,7 +4,7 @@ namespace viscocorrect
 {
     Application::Application(ApplicationBase *application_implementaion) : frontend_impl{application_implementaion}
     {
-        event_callback_ = std::make_shared<EventCallbackType >(std::bind(&PushEvent, this, std::placeholders::_1));
+        event_callback_ = std::make_shared<EventCallbackType>(std::bind(&PushEvent, this, std::placeholders::_1));
         projects_ = std::make_shared<std::vector<Project>>(1);
 
         frontend_impl->set_event_callback(event_callback_);
@@ -49,7 +49,7 @@ namespace viscocorrect
 
     void Application::HandleEvents()
     {
-        for (int i = 0; i < event_que_.size(); i++)
+        for (size_t i = 0; i < event_que_.size(); i++)
         {
             auto event = std::move(event_que_.front());
             switch (event->get_event_type_())

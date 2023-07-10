@@ -61,7 +61,7 @@ namespace viscocorrect
         virtual ~GraphContext();
 
         GraphCoordsStorage &GetGraphCoords(const float scale = 1.0f);
-        GraphProjectCoordsStorage &GetProjectCoords(const Project &project) {}
+        GraphProjectCoordsStorage &GetProjectCoords(const Project &project) { return prj_data_; } // only a temporary solution! DO NOT USE. Function is yet to be implemented
 
         inline const float GetTableWith() { return internal::kProperties.kTableWidth; }
         inline const float GetTableParameterHeight() { return internal::kProperties.kTableParameterHeight; }

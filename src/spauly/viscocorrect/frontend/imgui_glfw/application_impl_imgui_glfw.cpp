@@ -150,6 +150,9 @@ namespace viscocorrect
 
             void ApplicationImplImguiGlfw::RenderProjectManager()
             {
+                if (!get_projects())
+                    return;
+
                 ImGui::Begin("Project");
 
                 for (auto &proj : *get_projects()) // leads to segmentation fault if projects is not created

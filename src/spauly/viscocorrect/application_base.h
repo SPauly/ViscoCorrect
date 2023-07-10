@@ -15,13 +15,13 @@ namespace viscocorrect
     class ApplicationBase
     {
     public:
-        ApplicationBase() {}
-        virtual ~ApplicationBase(){};
+        ApplicationBase() = default;
+        virtual ~ApplicationBase() = default;
 
-        virtual bool Init(){};
-        virtual void Shutdown(){};
+        virtual bool Init() = 0;
+        virtual void Shutdown() = 0;
 
-        virtual bool Render(){};
+        virtual bool Render() = 0;
 
         virtual std::shared_ptr<GraphImplBase> get_graph() { return nullptr; } // overload this for debugging purposes
 
