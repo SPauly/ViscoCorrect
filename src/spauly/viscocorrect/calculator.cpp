@@ -9,7 +9,7 @@ Calculator::Calculator()
     : poly_cq_(internal::kProperties.kCoefficientsQ),
       poly_cv_(internal::kProperties.kCoefficientsV) {
   for (auto &pol : internal::kProperties.kCoefficientsH) {
-    poly_ch_.push_back(util::PolynomialFunction(pol));
+    poly_ch_.push_back(util::LogisticalFunction(pol));
   }
 }
 

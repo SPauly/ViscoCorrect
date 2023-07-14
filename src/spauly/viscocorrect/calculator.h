@@ -29,7 +29,7 @@ class Calculator {
  private:
   util::PolynomialFunction poly_cv_;
   util::PolynomialFunction poly_cq_;
-  std::vector<util::PolynomialFunction> poly_ch_;
+  std::vector<util::LogisticalFunction> poly_ch_;
 };
 }  // namespace viscocorrect
 
