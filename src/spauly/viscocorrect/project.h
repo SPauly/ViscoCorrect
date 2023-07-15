@@ -8,18 +8,22 @@
 #include "spauly/viscocorrect/util/mathematical_functions.h"
 
 namespace viscocorrect {
+enum class CurvesOrderH : int;  // defined in properties.h
+
 struct CalcParameters {
   float flowrate_q = 0;
   float total_head_m = 0;
   float viscosity_v = 0;
+  CurvesOrderH selected_h_curve;
   util::ViscoUnits visco_unit = util::ViscoUnits::kMilliPascalSeconds;
   util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kLitersPerMinute;
 };
 
 struct CorrectionFactors {
-  double c_q = 0.0f;
-  double c_v = 0.0f;
-  double c_h[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+  double c_q = 0.0;
+  double c_n = 0.0;
+  double c_h_selected = 0.0;
+  double c_h_all[4] = {0.0, 0.0, 0.0, 0.0};
 };
 
 struct Project {

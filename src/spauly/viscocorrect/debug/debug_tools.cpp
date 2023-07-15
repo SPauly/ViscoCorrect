@@ -8,7 +8,7 @@ DebugTools::DebugTools(std::shared_ptr<EventCallbackType> callback)
 DebugTools::~DebugTools() { tool_stack_.clear(); }
 
 void DebugTools::OnUIRender() {
-  // ImGui::ShowDemoWindow();  //this leads to an error fix in #8
+  ImGui::ShowDemoWindow();
   curve_fitting_.Render();
 
   ImGui::Begin("Debugging");

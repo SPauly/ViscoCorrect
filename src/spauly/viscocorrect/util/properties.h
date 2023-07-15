@@ -5,6 +5,7 @@
 #include <vector>
 
 namespace viscocorrect {
+enum class CurvesOrderH : int { k06 = 0, k08 = 1, k10 = 2, k12 = 3 };
 namespace internal {
 struct Properties {
   // Table sizes
@@ -16,17 +17,17 @@ struct Properties {
   const int kCorrectionScale =
       22;  // pixels between each correction factor on scale
   const int kCutoffQ[2]{242, 384};
-  const int kCutoffV[2]{122, 363};
-  const int kCutoffH[2]{146, 382};  // yet to be determined
+  const int kCutoffN[2]{122, 363};
+  const int kCutoffH[2]{146, 382};
   const std::vector<double> kCoefficientsQ{
       4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324,
       -1.1870337647376101,    176.52190832690891,      -10276.558815133236};
-  const std::vector<double> kCoefficientsV{
+  const std::vector<double> kCoefficientsN{
       2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714,
       -0.037300324399145976,  4.2391803778160968,      -6.2364025573465849};
-  const std::vector<std::vector<double>>
-      kCoefficientsH{{285.91175890816675, -0.015057232233799856, 436.03377039579027}//1.2
-      };  // yet to be determined
+  const std::vector<std::vector<double>> kCoefficientsH{
+      {285.91175890816675, -0.015057232233799856, 436.03377039579027}  // 1.2
+  };  // yet to be determined
 
   // Parameters
   const int kStartFlowrate[2]{0, 0};

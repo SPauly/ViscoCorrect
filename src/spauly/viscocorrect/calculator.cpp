@@ -6,50 +6,53 @@
 
 namespace viscocorrect {
 Calculator::Calculator()
-    : poly_cq_(internal::kProperties.kCoefficientsQ),
-      poly_cv_(internal::kProperties.kCoefficientsV) {
+    : func_cq_(internal::kProperties.kCoefficientsQ),
+      func_cn_(internal::kProperties.kCoefficientsN) {
   for (auto &pol : internal::kProperties.kCoefficientsH) {
-    poly_ch_.push_back(util::LogisticalFunction(pol));
+    func_ch_.push_back(util::LogisticalFunction(pol));
   }
 }
 
-Project *Calculator::Calculate(Project *_prj) {
-  _prj->func_totalhead = CreateLinearF(
+Project *Calculator::Calculate(Project *prj) {
+  prj->func_totalhead = CreateLinearF(
       internal::kProperties.kTotalHeadScale, internal::kProperties.kPitchTotalH,
-      _prj->parameters.total_head_m, internal::kProperties.kStartTotalH, false);
-  _prj->func_visco = CreateLinearF(
+      prj->parameters.total_head_m, internal::kProperties.kStartTotalH, false);
+  prj->func_visco = CreateLinearF(
       internal::kProperties.kViscoScale, internal::kProperties.kPitchVisco,
-      _prj->parameters.viscosity_v, internal::kProperties.kStartVisco, true);
+      prj->parameters.viscosity_v, internal::kProperties.kStartVisco, true);
 
-  _prj->flow_pos = FitToScale(internal::kProperties.kFlowrateScale,
-                              _prj->parameters.flowrate_q,
-                              internal::kProperties.kStartFlowrate[0]);
+  prj->flow_pos = FitToScale(internal::kProperties.kFlowrateScale,
+                             prj->parameters.flowrate_q,
+                             internal::kProperties.kStartFlowrate[0]);
 
-  if (!_prj->func_totalhead || !_prj->func_visco) return _prj;
+  if (!prj->func_totalhead || !prj->func_visco) return prj;
 
-  _prj->correction_x =
-      _prj->func_visco->get_x(_prj->func_totalhead->f(_prj->flow_pos));
+  prj->correction_x =
+      prj->func_visco->get_x(prj->func_totalhead->f(prj->flow_pos));
 
-  GetCorrectionFactors(&_prj->correction, _prj->correction_x);
+  GetCorrectionFactors(&prj->correction, prj->correction_x);
 
-  return _prj;
+  prj->correction.c_h_selected =
+      prj->correction.c_h_all[(int)prj->parameters.selected_h_curve];
+
+  return prj;
 }
 
-CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *_obj,
+CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *obj,
                                                     const double _x) {
-  _obj->c_v = (poly_cv_.f(_x) / (double)internal::kProperties.kCorrectionScale /
-               (double)10.0) +
-              (double)0.2;
-  _obj->c_q =
-      (poly_cq_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) +
+  obj->c_n = (func_cn_.f(_x) / (double)internal::kProperties.kCorrectionScale /
+              (double)10.0) +
+             (double)0.2;
+  obj->c_q =
+      (func_cq_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) +
       0.2;
-  for (int i = 0; i < poly_ch_.size(); i++) {
-    _obj->c_h[i] = (poly_ch_.at(i).f(_x) /
-                    (double)internal::kProperties.kCorrectionScale / 10) -
-                   0.3;
+  for (int i = 0; i < func_ch_.size(); i++) {
+    obj->c_h_all[i] = (func_ch_.at(i).f(_x) /
+                       (double)internal::kProperties.kCorrectionScale / 10) -
+                      0.3;
   }
 
-  return _obj;
+  return obj;
 }
 
 const double Calculator::FitToScale(const std::map<int, int> &_raw_scale,

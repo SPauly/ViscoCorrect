@@ -167,11 +167,11 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
           util::EventType::kCalcReq, &proj));
     }
     ImGui::Text("Correction Q: %.2f", proj.correction.c_q);
-    ImGui::Text("Correction V: %.2f", proj.correction.c_v);
-    ImGui::Text("Correction C_H 0.6: %.2f", proj.correction.c_h[0]);
-    ImGui::Text("Correction C_H 0.8: %.2f", proj.correction.c_h[1]);
-    ImGui::Text("Correction C_H 1.0: %.2f", proj.correction.c_h[2]);
-    ImGui::Text("Correction C_H 1.2: %.2f", proj.correction.c_h[3]);
+    ImGui::Text("Correction N: %.2f", proj.correction.c_n);
+    ImGui::Text("Correction C_H 0.6: %.2f", proj.correction.c_h_all[0]);
+    ImGui::Text("Correction C_H 0.8: %.2f", proj.correction.c_h_all[1]);
+    ImGui::Text("Correction C_H 1.0: %.2f", proj.correction.c_h_all[2]);
+    ImGui::Text("Correction C_H 1.2: %.2f", proj.correction.c_h_all[3]);
   }
 
   ImGui::End();
