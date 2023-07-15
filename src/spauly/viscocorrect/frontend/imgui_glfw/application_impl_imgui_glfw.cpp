@@ -162,16 +162,22 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
     ImGui::InputFloat("Total head H in m", &proj.parameters.total_head_m);
     ImGui::InputFloat("Kinematic viscosity v in mm^2/s",
                       &proj.parameters.viscosity_v);
+    ImGui::Combo("Choose factor for Q",
+                 reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
+                 " 0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
+
     if (ImGui::Button("Calculate")) {
       (*get_register_event())(std::make_unique<util::Event<Project>>(
           util::EventType::kCalcReq, &proj));
     }
     ImGui::Text("Correction Q: %.2f", proj.correction.c_q);
     ImGui::Text("Correction N: %.2f", proj.correction.c_n);
-    ImGui::Text("Correction C_H 0.6: %.2f", proj.correction.c_h_all[0]);
-    ImGui::Text("Correction C_H 0.8: %.2f", proj.correction.c_h_all[1]);
-    ImGui::Text("Correction C_H 1.0: %.2f", proj.correction.c_h_all[2]);
-    ImGui::Text("Correction C_H 1.2: %.2f", proj.correction.c_h_all[3]);
+    ImGui::Text("Correction C_H: %.2f", proj.correction.c_h_selected);
+
+    ImGui::Text("Correction C_H_ALL 0.6: %.2f", proj.correction.c_h_all[0]);
+    ImGui::Text("Correction C_H_ALL 0.8: %.2f", proj.correction.c_h_all[1]);
+    ImGui::Text("Correction C_H_ALL 1.0: %.2f", proj.correction.c_h_all[2]);
+    ImGui::Text("Correction C_H_ALL 1.2: %.2f", proj.correction.c_h_all[3]);
   }
 
   ImGui::End();

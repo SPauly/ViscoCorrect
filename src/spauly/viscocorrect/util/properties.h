@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace viscocorrect {
-enum class CurvesOrderH : int { k06 = 0, k08 = 1, k10 = 2, k12 = 3 };
+enum CurvesOrderH : int { k06 = 0, k08 = 1, k10 = 2, k12 = 3 };
 namespace internal {
 struct Properties {
   // Table sizes

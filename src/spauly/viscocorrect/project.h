@@ -8,7 +8,7 @@
 #include "spauly/viscocorrect/util/mathematical_functions.h"
 
 namespace viscocorrect {
-enum class CurvesOrderH : int;  // defined in properties.h
+enum CurvesOrderH : int;  // defined in properties.h
 
 struct CalcParameters {
   float flowrate_q = 0;
