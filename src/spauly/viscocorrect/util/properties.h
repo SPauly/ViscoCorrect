@@ -5,13 +5,34 @@
 #include <vector>
 
 namespace viscocorrect {
+
+// implemented in this file
+struct InputRestrictions;
 enum CurvesOrderH : int { k06 = 0, k08 = 1, k10 = 2, k12 = 3 };
+bool IsFlowrateInputOkay(const float &flowrate);
+bool IsTotalHeadInputOkay(const float &total_head);
+bool IsViscosityInputOkay(const float &viscosity);
+
 namespace internal {
+struct Properties;
+extern const Properties kProperties;
+
+bool ValidateXQ(const double &x);
+bool ValidateXN(const double &x);
+bool ValidateXH(const double &x);
+
+//---------------------
+// implementation
 struct Properties {
   // Table sizes
   const float kTableWidth = 434.0f;
   const float kTableParameterHeight = 304.0f;
   const float kTableCorrectionHeight = 284.0f;
+
+  // Input restrictions
+  const float kInputFlowrate[2]{6, 2000};
+  const float kInputTotalHead[2]{5, 200};
+  const float kInputViscosity[2]{10, 4000};
 
   // Correction Factors
   const int kCorrectionScale =
@@ -26,7 +47,8 @@ struct Properties {
       2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714,
       -0.037300324399145976,  4.2391803778160968,      -6.2364025573465849};
   const std::vector<std::vector<double>> kCoefficientsH{
-      {285.91175890816675, -0.015057232233799856, 436.03377039579027}  // 1.2
+      {285.91175890816675, -0.015057232233799856, 436.03377039579027},  // 1.2
+      {284.91175890816675, -0.014057232233799856, 436.06377039579027}   // test
   };  // yet to be determined
 
   // Parameters
@@ -51,9 +73,14 @@ struct Properties {
       {100, 8},  {200, 26}, {300, 16},  {400, 11},  {500, 8},  {600, 6},
       {800, 12}, {1000, 9}, {2000, 26}, {3000, 14}, {4000, 10}};
 };
-
-extern const Properties kProperties;
 }  // namespace internal
+
+struct InputRestrictions {
+  // Input restrictions
+  const float *kInputFlowrate = internal::kProperties.kInputFlowrate;
+  const float *kInputTotalHead = internal::kProperties.kInputTotalHead;
+  const float *kInputViscosity = internal::kProperties.kInputViscosity;
+};
 
 }  // namespace viscocorrect
 

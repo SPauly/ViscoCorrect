@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "spauly/viscocorrect/util/properties.h"  //for verifying the input
 
 namespace viscocorrect {
 namespace frontend {
@@ -157,27 +158,43 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
   for (auto &proj : *get_projects())  // leads to segmentation fault if projects
                                       // is not created
   {
-    // start new heading et.
+    ImGui::PushItemWidth(100);
     ImGui::InputFloat("Flowrate Q", &proj.parameters.flowrate_q);
     ImGui::InputFloat("Total head H in m", &proj.parameters.total_head_m);
     ImGui::InputFloat("Kinematic viscosity v in mm^2/s",
                       &proj.parameters.viscosity_v);
     ImGui::Combo("Choose factor for Q",
                  reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
-                 " 0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
+                 "0.6x\0/0.8x\01.0x\01.2x\0\0");
+    ImGui::PopItemWidth();
 
+    if (ImGui::BeginMenu("Advanced Settings")) {
+      ImGui::MenuItem("Show project in graph");
+
+      ImGui::EndMenu();
+    }
+
+    ImGui::Separator();
+
+    ImGui::Text("Correction Q: %.2f", proj.correction.c_q);
+    ImGui::Text("Correction N: %.2f", proj.correction.c_n);
+    ImGui::Text("Correction H: %.2f", proj.correction.c_h_selected);
+
+    ImGui::Separator();
+
+    static bool found_error = false;
     if (ImGui::Button("Calculate")) {
+      if (!IsFlowrateInputOkay(proj.parameters.flowrate_q) ||
+          !IsTotalHeadInputOkay(proj.parameters.total_head_m) ||
+          !IsViscosityInputOkay(proj.parameters.viscosity_v))
+        found_error = true;
+      else
+        found_error = false;
       (*get_register_event())(std::make_unique<util::Event<Project>>(
           util::EventType::kCalcReq, &proj));
     }
-    ImGui::Text("Correction Q: %.2f", proj.correction.c_q);
-    ImGui::Text("Correction N: %.2f", proj.correction.c_n);
-    ImGui::Text("Correction C_H: %.2f", proj.correction.c_h_selected);
 
-    ImGui::Text("Correction C_H_ALL 0.6: %.2f", proj.correction.c_h_all[0]);
-    ImGui::Text("Correction C_H_ALL 0.8: %.2f", proj.correction.c_h_all[1]);
-    ImGui::Text("Correction C_H_ALL 1.0: %.2f", proj.correction.c_h_all[2]);
-    ImGui::Text("Correction C_H_ALL 1.2: %.2f", proj.correction.c_h_all[3]);
+    if (found_error) ImGui::Text("Input not valid");
   }
 
   ImGui::End();

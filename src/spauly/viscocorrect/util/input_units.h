@@ -8,6 +8,8 @@ enum class ViscoUnits { kMilliPascalSeconds, kCentiStoke };
 enum class FlowrateUnits { kLitersPerMinute, kGallonsPerMinute };
 }  // namespace util
 
+namespace internal {}  // namespace internal
+
 }  // namespace viscocorrect
 
 #endif  // SPAULY_VISCOCORRECT_UTIL_INPUT_UNITS_H

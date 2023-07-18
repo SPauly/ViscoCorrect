@@ -10,6 +10,11 @@
 namespace viscocorrect {
 enum CurvesOrderH : int;  // defined in properties.h
 
+// defined in this file
+struct CalcParameters;
+struct CorrectionFactors;
+struct Project;
+
 struct CalcParameters {
   float flowrate_q = 0;
   float total_head_m = 0;

@@ -14,6 +14,12 @@ Calculator::Calculator()
 }
 
 Project *Calculator::Calculate(Project *prj) {
+  // verify the input
+  if (!IsFlowrateInputOkay(prj->parameters.flowrate_q) ||
+      !IsTotalHeadInputOkay(prj->parameters.total_head_m) ||
+      !IsViscosityInputOkay(prj->parameters.viscosity_v))
+    return prj;
+
   prj->func_totalhead = CreateLinearF(
       internal::kProperties.kTotalHeadScale, internal::kProperties.kPitchTotalH,
       prj->parameters.total_head_m, internal::kProperties.kStartTotalH, false);
@@ -40,16 +46,32 @@ Project *Calculator::Calculate(Project *prj) {
 
 CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *obj,
                                                     const double _x) {
-  obj->c_n = (func_cn_.f(_x) / (double)internal::kProperties.kCorrectionScale /
-              (double)10.0) +
-             (double)0.2;
-  obj->c_q =
-      (func_cq_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) +
-      0.2;
-  for (int i = 0; i < func_ch_.size(); i++) {
-    obj->c_h_all[i] = (func_ch_.at(i).f(_x) /
-                       (double)internal::kProperties.kCorrectionScale / 10) -
-                      0.3;
+  if (internal::ValidateXN(_x)) {
+    obj->c_n = (func_cn_.f(_x) /
+                (double)internal::kProperties.kCorrectionScale / (double)10.0) +
+               (double)0.2;
+  } else {
+    obj->c_n = (_x < internal::kProperties.kCutoffN[0]) ? 1.0 : 0.0;
+  }
+
+  if (internal::ValidateXQ(_x)) {
+    obj->c_q =
+        (func_cq_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) +
+        0.2;
+  } else {
+    obj->c_q = (_x < internal::kProperties.kCutoffQ[0]) ? 1.0 : 0.0;
+  }
+
+  if (internal::ValidateXH(_x)) {
+    for (int i = 0; i < func_ch_.size(); i++) {
+      obj->c_h_all[i] = (func_ch_.at(i).f(_x) /
+                         (double)internal::kProperties.kCorrectionScale / 10) -
+                        0.3;
+    }
+  } else {
+    for (int i = 0; i < func_ch_.size(); i++) {
+      obj->c_h_all[i] = (_x < internal::kProperties.kCutoffH[0]) ? 1.0 : 0.0;
+    }
   }
 
   return obj;
