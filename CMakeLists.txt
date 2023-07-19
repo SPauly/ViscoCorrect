@@ -5,11 +5,10 @@ project(ViscoCorrect)
 # compiler configuration
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wformat -fno-var-tracking-assignments -fverbose-asm -fopenmp")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g -fno-omit-frame-pointer -rdynamic")
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "/Zi /Od")
+set(CMAKE_CXX_FLAGS_RELEASE "/O2 /arch:NATIVE")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/O2 /arch:NATIVE /Zi")
 
 # option for building with debug features
 option(BUILD_DEBUG_FEATURES "Build with debug features" OFF)

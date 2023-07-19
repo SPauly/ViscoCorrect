@@ -1,5 +1,7 @@
 #include "spauly/viscocorrect/graph_base.h"
 
+#include <stdexcept>
+
 #include "spauly/viscocorrect/util/properties.h"
 
 namespace viscocorrect {
