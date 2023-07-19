@@ -28,6 +28,9 @@ CurveFitting::CurveFitting(std::shared_ptr<EventCallbackType> callback)
   curves.push_back(FullDataCurve(raw_points.at(0), true, 6));
   curves.push_back(FullDataCurve(raw_points.at(1), true, 6));
   curves.push_back(FullDataCurve(raw_points.at(2), true, 6));
+  curves.push_back(FullDataCurve(raw_points.at(3), true, 6));
+  curves.push_back(FullDataCurve(raw_points.at(4), true, 6));
+  curves.push_back(FullDataCurve(raw_points.at(5), true, 6));
 
   PlotRender_func =
       std::make_shared<std::function<void()>>(std::bind(RenderInPlot, this));
@@ -58,6 +61,9 @@ void CurveFitting::Render() {
       curves.push_back(FullDataCurve(raw_points.at(0), (bool)use_poly_, num_params_));
       curves.push_back(FullDataCurve(raw_points.at(1), (bool)use_poly_, num_params_));
       curves.push_back(FullDataCurve(raw_points.at(2), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(3), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(4), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(5), (bool)use_poly_, num_params_));
     }
     for (int i = 0; i < curves.size(); i++) {
       FitCurve(curves.at(i));

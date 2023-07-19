@@ -1,5 +1,8 @@
 #include "frontend/imgui_glfw/application_impl_imgui_glfw.h"
 
+#include <fstream>
+#include <string>
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -43,7 +46,7 @@ bool ApplicationImplImguiGlfw::Init() {
 #endif
 
   // Create window with graphics context
-  window_ = glfwCreateWindow(1280, 720, "ViscoCorrect", NULL, NULL);
+  window_ = glfwCreateWindow(820, 630, "ViscoCorrect", NULL, NULL);
   if (window_ == NULL) return false;
   glfwMakeContextCurrent(window_);
   glfwSwapInterval(1);  // Enable vsync
@@ -123,6 +126,7 @@ bool ApplicationImplImguiGlfw::Render() {
   }
 
   RenderProjectManager();
+  Feedback();
 
   // Rendering
   ImGui::Render();
@@ -165,20 +169,23 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
                       &proj.parameters.viscosity_v);
     ImGui::Combo("Choose factor for Q",
                  reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
-                 "0.6x\0/0.8x\01.0x\01.2x\0\0");
+                 "0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
     ImGui::PopItemWidth();
 
     if (ImGui::BeginMenu("Advanced Settings")) {
-      ImGui::MenuItem("Show project in graph");
+      ImGui::MenuItem("[beta] Not implemented yet");
+      ImGui::MenuItem("Enable show Project in Graph");
+      ImGui::MenuItem("Select unit of measure for viscosity");
+      ImGui::MenuItem("Select unit of measure for flowrate");
 
       ImGui::EndMenu();
     }
 
     ImGui::Separator();
 
-    ImGui::Text("Correction Q: %.2f", proj.correction.c_q);
-    ImGui::Text("Correction N: %.2f", proj.correction.c_n);
-    ImGui::Text("Correction H: %.2f", proj.correction.c_h_selected);
+    ImGui::Text("Correction n: %.3f", proj.correction.c_n);
+    ImGui::Text("Correction Q: %.3f", proj.correction.c_q);
+    ImGui::Text("Correction H: %.3f", proj.correction.c_h_selected);
 
     ImGui::Separator();
 
@@ -195,6 +202,61 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
     }
 
     if (found_error) ImGui::Text("Input not valid");
+  }
+
+  ImGui::End();
+}
+
+void ApplicationImplImguiGlfw::Feedback() {
+  ImGui::Begin("Feedback");
+  ImGui::Text("Are the calculated values wrong?");
+  ImGui::Text("Please provide your feedback here:");
+  ImGui::Text("Expected values: ");
+
+  static float expected_n, expected_q, expected_h;
+
+  ImGui::PushItemWidth(100);
+  ImGui::InputFloat("n", &expected_n);
+  ImGui::InputFloat("Q", &expected_q);
+  ImGui::InputFloat("H", &expected_h);
+  ImGui::PopItemWidth();
+
+  if (ImGui::Button("Submit Feedback")) {
+    std::string entry = "----------------\nParameters:";
+
+    if (auto projectsPtr = get_projects();
+        projectsPtr && !projectsPtr->empty()) {
+      const auto &parameters = projectsPtr->at(0).parameters;
+      const auto &corrections = projectsPtr->at(0).correction;
+
+      entry += "Flowrate: " + std::to_string(parameters.flowrate_q) + "\n";
+      entry += "Total Head: " + std::to_string(parameters.total_head_m) + "\n";
+      entry += "Viscosity: " + std::to_string(parameters.viscosity_v) + "\n";
+      entry +=
+          "Multiplier H: " + std::to_string(parameters.selected_h_curve) + "\n";
+
+      entry += "Calculated values - Expected values = difference:\n";
+      entry += "Q: " + std::to_string(corrections.c_q) + " - " +
+               std::to_string(expected_q) + " = " +
+               std::to_string(corrections.c_q - expected_q) + "\n";
+      entry += "n: " + std::to_string(corrections.c_n) + " - " +
+               std::to_string(expected_n) + " = " +
+               std::to_string(corrections.c_n - expected_n) + "\n";
+      entry += "H: " + std::to_string(corrections.c_h_selected) + " - " +
+               std::to_string(expected_h) + " = " +
+               std::to_string(corrections.c_h_selected - expected_h) + "\n\n";
+
+      std::ofstream feedback_file("feedback.txt",
+                                  std::ios::app | std::ios::out);
+      if (feedback_file.is_open()) {
+        // Write the entry to the file
+        feedback_file << entry << std::endl;
+
+        // Close the file
+        feedback_file.close();
+      } else {
+      }
+    }
   }
 
   ImGui::End();

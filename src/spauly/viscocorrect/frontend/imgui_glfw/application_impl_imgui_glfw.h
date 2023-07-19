@@ -37,6 +37,8 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   void RenderProjectManager();
   void SetStyle();
 
+  void Feedback();
+
  private:
   GLFWwindow *window_;
   int display_w_, display_h_;
