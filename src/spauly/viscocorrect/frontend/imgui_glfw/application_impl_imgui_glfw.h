@@ -12,7 +12,6 @@
 #include "imgui.h"
 #include "spauly/viscocorrect/frontend/imgui_glfw/graph_impl_imgui_glfw.h"
 #include "spauly/viscocorrect/frontend/util_frontend/layerstack.h"
-#include "spauly/viscocorrect/manage_project.h"
 #include "spauly/viscocorrect/project.h"
 
 #ifdef DEBUG_BUILD
@@ -37,6 +36,8 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
  private:
   void RenderProjectManager();
   void SetStyle();
+
+  void Feedback();
 
  private:
   GLFWwindow *window_;

@@ -108,12 +108,16 @@ void GraphContext::CreateLineCoords(GraphLineStorage *coords,
 
 void GraphContext::CreateCorrectionPoints() {
   // have to implement the scaling_factor here!
-  util::PolynomialFunction correct_v{internal::kProperties.kCoefficientsV};
+  util::PolynomialFunction correct_v{internal::kProperties.kCoefficientsN};
   util::PolynomialFunction correct_q{internal::kProperties.kCoefficientsQ};
-  std::vector<util::PolynomialFunction> correct_h;
+  std::vector<util::LogisticalFunction> correct_h;
+  for (const std::vector<double> &params :
+       internal::kProperties.kCoefficientsH) {
+    correct_h.push_back(params);
+  }
 
-  for (int i = internal::kProperties.kCutoffV[0];
-       i < internal::kProperties.kCutoffV[1]; i++) {
+  for (int i = internal::kProperties.kCutoffN[0];
+       i < internal::kProperties.kCutoffN[1]; i++) {
     data_.x_coords_v.push_back(i);
     data_.y_coords_v.push_back(correct_v.f((double)i));
   }
@@ -122,6 +126,20 @@ void GraphContext::CreateCorrectionPoints() {
        i < internal::kProperties.kCutoffQ[1]; i++) {
     data_.x_coords_q.push_back(i);
     data_.y_coords_q.push_back(correct_q.f((double)i));
+  }
+
+  for (int i = 0; i < correct_h.size(); i++) {
+    std::vector<double> temp_x;
+    std::vector<double> temp_y;
+    for (int ii = internal::kProperties.kCutoffH[0];
+         ii < internal::kProperties.kCutoffH[1]; ii++) {
+      temp_x.push_back(ii);
+      temp_y.push_back(correct_h.at(i).f((double)ii));
+    }
+    data_.x_coords_h.push_back(temp_x);
+    data_.y_coords_h.push_back(temp_y);
+    temp_x.clear();
+    temp_y.clear();
   }
 }
 

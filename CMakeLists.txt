@@ -12,7 +12,7 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g -fno-omit-fram
 
 
 # option for building with debug features
-option(BUILD_DEBUG_FEATURES "Build with debug features" ON)
+option(BUILD_DEBUG_FEATURES "Build with debug features" OFF)
 
 # Load file lists
 include(${PROJECT_SOURCE_DIR}/src/file_lists.cmake)
@@ -36,7 +36,7 @@ message(STATUS "Using Sources and headers: ${_visco_includes} ${${_visco_TARGET_
 include(${PROJECT_SOURCE_DIR}/cmake/${_visco_TARGET_CMAKE_FILE})
 
 # Build Application
-add_executable( ViscoCorrect
+add_executable( ViscoCorrect WIN32
     ${${_visco_TARGET_MAIN}}
     ${_visco_srcs}
     ${${_visco_TARGET_SRC}}
@@ -53,6 +53,12 @@ target_link_libraries( ViscoCorrect
 
 # Add dependencies to ViscoCorrect
 add_dependencies(ViscoCorrect ${_visco_TARGET_LIBRARIES})
+
+# Set the BUILD_DEBUG_FEATURES to OFF when building in Release mode
+target_compile_definitions(ViscoCorrect PRIVATE
+    $<$<CONFIG:Release>:BUILD_DEBUG_FEATURES=0>
+)
+
 
 # Debugtools
 if(BUILD_DEBUG_FEATURES)
@@ -73,7 +79,7 @@ if(BUILD_DEBUG_FEATURES)
     add_dependencies(debug_tools gsl ${_visco_TARGET_LIBRARIES})
     target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)
 
-    target_link_libraries(debug_tools PUBLIC gsl gslcblas)
+    target_link_libraries(debug_tools PUBLIC imgui implot gsl gslcblas)
     target_link_libraries(ViscoCorrect debug_tools)
 
     set_target_properties(debug_tools PROPERTIES

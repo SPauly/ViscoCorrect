@@ -25,9 +25,12 @@ CurveFitting::CurveFitting(std::shared_ptr<EventCallbackType> callback)
       std::make_unique<util::Event<std::shared_ptr<GraphImplBase>>>(
           util::EventType::kGetGraphInstance, &graph_instance_));
 
-  ncurves = raw_points.size();
   curves.push_back(FullDataCurve(raw_points.at(0), true, 6));
   curves.push_back(FullDataCurve(raw_points.at(1), true, 6));
+  curves.push_back(FullDataCurve(raw_points.at(2), true, 6));
+  curves.push_back(FullDataCurve(raw_points.at(3), true, 6));
+  curves.push_back(FullDataCurve(raw_points.at(4), true, 6));
+  curves.push_back(FullDataCurve(raw_points.at(5), true, 6));
 
   PlotRender_func =
       std::make_shared<std::function<void()>>(std::bind(RenderInPlot, this));
@@ -47,22 +50,22 @@ void CurveFitting::Render() {
     b_renderplot = false;
   }
 
-  ImGui::RadioButton("1Polynom", &poly1, 1);
+  ImGui::RadioButton("1Polynom", &use_poly_, 1);
   ImGui::SameLine();
-  ImGui::RadioButton("1Logistical", &poly1, 0);
-  ImGui::InputInt("1Parameters", &param1);
-  ImGui::RadioButton("2Polynom", &poly2, 1);
-  ImGui::SameLine();
-  ImGui::RadioButton("2Logistical", &poly2, 0);
-  ImGui::InputInt("2Parameters", &param2);
+  ImGui::RadioButton("1Logistical", &use_poly_, 0);
+  ImGui::InputInt("1Parameters", &num_params_);
 
   if (ImGui::Button("Refresh Curve")) {
     if (b_function) {
       curves.clear();
-      curves.push_back(FullDataCurve(raw_points.at(0), (bool)poly1, param1));
-      curves.push_back(FullDataCurve(raw_points.at(1), (bool)poly2, param2));
+      curves.push_back(FullDataCurve(raw_points.at(0), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(1), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(2), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(3), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(4), (bool)use_poly_, num_params_));
+      curves.push_back(FullDataCurve(raw_points.at(5), (bool)use_poly_, num_params_));
     }
-    for (int i = 0; i < ncurves; i++) {
+    for (int i = 0; i < curves.size(); i++) {
       FitCurve(curves.at(i));
     }
     b_function = true;
@@ -72,7 +75,7 @@ void CurveFitting::Render() {
 }
 
 void CurveFitting::RenderInPlot() {
-  for (int i = 0; i < ncurves; i++) {
+  for (int i = 0; i < curves.size(); i++) {
     ImPlot::PlotScatter("raw_points", curves.at(i).xData.data(),
                         curves.at(i).yData.data(), curves.at(i).xData.size());
     ImPlot::PlotLine("fitted", curves.at(i).fittedX.data(),

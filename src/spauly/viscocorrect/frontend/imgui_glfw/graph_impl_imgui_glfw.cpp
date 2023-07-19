@@ -2,8 +2,6 @@
 
 #include "implot.h"
 
-#include "spauly/viscocorrect/util/properties.h"  // remove it
-
 namespace viscocorrect {
 namespace frontend {
 namespace imgui_glfw {
