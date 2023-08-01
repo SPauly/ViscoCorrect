@@ -58,27 +58,15 @@ target_compile_definitions(ViscoCorrect PRIVATE
     $<$<CONFIG:Release>:BUILD_DEBUG_FEATURES=0>
 )
 
+# Set the BUILD_DEBUG_FEATURES to OFF when building in Release mode
+target_compile_definitions(ViscoCorrect PRIVATE
+    $<$<CONFIG:Debug>:BUILD_DEBUG_FEATURES=1>
+)
+
 
 # Debugtools
 if(BUILD_DEBUG_FEATURES)
-    set (BUILDLIBS "multifit_nlinear" CACHE STRING "")
-    set (NO_AMPL_BINDINGS ON CACHE BOOL "")
-    set (GSL_DISABLE_TESTS ON CACHE BOOL "")
-
-    add_subdirectory(external/gsl)
-
-    add_library(debug_tools 
-    ${_visco_debug_srcs}
-    )
-
-    target_include_directories(debug_tools PUBLIC
-        ${_visco_debug_includes}
-    )
-
-    add_dependencies(debug_tools gsl ${_visco_TARGET_LIBRARIES})
-    target_compile_definitions(debug_tools PUBLIC DEBUG_BUILD)
-
-    target_link_libraries(debug_tools PUBLIC imgui implot gsl gslcblas)
+    include(cmake/target_debug_tools.cmake)
     target_link_libraries(ViscoCorrect debug_tools)
 
     set_target_properties(debug_tools PROPERTIES

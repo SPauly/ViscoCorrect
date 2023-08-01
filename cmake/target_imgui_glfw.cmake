@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-project(ViscoCorrectFrontend)
-
 link_directories("${PROJECT_BINARY_DIR}/lib/frontend/imgui_glfw")    
 
 #packages
