@@ -4,10 +4,10 @@
 
 namespace viscocorrect {
 Calculator::Calculator()
-    : func_cq_(internal::kProperties.kCoefficientsQ),
-      func_cn_(internal::kProperties.kCoefficientsN) {
+    : func_q_(internal::kProperties.kCoefficientsQ),
+      func_eta_(internal::kProperties.kCoefficientsEta) {
   for (auto &pol : internal::kProperties.kCoefficientsH) {
-    func_ch_.push_back(util::LogisticalFunction(pol));
+    func_h_.push_back(util::LogisticalFunction(pol));
   }
 }
 
@@ -17,7 +17,7 @@ Project *Calculator::Calculate(Project *prj) {
       !IsTotalHeadInputOkay(prj->parameters.total_head_m) ||
       !IsViscosityInputOkay(prj->parameters.viscosity_v)) {
     prj->correction.Clear();
-    prj->parameters.has_error = true;
+    prj->parameters.has_input_error = true;
     return prj;
   }
 
@@ -34,7 +34,7 @@ Project *Calculator::Calculate(Project *prj) {
 
   if (!prj->func_totalhead || !prj->func_visco) {
     prj->correction.Clear();
-    prj->correction.c_has_error = true;
+    prj->correction.has_calc_error = true;
     return prj;
   }
 
@@ -43,39 +43,39 @@ Project *Calculator::Calculate(Project *prj) {
 
   GetCorrectionFactors(&prj->correction, prj->correction_x);
 
-  prj->correction.c_h_selected =
-      prj->correction.c_h_all[(int)prj->parameters.selected_h_curve];
+  prj->correction.H_selected =
+      prj->correction.H_all[(int)prj->parameters.selected_h_curve];
 
   return prj;
 }
 
 CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *obj,
                                                     const double _x) {
-  if (internal::ValidateXN(_x)) {
-    obj->c_n = (func_cn_.f(_x) /
+  if (internal::ValidateXEta(_x)) {
+    obj->eta = (func_eta_.f(_x) /
                 (double)internal::kProperties.kCorrectionScale / (double)10.0) +
                (double)0.2;
   } else {
-    obj->c_n = (_x < internal::kProperties.kCutoffN[0]) ? 1.0 : 0.0;
+    obj->eta = (_x < internal::kProperties.kCutoffEta[0]) ? 1.0 : 0.0;
   }
 
   if (internal::ValidateXQ(_x)) {
-    obj->c_q =
-        (func_cq_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) +
+    obj->Q =
+        (func_q_.f(_x) / (double)internal::kProperties.kCorrectionScale / 10) +
         0.2;
   } else {
-    obj->c_q = (_x < internal::kProperties.kCutoffQ[0]) ? 1.0 : 0.0;
+    obj->Q = (_x < internal::kProperties.kCutoffQ[0]) ? 1.0 : 0.0;
   }
 
   if (internal::ValidateXH(_x)) {
-    for (int i = 0; i < func_ch_.size(); i++) {
-      obj->c_h_all[i] = (func_ch_.at(i).f(_x) /
+    for (int i = 0; i < func_h_.size(); i++) {
+      obj->H_all[i] = (func_h_.at(i).f(_x) /
                          (double)internal::kProperties.kCorrectionScale / 10) -
                         0.3;
     }
   } else {
-    for (int i = 0; i < func_ch_.size(); i++) {
-      obj->c_h_all[i] = (_x < internal::kProperties.kCutoffH[0]) ? 1.0 : 0.0;
+    for (int i = 0; i < func_h_.size(); i++) {
+      obj->H_all[i] = (_x < internal::kProperties.kCutoffH[0]) ? 1.0 : 0.0;
     }
   }
 

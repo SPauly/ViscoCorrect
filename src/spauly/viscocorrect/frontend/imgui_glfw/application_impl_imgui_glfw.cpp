@@ -163,29 +163,25 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
                                       // is not created
   {
     ImGui::PushItemWidth(100);
-    ImGui::InputFloat("Flowrate Q", &proj.parameters.flowrate_q);
-    ImGui::InputFloat("Total head H in m", &proj.parameters.total_head_m);
-    ImGui::InputFloat("Kinematic viscosity v in mm^2/s",
-                      &proj.parameters.viscosity_v);
-    ImGui::Combo("Choose factor for Q",
+    ImGui::InputFloat("Q - Flowrate [m^3/h]", &proj.parameters.flowrate_q);
+        ImGui::Combo("Q(BEP) - Factor for Q",
                  reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
                  "0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
+    ImGui::InputFloat("H - Total differential head [m]", &proj.parameters.total_head_m);
+    ImGui::InputFloat("v - Kinematic viscosity [mm^2/s]",
+                      &proj.parameters.viscosity_v);
     ImGui::PopItemWidth();
 
     if (ImGui::BeginMenu("Advanced Settings")) {
       ImGui::MenuItem("[beta] Not implemented yet");
-      ImGui::MenuItem("Enable show Project in Graph");
-      ImGui::MenuItem("Select unit of measure for viscosity");
-      ImGui::MenuItem("Select unit of measure for flowrate");
-
       ImGui::EndMenu();
     }
 
     ImGui::Separator();
 
-    ImGui::Text("Correction n: %.3f", proj.correction.c_n);
-    ImGui::Text("Correction Q: %.3f", proj.correction.c_q);
-    ImGui::Text("Correction H: %.3f", proj.correction.c_h_selected);
+    ImGui::Text("Correction eta: %.3f", proj.correction.eta);
+    ImGui::Text("Correction Q: %.3f", proj.correction.Q);
+    ImGui::Text("Correction H: %.3f", proj.correction.H_selected);
 
     ImGui::Separator();
 
@@ -236,15 +232,15 @@ void ApplicationImplImguiGlfw::Feedback() {
           "Multiplier H: " + std::to_string(parameters.selected_h_curve) + "\n";
 
       entry += "Calculated values - Expected values = difference:\n";
-      entry += "Q: " + std::to_string(corrections.c_q) + " - " +
+      entry += "Q: " + std::to_string(corrections.Q) + " - " +
                std::to_string(expected_q) + " = " +
-               std::to_string(corrections.c_q - expected_q) + "\n";
-      entry += "n: " + std::to_string(corrections.c_n) + " - " +
+               std::to_string(corrections.Q - expected_q) + "\n";
+      entry += "n: " + std::to_string(corrections.eta) + " - " +
                std::to_string(expected_n) + " = " +
-               std::to_string(corrections.c_n - expected_n) + "\n";
-      entry += "H: " + std::to_string(corrections.c_h_selected) + " - " +
+               std::to_string(corrections.eta - expected_n) + "\n";
+      entry += "H: " + std::to_string(corrections.H_selected) + " - " +
                std::to_string(expected_h) + " = " +
-               std::to_string(corrections.c_h_selected - expected_h) + "\n\n";
+               std::to_string(corrections.H_selected - expected_h) + "\n\n";
 
       std::ofstream feedback_file("feedback.txt",
                                   std::ios::app | std::ios::out);

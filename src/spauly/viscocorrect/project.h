@@ -25,21 +25,21 @@ struct CalcParameters {
   util::ViscoUnits visco_unit = util::ViscoUnits::kMilliPascalSeconds;
   util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kLitersPerMinute;
 
-  bool has_error = false;
+  bool has_input_error = false;
 };
 
 struct CorrectionFactors {
-  double c_q = 0.0;
-  double c_n = 0.0;
-  double c_h_selected = 0.0;
-  double c_h_all[4] = {0.0, 0.0, 0.0, 0.0};
-  bool c_has_error = false;
+  double Q = 0.0;
+  double eta = 0.0;
+  double H_selected = 0.0;
+  double H_all[4] = {0.0, 0.0, 0.0, 0.0};
+  bool has_calc_error = false;
 
   void Clear() {
-    c_q = 0.0;
-    c_n = 0.0;
-    c_h_selected = 0.0;
-    for (int i = 0; i < 4; i++) c_h_all[i] = 0.0;
+    Q = 0.0;
+    eta = 0.0;
+    H_selected = 0.0;
+    for (int i = 0; i < 4; i++) H_all[i] = 0.0;
   }
 };
 

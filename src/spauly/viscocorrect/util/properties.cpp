@@ -9,9 +9,9 @@ bool ValidateXQ(const double &x) {
           x <= static_cast<double>(kProperties.kCutoffQ[1]));
 }
 
-bool ValidateXN(const double &x) {
-  return (x >= static_cast<double>(kProperties.kCutoffN[0]) &&
-          x <= static_cast<double>(kProperties.kCutoffN[1]));
+bool ValidateXEta(const double &x) {
+  return (x >= static_cast<double>(kProperties.kCutoffEta[0]) &&
+          x <= static_cast<double>(kProperties.kCutoffEta[1]));
 }
 
 bool ValidateXH(const double &x) {

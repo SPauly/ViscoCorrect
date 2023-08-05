@@ -17,9 +17,9 @@ namespace internal {
 struct Properties;
 extern const Properties kProperties;
 
-bool ValidateXQ(const double &x);
-bool ValidateXN(const double &x);
 bool ValidateXH(const double &x);
+bool ValidateXQ(const double &x);
+bool ValidateXEta(const double &x);
 
 //---------------------
 // implementation
@@ -38,12 +38,12 @@ struct Properties {
   const int kCorrectionScale =
       22;  // pixels between each correction factor on scale
   const int kCutoffQ[2]{242, 384};
-  const int kCutoffN[2]{122, 363};
+  const int kCutoffEta[2]{122, 363};
   const int kCutoffH[2]{146, 382};
   const std::vector<double> kCoefficientsQ{
       4.3286373442021278e-09, -6.5935466655309209e-06, 0.0039704102541411324,
       -1.1870337647376101,    176.52190832690891,      -10276.558815133236};
-  const std::vector<double> kCoefficientsN{
+  const std::vector<double> kCoefficientsEta{
       2.5116987378131985e-10, -3.2416532447274418e-07, 0.00015531747394399714,
       -0.037300324399145976,  4.2391803778160968,      -6.2364025573465849};
   const std::vector<std::vector<double>> kCoefficientsH{

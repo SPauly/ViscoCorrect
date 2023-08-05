@@ -91,7 +91,7 @@ void GraphImplImGuiGlfw::RenderCorrection() {
   ImPlot::PlotLine("##c_v", graph_coords_->x_coords_v.data(),
                    graph_coords_->y_coords_v.data(),
                    graph_coords_->x_coords_v.size());
-  ImPlot::PlotLine("##c_q", graph_coords_->x_coords_q.data(),
+  ImPlot::PlotLine("##Q", graph_coords_->x_coords_q.data(),
                    graph_coords_->y_coords_q.data(),
                    graph_coords_->x_coords_q.size());
   for (int i = 0; i < graph_coords_->x_coords_h.size(); i++) {

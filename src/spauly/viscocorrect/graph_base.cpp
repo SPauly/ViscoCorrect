@@ -110,7 +110,7 @@ void GraphContext::CreateLineCoords(GraphLineStorage *coords,
 
 void GraphContext::CreateCorrectionPoints() {
   // have to implement the scaling_factor here!
-  util::PolynomialFunction correct_v{internal::kProperties.kCoefficientsN};
+  util::PolynomialFunction correct_v{internal::kProperties.kCoefficientsEta};
   util::PolynomialFunction correct_q{internal::kProperties.kCoefficientsQ};
   std::vector<util::LogisticalFunction> correct_h;
   for (const std::vector<double> &params :
@@ -118,8 +118,8 @@ void GraphContext::CreateCorrectionPoints() {
     correct_h.push_back(params);
   }
 
-  for (int i = internal::kProperties.kCutoffN[0];
-       i < internal::kProperties.kCutoffN[1]; i++) {
+  for (int i = internal::kProperties.kCutoffEta[0];
+       i < internal::kProperties.kCutoffEta[1]; i++) {
     data_.x_coords_v.push_back(i);
     data_.y_coords_v.push_back(correct_v.f((double)i));
   }

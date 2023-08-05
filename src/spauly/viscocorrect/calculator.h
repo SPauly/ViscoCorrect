@@ -27,9 +27,9 @@ class Calculator {
                                       bool _scale_on_x = true);
 
  private:
-  util::PolynomialFunction func_cn_;
-  util::PolynomialFunction func_cq_;
-  std::vector<util::LogisticalFunction> func_ch_;
+  util::PolynomialFunction func_eta_;
+  util::PolynomialFunction func_q_;
+  std::vector<util::LogisticalFunction> func_h_;
 };
 }  // namespace viscocorrect
 
