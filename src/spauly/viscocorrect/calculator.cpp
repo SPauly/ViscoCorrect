@@ -15,8 +15,11 @@ Project *Calculator::Calculate(Project *prj) {
   // verify the input
   if (!IsFlowrateInputOkay(prj->parameters.flowrate_q) ||
       !IsTotalHeadInputOkay(prj->parameters.total_head_m) ||
-      !IsViscosityInputOkay(prj->parameters.viscosity_v))
+      !IsViscosityInputOkay(prj->parameters.viscosity_v)) {
+    prj->correction.Clear();
+    prj->parameters.has_error = true;
     return prj;
+  }
 
   prj->func_totalhead = CreateLinearF(
       internal::kProperties.kTotalHeadScale, internal::kProperties.kPitchTotalH,
@@ -79,43 +82,43 @@ CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *obj,
   return obj;
 }
 
-const double Calculator::FitToScale(const std::map<int, int> &_raw_scale,
-                                    const int _input, const int _startpos) {
-  double absolute_position = static_cast<double>(_startpos);
-  int prev_value = 0;
+const float Calculator::FitToScale(const std::map<int, int> &_raw_scale,
+                                    const float _input, const int _startpos) {
+  float absolute_position = static_cast<float>(_startpos);
+  float prev_value = 0;
   bool bfound = false;
 
   for (const auto &pair : _raw_scale) {
-    int value = pair.first;
+    float value = static_cast<float>(pair.first);
 
     if (value == _input) {
-      absolute_position += pair.second;
+      absolute_position += static_cast<float>(pair.second);
       bfound = true;
       break;
     } else if (value > _input) {
-      int range = value - prev_value;
-      int relative_value = _input - prev_value;
+      float range = value - prev_value;
+      float relative_value = _input - prev_value;
 
       absolute_position +=
-          ((double)relative_value / (double)range) * (double)pair.second;
+          (relative_value / range) * static_cast<float>(pair.second);
       bfound = true;
       break;
     }
 
-    absolute_position += pair.second;
+    absolute_position += static_cast<float>(pair.second);
     prev_value = value;
   }
 
   if (bfound)
     return absolute_position;
   else
-    return -1.0;
+    return -1.0f;
 }
 
 util::LinearFunction *Calculator::CreateLinearF(
-    const std::map<int, int> &_raw_scale, const double _m, const int _input,
+    const std::map<int, int> &_raw_scale, const double _m, const float _input,
     const int *_startpos, bool _scale_on_x) {
-  double pos;
+  float pos;
   pos = FitToScale(_raw_scale, _input,
                      (_scale_on_x)
                          ? _startpos[0]

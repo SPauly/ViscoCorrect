@@ -19,9 +19,13 @@ struct CalcParameters {
   float flowrate_q = 0;
   float total_head_m = 0;
   float viscosity_v = 0;
+
   CurvesOrderH selected_h_curve;
+
   util::ViscoUnits visco_unit = util::ViscoUnits::kMilliPascalSeconds;
   util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kLitersPerMinute;
+
+  bool has_error = false;
 };
 
 struct CorrectionFactors {

@@ -19,10 +19,10 @@ class Calculator {
                                           const double x_pos);
 
  protected:
-  const double FitToScale(const std::map<int, int> &raw_scale_units,
-                          const int input, const int startpos = 0);
+  const float FitToScale(const std::map<int, int> &raw_scale_units,
+                          const float input, const int startpos = 0);
   util::LinearFunction *CreateLinearF(const std::map<int, int> &_raw_scale,
-                                      const double _m, const int _input,
+                                      const double _m, const float _input,
                                       const int *_startpos = nullptr,
                                       bool _scale_on_x = true);
 
