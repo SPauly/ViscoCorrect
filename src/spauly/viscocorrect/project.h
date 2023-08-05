@@ -29,6 +29,14 @@ struct CorrectionFactors {
   double c_n = 0.0;
   double c_h_selected = 0.0;
   double c_h_all[4] = {0.0, 0.0, 0.0, 0.0};
+  bool c_has_error = false;
+
+  void Clear() {
+    c_q = 0.0;
+    c_n = 0.0;
+    c_h_selected = 0.0;
+    for (int i = 0; i < 4; i++) c_h_all[i] = 0.0;
+  }
 };
 
 struct Project {

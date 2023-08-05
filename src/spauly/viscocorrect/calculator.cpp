@@ -1,7 +1,5 @@
 #include "spauly/viscocorrect/calculator.h"
 
-#include <stdexcept>
-
 #include "spauly/viscocorrect/util/properties.h"
 
 namespace viscocorrect {
@@ -31,7 +29,11 @@ Project *Calculator::Calculate(Project *prj) {
                              prj->parameters.flowrate_q,
                              internal::kProperties.kStartFlowrate[0]);
 
-  if (!prj->func_totalhead || !prj->func_visco) return prj;
+  if (!prj->func_totalhead || !prj->func_visco) {
+    prj->correction.Clear();
+    prj->correction.c_has_error = true;
+    return prj;
+  }
 
   prj->correction_x =
       prj->func_visco->get_x(prj->func_totalhead->f(prj->flow_pos));
@@ -79,7 +81,7 @@ CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *obj,
 
 const double Calculator::FitToScale(const std::map<int, int> &_raw_scale,
                                     const int _input, const int _startpos) {
-  double absolute_position = (double)_startpos;
+  double absolute_position = static_cast<double>(_startpos);
   int prev_value = 0;
   bool bfound = false;
 
@@ -107,25 +109,24 @@ const double Calculator::FitToScale(const std::map<int, int> &_raw_scale,
   if (bfound)
     return absolute_position;
   else
-    throw std::runtime_error("Input not in range of scale");
+    return -1.0;
 }
 
 util::LinearFunction *Calculator::CreateLinearF(
     const std::map<int, int> &_raw_scale, const double _m, const int _input,
     const int *_startpos, bool _scale_on_x) {
   double pos;
-  try {
-    pos = FitToScale(_raw_scale, _input,
+  pos = FitToScale(_raw_scale, _input,
                      (_scale_on_x)
                          ? _startpos[0]
                          : _startpos[1]);  // sometimes setting it to
                                            // _startpos[0] works better...
-  } catch (const std::runtime_error &e) {
-    return nullptr;
-  }
 
-  return new util::LinearFunction(_m, (_scale_on_x) ? pos : _startpos[0],
-                                  (!_scale_on_x) ? pos : _startpos[1]);
+  if (pos < 0)
+    return nullptr;
+  else
+    return new util::LinearFunction(_m, (_scale_on_x) ? pos : _startpos[0],
+                                    (!_scale_on_x) ? pos : _startpos[1]);
 }
 
 }  // namespace viscocorrect
