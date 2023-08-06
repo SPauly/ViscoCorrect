@@ -12,6 +12,10 @@ Calculator::Calculator()
 }
 
 Project *Calculator::Calculate(Project *prj) {
+  // Make sure the input is converted properly
+  //ConversionContext ensures any conversion will be undone 
+  ConversionContext con_ctx(prj);
+
   // verify the input
   if (!IsFlowrateInputOkay(prj->parameters.flowrate_q) ||
       !IsTotalHeadInputOkay(prj->parameters.total_head_m) ||
@@ -70,8 +74,8 @@ CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *obj,
   if (internal::ValidateXH(_x)) {
     for (int i = 0; i < func_h_.size(); i++) {
       obj->H_all[i] = (func_h_.at(i).f(_x) /
-                         (double)internal::kProperties.kCorrectionScale / 10) -
-                        0.3;
+                       (double)internal::kProperties.kCorrectionScale / 10) -
+                      0.3;
     }
   } else {
     for (int i = 0; i < func_h_.size(); i++) {
@@ -83,7 +87,7 @@ CorrectionFactors *Calculator::GetCorrectionFactors(CorrectionFactors *obj,
 }
 
 const float Calculator::FitToScale(const std::map<int, int> &_raw_scale,
-                                    const float _input, const int _startpos) {
+                                   const float _input, const int _startpos) {
   float absolute_position = static_cast<float>(_startpos);
   float prev_value = 0;
   bool bfound = false;
@@ -119,17 +123,64 @@ util::LinearFunction *Calculator::CreateLinearF(
     const std::map<int, int> &_raw_scale, const double _m, const float _input,
     const int *_startpos, bool _scale_on_x) {
   float pos;
-  pos = FitToScale(_raw_scale, _input,
-                     (_scale_on_x)
-                         ? _startpos[0]
-                         : _startpos[1]);  // sometimes setting it to
-                                           // _startpos[0] works better...
+  pos =
+      FitToScale(_raw_scale, _input,
+                 (_scale_on_x) ? _startpos[0]
+                               : _startpos[1]);  // sometimes setting it to
+                                                 // _startpos[0] works better...
 
   if (pos < 0)
     return nullptr;
   else
     return new util::LinearFunction(_m, (_scale_on_x) ? pos : _startpos[0],
                                     (!_scale_on_x) ? pos : _startpos[1]);
+}
+
+Calculator::ConversionContext::ConversionContext(Project *prj)
+{
+  prj_ = prj;
+  ConvertInput(prj);
+}
+
+Calculator::ConversionContext::~ConversionContext()
+{
+  UndoConversion(prj_);
+}
+
+void Calculator::ConversionContext::ConvertInput(Project *prj) {
+  prj->parameters.flowrate_q =
+      prj->parameters.flowrate_q *
+      internal::kConversionFlowrate.at(prj->parameters.flowrate_unit);
+  prj->parameters.total_head_m =
+      prj->parameters.total_head_m *
+      internal::kConversionTotalHead.at(prj->parameters.total_head_unit);
+
+  if (prj->parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise ||
+      prj->parameters.viscosity_unit ==
+          util::ViscosityUnits::kMilliPascalSeconds) {
+    prj->parameters.viscosity_v =
+        prj->parameters.viscosity_v /
+        (prj->parameters.density_cp *
+         internal::kConversionDensity.at(prj->parameters.density_unit));
+  }
+}
+
+void Calculator::ConversionContext::UndoConversion(Project *prj) {
+  prj->parameters.flowrate_q =
+      prj->parameters.flowrate_q /
+      internal::kConversionFlowrate.at(prj->parameters.flowrate_unit);
+  prj->parameters.total_head_m =
+      prj->parameters.total_head_m /
+      internal::kConversionTotalHead.at(prj->parameters.total_head_unit);
+
+  if (prj->parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise ||
+      prj->parameters.viscosity_unit ==
+          util::ViscosityUnits::kMilliPascalSeconds) {
+    prj->parameters.viscosity_v =
+        prj->parameters.viscosity_v *
+        (prj->parameters.density_cp *
+         internal::kConversionDensity.at(prj->parameters.density_unit));
+  }
 }
 
 }  // namespace viscocorrect

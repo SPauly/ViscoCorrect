@@ -18,13 +18,29 @@ class Calculator {
   CorrectionFactors *GetCorrectionFactors(CorrectionFactors *cor_factors,
                                           const double x_pos);
 
- protected:
+ private:
   const float FitToScale(const std::map<int, int> &raw_scale_units,
-                          const float input, const int startpos = 0);
+                         const float input, const int startpos = 0);
   util::LinearFunction *CreateLinearF(const std::map<int, int> &_raw_scale,
                                       const double _m, const float _input,
                                       const int *_startpos = nullptr,
                                       bool _scale_on_x = true);
+
+  class  ConversionContext
+  {
+  public:
+    ConversionContext() = delete;
+    ConversionContext(Project *project);
+    ~ConversionContext();
+
+    ConversionContext(const ConversionContext &) = delete;
+    ConversionContext &operator=(const ConversionContext&) = delete;
+  
+  private:
+    Project *prj_;
+    void ConvertInput(Project *project);
+    void UndoConversion(Project *project);
+  };
 
  private:
   util::PolynomialFunction func_eta_;

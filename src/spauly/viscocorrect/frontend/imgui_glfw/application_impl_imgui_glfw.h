@@ -36,6 +36,7 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
  private:
   void RenderProjectManager();
   void SetStyle();
+  void ToolMode();
 
   void Feedback();
 
@@ -47,6 +48,8 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   // Style
   ImVec4 clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   ImVec4 *colors_ = nullptr;
+  bool use_dark_mode = false;
+  bool use_tool_mode = true;
 
   // utils
   util_frontend::LayerStack layer_stack_;
