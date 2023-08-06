@@ -165,26 +165,31 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
     ImGui::PushItemWidth(100);
     ImGui::InputFloat("Q - Flowrate [m^3/h]", &proj.parameters.flowrate_q);
     ImGui::SameLine();
-    ImGui::Combo("XX", reinterpret_cast<int *>(&proj.parameters.flowrate_unit),
-                 "m^3/h\0GPM\0l/min\0\0");
+    ImGui::Combo("##flowunit",
+                 reinterpret_cast<int *>(&proj.parameters.flowrate_unit),
+                 "m^3/h\0l/min\0GPM\0\0");
     ImGui::Combo("Q(BEP) - Factor for Q",
                  reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
                  "0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
     ImGui::InputFloat("H - Total differential head [m]",
                       &proj.parameters.total_head_m);
     ImGui::SameLine();
-    ImGui::Combo("XX",
+    ImGui::Combo("##totalhunit",
                  reinterpret_cast<int *>(&proj.parameters.total_head_unit),
                  "m\0ft\0\0");
     ImGui::InputFloat("v - Kinematic viscosity [mm^2/s]",
                       &proj.parameters.viscosity_v);
     ImGui::SameLine();
-    ImGui::Combo("XX", reinterpret_cast<int *>(&proj.parameters.viscosity_unit),
+    ImGui::Combo("##viscounit",
+                 reinterpret_cast<int *>(&proj.parameters.viscosity_unit),
                  "mm^2/h\0cSt\0cP\0mPas\0\0");
-    if (proj.parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise) {
+    if (proj.parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise ||
+        proj.parameters.viscosity_unit ==
+            util::ViscosityUnits::kMilliPascalSeconds) {
       ImGui::InputFloat("Density", &proj.parameters.density_cp);
       ImGui::SameLine();
-      ImGui::Combo("XX", reinterpret_cast<int *>(&proj.parameters.density_unit),
+      ImGui::Combo("##Densityunit",
+                   reinterpret_cast<int *>(&proj.parameters.density_unit),
                    "g/l\0kg/m^3\0\0");
     }
     ImGui::PopItemWidth();

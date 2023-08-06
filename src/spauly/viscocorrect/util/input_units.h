@@ -18,7 +18,7 @@ enum class ViscosityUnits : int {
   kCentiPoise,
   kMilliPascalSeconds
 };
-enum class DensityUnits : int { kKilogramsPerCubicMeter, kGallonsPerLiter };
+enum class DensityUnits : int { kGramPerLiter, kKilogramsPerCubicMeter };
 
 }  // namespace util
 
@@ -34,7 +34,7 @@ const std::unordered_map<util::TotalHeadUnits, float> kConversionTotalHead{
     {util::TotalHeadUnits::kFeet, 0.3048}};
 
 const std::unordered_map<util::DensityUnits, float> kConversionDensity{
-    {util::DensityUnits::kGallonsPerLiter, 1.0f},
+    {util::DensityUnits::kGramPerLiter, 1.0f},
     {util::DensityUnits::kKilogramsPerCubicMeter, 1000.0f}};
 
 }  // namespace internal

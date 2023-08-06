@@ -21,6 +21,7 @@ Project *Calculator::Calculate(Project *prj) {
       !IsViscosityInputOkay(prj->parameters.viscosity_v)) {
     prj->correction.Clear();
     prj->parameters.has_input_error = true;
+    UndoConversion(prj);
     return prj;
   }
 
@@ -146,7 +147,9 @@ void Calculator::ConvertInput(Project *prj) {
       prj->parameters.total_head_m *
       internal::kConversionTotalHead.at(prj->parameters.total_head_unit);
 
-  if (prj->parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise) {
+  if (prj->parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise ||
+      prj->parameters.viscosity_unit ==
+          util::ViscosityUnits::kMilliPascalSeconds) {
     prj->parameters.viscosity_v =
         prj->parameters.viscosity_v /
         (prj->parameters.density_cp *
@@ -162,7 +165,9 @@ void Calculator::UndoConversion(Project *prj) {
       prj->parameters.total_head_m /
       internal::kConversionTotalHead.at(prj->parameters.total_head_unit);
 
-  if (prj->parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise) {
+  if (prj->parameters.viscosity_unit == util::ViscosityUnits::kCentiPoise ||
+      prj->parameters.viscosity_unit ==
+          util::ViscosityUnits::kMilliPascalSeconds) {
     prj->parameters.viscosity_v =
         prj->parameters.viscosity_v *
         (prj->parameters.density_cp *
