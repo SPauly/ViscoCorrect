@@ -24,6 +24,8 @@ struct CalcParameters {
 
   util::ViscoUnits visco_unit = util::ViscoUnits::kMilliPascalSeconds;
   util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kLitersPerMinute;
+  util::TotalHeadUnits total_head_unit = util::TotalHeadUnits::kMeters;
+  util::DensityUnits density_unit = util::DensityUnits::kKilogramsPerCubiMeter;
 
   bool has_input_error = false;
 };
