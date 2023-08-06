@@ -39,6 +39,7 @@ Project *Calculator::Calculate(Project *prj) {
   if (!prj->func_totalhead || !prj->func_visco) {
     prj->correction.Clear();
     prj->correction.has_calc_error = true;
+    UndoConversion(prj);
     return prj;
   }
 
