@@ -13,7 +13,8 @@ Calculator::Calculator()
 
 Project *Calculator::Calculate(Project *prj) {
   // Make sure the input is converted properly
-  ConvertInput(prj);
+  //ConversionContext ensures any conversion will be undone 
+  ConversionContext con_ctx(prj);
 
   // verify the input
   if (!IsFlowrateInputOkay(prj->parameters.flowrate_q) ||
@@ -21,7 +22,6 @@ Project *Calculator::Calculate(Project *prj) {
       !IsViscosityInputOkay(prj->parameters.viscosity_v)) {
     prj->correction.Clear();
     prj->parameters.has_input_error = true;
-    UndoConversion(prj);
     return prj;
   }
 
@@ -39,7 +39,6 @@ Project *Calculator::Calculate(Project *prj) {
   if (!prj->func_totalhead || !prj->func_visco) {
     prj->correction.Clear();
     prj->correction.has_calc_error = true;
-    UndoConversion(prj);
     return prj;
   }
 
@@ -50,9 +49,6 @@ Project *Calculator::Calculate(Project *prj) {
 
   prj->correction.H_selected =
       prj->correction.H_all[(int)prj->parameters.selected_h_curve];
-
-  // Undo conversion
-  UndoConversion(prj);
 
   return prj;
 }
@@ -140,7 +136,18 @@ util::LinearFunction *Calculator::CreateLinearF(
                                     (!_scale_on_x) ? pos : _startpos[1]);
 }
 
-void Calculator::ConvertInput(Project *prj) {
+Calculator::ConversionContext::ConversionContext(Project *prj)
+{
+  prj_ = prj;
+  ConvertInput(prj);
+}
+
+Calculator::ConversionContext::~ConversionContext()
+{
+  UndoConversion(prj_);
+}
+
+void Calculator::ConversionContext::ConvertInput(Project *prj) {
   prj->parameters.flowrate_q =
       prj->parameters.flowrate_q *
       internal::kConversionFlowrate.at(prj->parameters.flowrate_unit);
@@ -158,7 +165,7 @@ void Calculator::ConvertInput(Project *prj) {
   }
 }
 
-void Calculator::UndoConversion(Project *prj) {
+void Calculator::ConversionContext::UndoConversion(Project *prj) {
   prj->parameters.flowrate_q =
       prj->parameters.flowrate_q /
       internal::kConversionFlowrate.at(prj->parameters.flowrate_unit);

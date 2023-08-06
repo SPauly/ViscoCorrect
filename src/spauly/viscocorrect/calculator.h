@@ -26,8 +26,21 @@ class Calculator {
                                       const int *_startpos = nullptr,
                                       bool _scale_on_x = true);
 
-  void ConvertInput(Project *project);
-  void UndoConversion(Project *project);
+  class  ConversionContext
+  {
+  public:
+    ConversionContext() = delete;
+    ConversionContext(Project *project);
+    ~ConversionContext();
+
+    ConversionContext(const ConversionContext &) = delete;
+    ConversionContext &operator=(const ConversionContext&) = delete;
+  
+  private:
+    Project *prj_;
+    void ConvertInput(Project *project);
+    void UndoConversion(Project *project);
+  };
 
  private:
   util::PolynomialFunction func_eta_;
