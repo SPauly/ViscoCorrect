@@ -209,10 +209,10 @@ void ApplicationImplImguiGlfw::Feedback() {
   ImGui::Text("Please provide your feedback here:");
   ImGui::Text("Expected values: ");
 
-  static float expected_n, expected_q, expected_h;
+  static float expected_eta, expected_q, expected_h;
 
   ImGui::PushItemWidth(100);
-  ImGui::InputFloat("n", &expected_n);
+  ImGui::InputFloat("eta", &expected_eta);
   ImGui::InputFloat("Q", &expected_q);
   ImGui::InputFloat("H", &expected_h);
   ImGui::PopItemWidth();
@@ -235,9 +235,9 @@ void ApplicationImplImguiGlfw::Feedback() {
       entry += "Q: " + std::to_string(corrections.Q) + " - " +
                std::to_string(expected_q) + " = " +
                std::to_string(corrections.Q - expected_q) + "\n";
-      entry += "n: " + std::to_string(corrections.eta) + " - " +
-               std::to_string(expected_n) + " = " +
-               std::to_string(corrections.eta - expected_n) + "\n";
+      entry += "eta: " + std::to_string(corrections.eta) + " - " +
+               std::to_string(expected_eta) + " = " +
+               std::to_string(corrections.eta - expected_eta) + "\n";
       entry += "H: " + std::to_string(corrections.H_selected) + " - " +
                std::to_string(expected_h) + " = " +
                std::to_string(corrections.H_selected - expected_h) + "\n\n";
