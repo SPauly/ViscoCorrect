@@ -12,13 +12,13 @@ enum class FlowrateUnits : int {
   kGallonsPerMinute
 };
 enum class TotalHeadUnits : int { kMeters, kFeet };
-enum class ViscoUnits : int {
+enum class ViscosityUnits : int {
   kSquareMillimetersPerSecond,
   kCentiStokes,
   kCentiPoise,
   kMilliPascalSeconds
 };
-enum class DensityUnits : int { kKilogramsPerCubiMeter, kGallonsPerLiter };
+enum class DensityUnits : int { kKilogramsPerCubicMeter, kGallonsPerLiter };
 
 }  // namespace util
 
@@ -28,6 +28,14 @@ const std::unordered_map<util::FlowrateUnits, float> kConversionFlowrate{
     {util::FlowrateUnits::kCubicMetersPerHour, 1.0f},
     {util::FlowrateUnits::kLitersPerMinute, 0.06f},
     {util::FlowrateUnits::kGallonsPerMinute, 0.2771f}};
+
+const std::unordered_map<util::TotalHeadUnits, float> kConversionTotalHead{
+    {util::TotalHeadUnits::kMeters, 1.0f},
+    {util::TotalHeadUnits::kFeet, 0.3048}};
+
+const std::unordered_map<util::DensityUnits, float> kConversionDensity{
+    {util::DensityUnits::kGallonsPerLiter, 1.0f},
+    {util::DensityUnits::kKilogramsPerCubicMeter, 1000.0f}};
 
 }  // namespace internal
 
