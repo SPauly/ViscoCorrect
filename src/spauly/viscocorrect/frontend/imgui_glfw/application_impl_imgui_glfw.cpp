@@ -125,6 +125,7 @@ bool ApplicationImplImguiGlfw::Render() {
     layer->OnUIRender();
   }
 
+  ToolMode();
   RenderProjectManager();
   Feedback();
 

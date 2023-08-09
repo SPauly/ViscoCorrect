@@ -49,7 +49,7 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   ImVec4 clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   ImVec4 *colors_ = nullptr;
   bool use_dark_mode = false;
-  bool use_tool_mode = true;
+  bool use_tool_mode = false;
 
   // utils
   util_frontend::LayerStack layer_stack_;
