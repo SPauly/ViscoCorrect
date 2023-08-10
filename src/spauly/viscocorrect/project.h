@@ -24,10 +24,10 @@ struct CalcParameters {
   CurvesOrderH selected_h_curve;
 
   util::ViscosityUnits viscosity_unit =
-      util::ViscosityUnits::kMilliPascalSeconds;
-  util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kLitersPerMinute;
+      util::ViscosityUnits::kSquareMillimetersPerSecond;
+  util::FlowrateUnits flowrate_unit = util::FlowrateUnits::kCubicMetersPerHour;
   util::TotalHeadUnits total_head_unit = util::TotalHeadUnits::kMeters;
-  util::DensityUnits density_unit = util::DensityUnits::kKilogramsPerCubicMeter;
+  util::DensityUnits density_unit = util::DensityUnits::kGramPerLiter;
 
   bool has_input_error = false;
 };

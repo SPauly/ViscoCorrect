@@ -46,7 +46,8 @@ bool ApplicationImplImguiGlfw::Init() {
 #endif
 
   // Create window with graphics context
-  window_ = glfwCreateWindow(820, 630, "ViscoCorrect", NULL, NULL);
+  window_ = glfwCreateWindow(display_w_tool_, display_h_tool_, "ViscoCorrect",
+                             NULL, NULL);
   if (window_ == NULL) return false;
   glfwMakeContextCurrent(window_);
   glfwSwapInterval(1);  // Enable vsync
@@ -77,9 +78,10 @@ bool ApplicationImplImguiGlfw::Init() {
 
   // End ImGui Window Init
 
+  viewport_ = ImGui::GetMainViewport();
+
   // layer init graph
   graph_ = std::make_shared<GraphImplImGuiGlfw>();
-  layer_stack_.PushLayer(graph_);
 
   // get the projects
   (*get_register_event())(
@@ -125,14 +127,13 @@ bool ApplicationImplImguiGlfw::Render() {
     layer->OnUIRender();
   }
 
-  ToolMode();
-  RenderProjectManager();
-  Feedback();
+  MenuBar();
+  ProjectManager();
 
   // Rendering
   ImGui::Render();
-  glfwGetFramebufferSize(window_, &display_w_, &display_h_);
-  glViewport(0, 0, display_w_, display_h_);
+  glfwGetFramebufferSize(window_, &temp_display_w_, &temp_display_h_);
+  glViewport(0, 0, temp_display_w_, temp_display_h_);
   glClearColor(clear_color_.x * clear_color_.w, clear_color_.y * clear_color_.w,
                clear_color_.z * clear_color_.w, clear_color_.w);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -155,8 +156,14 @@ bool ApplicationImplImguiGlfw::Render() {
   return true;
 }
 
-void ApplicationImplImguiGlfw::RenderProjectManager() {
+void ApplicationImplImguiGlfw::ProjectManager() {
   if (!get_projects()) return;
+
+  if (use_tool_mode_) {
+    ImGui::SetNextWindowPos(viewport_->WorkPos);
+    ImGui::SetNextWindowSize(
+        ImVec2{viewport_->WorkSize.x, viewport_->WorkSize.y - 100});
+  }
 
   ImGui::Begin("Project");
 
@@ -164,21 +171,23 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
                                       // is not created
   {
     ImGui::PushItemWidth(100);
-    ImGui::InputFloat("Q - Flowrate [m^3/h]", &proj.parameters.flowrate_q);
+    ImGui::InputFloat("Q - Flowrate in", &proj.parameters.flowrate_q);
     ImGui::SameLine();
     ImGui::Combo("##flowunit",
                  reinterpret_cast<int *>(&proj.parameters.flowrate_unit),
                  "m^3/h\0l/min\0GPM\0\0");
+    ImGui::Indent();
     ImGui::Combo("Q(BEP) - Factor for Q",
                  reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
                  "0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
-    ImGui::InputFloat("H - Total differential head [m]",
+    ImGui::Unindent();
+    ImGui::InputFloat("H - Total differential head in",
                       &proj.parameters.total_head_m);
     ImGui::SameLine();
     ImGui::Combo("##totalhunit",
                  reinterpret_cast<int *>(&proj.parameters.total_head_unit),
                  "m\0ft\0\0");
-    ImGui::InputFloat("v - Kinematic viscosity [mm^2/s]",
+    ImGui::InputFloat("v - Kinematic viscosity in",
                       &proj.parameters.viscosity_v);
     ImGui::SameLine();
     ImGui::Combo("##viscounit",
@@ -226,75 +235,95 @@ void ApplicationImplImguiGlfw::RenderProjectManager() {
   ImGui::End();
 }
 
-void ApplicationImplImguiGlfw::ToolMode() {
-  ImGui::Begin("Settings");
-  if (!use_tool_mode) {
-    if (ImGui::Button("Switch ON tool mode")) {
-      layer_stack_.PopLayer(graph_);
-      use_tool_mode = true;
+void ApplicationImplImguiGlfw::MenuBar() {
+  if (ImGui::BeginMainMenuBar()) {
+    if (ImGui::BeginMenu("File")) {
+      if (ImGui::MenuItem("Show Graph [beta]", "STRG + G", &show_graph_)) {
+        layer_stack_.PushLayer(graph_);
+        show_graph_was_enabled_ = true;
+      }
+      ImGui::EndMenu();
     }
-  } else {
-    if (ImGui::Button("Switch OFF tool mode")) {
-      layer_stack_.PushLayer(graph_);
-      use_tool_mode = false;
+    if (ImGui::BeginMenu("Style")) {
+      ImGui::MenuItem("Toggle Dark/Light mode [not impl]");
+      if (ImGui::MenuItem("Enable Tool Mode", "STRG+T", &use_tool_mode_)) {
+        if (!show_graph_) layer_stack_.PopLayer(graph_);
+        glfwSetWindowSize(window_, display_w_tool_, display_h_tool_);
+      }
+      ImGui::EndMenu();
     }
+
+    if (ImGui::BeginMenu("Feedback")) {
+      Feedback();
+      ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
   }
-  ImGui::End();
+
+  if (show_graph_was_enabled_ && !show_graph_) {
+    layer_stack_.PopLayer(graph_);
+    show_graph_was_enabled_ = false;
+  }
 }
 
 void ApplicationImplImguiGlfw::Feedback() {
-  ImGui::Begin("Feedback");
-  ImGui::Text("Are the calculated values wrong?");
-  ImGui::Text("Please provide your feedback here:");
-  ImGui::Text("Expected values: ");
+  if (ImGui::IsPopupOpen("Feedback")) ImGui::OpenPopup("Feedback");
 
-  static float expected_eta, expected_q, expected_h;
+  if (ImGui::BeginPopupModal("Save?", NULL,
+                             ImGuiWindowFlags_AlwaysAutoResize)) {
+    ImGui::Text("Are the calculated values wrong?");
+    ImGui::Text("Please provide your feedback here:");
+    ImGui::Text("Expected values: ");
 
-  ImGui::PushItemWidth(100);
-  ImGui::InputFloat("eta", &expected_eta);
-  ImGui::InputFloat("Q", &expected_q);
-  ImGui::InputFloat("H", &expected_h);
-  ImGui::PopItemWidth();
+    static float expected_eta, expected_q, expected_h;
 
-  if (ImGui::Button("Submit Feedback")) {
-    std::string entry = "----------------\nParameters:";
+    ImGui::PushItemWidth(100);
+    ImGui::InputFloat("eta", &expected_eta);
+    ImGui::InputFloat("Q", &expected_q);
+    ImGui::InputFloat("H", &expected_h);
+    ImGui::PopItemWidth();
 
-    if (auto projectsPtr = get_projects();
-        projectsPtr && !projectsPtr->empty()) {
-      const auto &parameters = projectsPtr->at(0).parameters;
-      const auto &corrections = projectsPtr->at(0).correction;
+    if (ImGui::Button("Submit Feedback")) {
+      std::string entry = "----------------\nParameters:";
 
-      entry += "Flowrate: " + std::to_string(parameters.flowrate_q) + "\n";
-      entry += "Total Head: " + std::to_string(parameters.total_head_m) + "\n";
-      entry += "Viscosity: " + std::to_string(parameters.viscosity_v) + "\n";
-      entry +=
-          "Multiplier H: " + std::to_string(parameters.selected_h_curve) + "\n";
+      if (auto projectsPtr = get_projects();
+          projectsPtr && !projectsPtr->empty()) {
+        const auto &parameters = projectsPtr->at(0).parameters;
+        const auto &corrections = projectsPtr->at(0).correction;
 
-      entry += "Calculated values - Expected values = difference:\n";
-      entry += "Q: " + std::to_string(corrections.Q) + " - " +
-               std::to_string(expected_q) + " = " +
-               std::to_string(corrections.Q - expected_q) + "\n";
-      entry += "eta: " + std::to_string(corrections.eta) + " - " +
-               std::to_string(expected_eta) + " = " +
-               std::to_string(corrections.eta - expected_eta) + "\n";
-      entry += "H: " + std::to_string(corrections.H_selected) + " - " +
-               std::to_string(expected_h) + " = " +
-               std::to_string(corrections.H_selected - expected_h) + "\n\n";
+        entry += "Flowrate: " + std::to_string(parameters.flowrate_q) + "\n";
+        entry +=
+            "Total Head: " + std::to_string(parameters.total_head_m) + "\n";
+        entry += "Viscosity: " + std::to_string(parameters.viscosity_v) + "\n";
+        entry +=
+            "Multiplier H: " + std::to_string(parameters.selected_h_curve) +
+            "\n";
 
-      std::ofstream feedback_file("feedback.txt",
-                                  std::ios::app | std::ios::out);
-      if (feedback_file.is_open()) {
-        // Write the entry to the file
-        feedback_file << entry << std::endl;
+        entry += "Calculated values - Expected values = difference:\n";
+        entry += "Q: " + std::to_string(corrections.Q) + " - " +
+                 std::to_string(expected_q) + " = " +
+                 std::to_string(corrections.Q - expected_q) + "\n";
+        entry += "eta: " + std::to_string(corrections.eta) + " - " +
+                 std::to_string(expected_eta) + " = " +
+                 std::to_string(corrections.eta - expected_eta) + "\n";
+        entry += "H: " + std::to_string(corrections.H_selected) + " - " +
+                 std::to_string(expected_h) + " = " +
+                 std::to_string(corrections.H_selected - expected_h) + "\n\n";
 
-        // Close the file
-        feedback_file.close();
-      } else {
+        std::ofstream feedback_file("feedback.txt",
+                                    std::ios::app | std::ios::out);
+        if (feedback_file.is_open()) {
+          // Write the entry to the file
+          feedback_file << entry << std::endl;
+
+          // Close the file
+          feedback_file.close();
+        } else {
+        }
       }
     }
+    ImGui::EndPopup();
   }
-
-  ImGui::End();
 }
 
 void ApplicationImplImguiGlfw::SetStyle() {

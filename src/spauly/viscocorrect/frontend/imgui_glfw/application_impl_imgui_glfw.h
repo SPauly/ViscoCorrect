@@ -34,22 +34,32 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   virtual std::shared_ptr<GraphImplBase> get_graph() override { return graph_; }
 
  private:
-  void RenderProjectManager();
-  void SetStyle();
-  void ToolMode();
-
+  void ProjectManager();
+  void MenuBar();
   void Feedback();
 
+  void SetStyle();
+
  private:
+  //config
+  bool use_tool_mode_ = true;
+  bool show_graph_ = false;
+  bool show_graph_was_enabled_ = false;
+  
+  //internal use 
   GLFWwindow *window_;
-  int display_w_, display_h_;
+  ImGuiViewport *viewport_;
   ImGuiIO *io_;
+
+  //Appearence
+  const int display_w_tool_ = 450;
+  const int display_h_tool_ = 650;
+  int temp_display_w_, temp_display_h_; //for temporary use
 
   // Style
   ImVec4 clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   ImVec4 *colors_ = nullptr;
   bool use_dark_mode = false;
-  bool use_tool_mode = false;
 
   // utils
   util_frontend::LayerStack layer_stack_;
