@@ -25,7 +25,7 @@ void GraphImplImGuiGlfw::OnAttach() {
 void GraphImplImGuiGlfw::OnDetach() { ImPlot::DestroyContext(); }
 
 void GraphImplImGuiGlfw::OnUIRender() {
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse);
+  ImGui::Begin("Viewport", nullptr, window_flags_);
 
   if (use_autofit_) Autofit();
 

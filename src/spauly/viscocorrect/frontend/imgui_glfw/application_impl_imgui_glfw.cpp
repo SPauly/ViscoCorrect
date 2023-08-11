@@ -46,8 +46,8 @@ bool ApplicationImplImguiGlfw::Init() {
 #endif
 
   // Create window with graphics context
-  window_ = glfwCreateWindow(display_w_tool_, display_h_tool_, "ViscoCorrect",
-                             NULL, NULL);
+  window_ =
+      glfwCreateWindow(display_w_, display_h_, "ViscoCorrect", NULL, NULL);
   if (window_ == NULL) return false;
   glfwMakeContextCurrent(window_);
   glfwSwapInterval(1);  // Enable vsync
@@ -82,6 +82,8 @@ bool ApplicationImplImguiGlfw::Init() {
 
   // layer init graph
   graph_ = std::make_shared<GraphImplImGuiGlfw>();
+  layer_stack_.PushLayer(graph_);
+  layer_stack_.HideLayer(graph_);
 
   // get the projects
   (*get_register_event())(
@@ -159,13 +161,9 @@ bool ApplicationImplImguiGlfw::Render() {
 void ApplicationImplImguiGlfw::ProjectManager() {
   if (!get_projects()) return;
 
-  if (use_tool_mode_) {
-    ImGui::SetNextWindowPos(viewport_->WorkPos);
-    ImGui::SetNextWindowSize(
-        ImVec2{viewport_->WorkSize.x, viewport_->WorkSize.y - 100});
-  }
-
-  ImGui::Begin("Project");
+  ImGui::Begin(
+      "Project", nullptr,
+      use_open_workspace ? open_workspace_flags_ : closed_workspace_flags_);
 
   for (auto &proj : *get_projects())  // leads to segmentation fault if projects
                                       // is not created
@@ -237,32 +235,39 @@ void ApplicationImplImguiGlfw::ProjectManager() {
 
 void ApplicationImplImguiGlfw::MenuBar() {
   if (ImGui::BeginMainMenuBar()) {
-    if (ImGui::BeginMenu("File")) {
-      if (ImGui::MenuItem("Show Graph [beta]", "STRG + G", &show_graph_)) {
-        layer_stack_.PushLayer(graph_);
-        show_graph_was_enabled_ = true;
-      }
+    if (ImGui::BeginMenu("Menu")) {
+      ImGui::MenuItem("Add Project", "STRG + P");
       ImGui::EndMenu();
     }
-    if (ImGui::BeginMenu("Style")) {
+    if (ImGui::BeginMenu("View")) {
       ImGui::MenuItem("Toggle Dark/Light mode [not impl]");
-      if (ImGui::MenuItem("Enable Tool Mode", "STRG+T", &use_tool_mode_)) {
-        if (!show_graph_) layer_stack_.PopLayer(graph_);
-        glfwSetWindowSize(window_, display_w_tool_, display_h_tool_);
+      if (ImGui::MenuItem("Show Graph [beta]", "STRG + G", &show_graph_)) {
+        if (show_graph_) {
+          glfwSetWindowSize(window_, display_w_ + display_w_offset_graph_,
+                            display_h_);
+          layer_stack_.ShowLayer(graph_);
+        } else {
+          glfwSetWindowSize(window_, display_w_, display_h_);
+          layer_stack_.HideLayer(graph_);
+        }
+      }
+
+      if (ImGui::MenuItem("Enable open workspace [beta]", "STRG+O",
+                          &use_open_workspace)) {
+        if (use_open_workspace)
+          graph_->set_window_flags(open_workspace_flags_);
+        else
+          graph_->set_window_flags(closed_workspace_flags_);
       }
       ImGui::EndMenu();
     }
 
-    if (ImGui::BeginMenu("Feedback")) {
-      Feedback();
+    if (ImGui::BeginMenu("Help")) {
+      ImGui::MenuItem("Help");
+      ImGui::MenuItem("Feedback");
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
-  }
-
-  if (show_graph_was_enabled_ && !show_graph_) {
-    layer_stack_.PopLayer(graph_);
-    show_graph_was_enabled_ = false;
   }
 }
 

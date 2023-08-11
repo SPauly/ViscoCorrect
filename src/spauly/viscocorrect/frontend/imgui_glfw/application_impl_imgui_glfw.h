@@ -42,9 +42,8 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
 
  private:
   //config
-  bool use_tool_mode_ = true;
+  bool use_open_workspace = false;
   bool show_graph_ = false;
-  bool show_graph_was_enabled_ = false;
   
   //internal use 
   GLFWwindow *window_;
@@ -52,9 +51,12 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   ImGuiIO *io_;
 
   //Appearence
-  const int display_w_tool_ = 450;
-  const int display_h_tool_ = 650;
+  const int display_w_ = 450;
+  const int display_h_ = 650;
+  const int display_w_offset_graph_ = 450;
   int temp_display_w_, temp_display_h_; //for temporary use
+  const ImGuiWindowFlags closed_workspace_flags_ = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+  const ImGuiWindowFlags open_workspace_flags_ = ImGuiWindowFlags_NoCollapse;
 
   // Style
   ImVec4 clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
