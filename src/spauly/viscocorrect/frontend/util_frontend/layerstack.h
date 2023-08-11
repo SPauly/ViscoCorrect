@@ -18,14 +18,18 @@ class LayerStack {
   void PushLayer() {
     static_assert(std::is_base_of<Layer, T>::value,
                   "Pushed type is not subclass of Layer!");
-    layers_.emplace_back(std::make_shared<T>());
-    layers_.back()->OnAttach();
+    layers_.emplace(layers_.begin() + layer_insert_index_,
+                    std::make_shared<T>());
+    layers_.at(layers_.begin() + layer_insert_index_)->OnAttach();
+    layer_insert_index_++;
   }
 
   void PushLayer(const std::shared_ptr<Layer> &layer);
   void PushOverlay(const std::shared_ptr<Layer> &overlay);
   void PopLayer(std::shared_ptr<Layer> layer);
   void PopOverlay(std::shared_ptr<Layer> overlay);
+  void HideLayer(std::shared_ptr<Layer> layer);
+  void ShowLayer(std::shared_ptr<Layer> layer);
 
   void clear();
 
@@ -55,6 +59,7 @@ class LayerStack {
 
  private:
   std::vector<std::shared_ptr<Layer>> layers_;
+  std::vector<std::shared_ptr<Layer>> hidden_layers_;
   unsigned int layer_insert_index_ = 0;
 };
 }  // namespace util_frontend

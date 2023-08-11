@@ -6,7 +6,7 @@ set (GSL_DISABLE_TESTS ON CACHE BOOL "")
 
 add_subdirectory(external/gsl)
 
-add_library(debug_tools SHARED
+add_library(debug_tools
 ${_visco_debug_srcs}
 )
 

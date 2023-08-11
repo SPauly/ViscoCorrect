@@ -1,5 +1,7 @@
 #include "spauly/viscocorrect/debug/curve_fitting.h"
 
+#include "spauly/viscocorrect/debug/debug_tools.h"
+
 namespace viscocorrect {
 namespace debug {
 // FullDataCurve
@@ -33,7 +35,7 @@ CurveFitting::CurveFitting(std::shared_ptr<EventCallbackType> callback)
   curves.push_back(FullDataCurve(raw_points.at(5), true, 6));
 
   PlotRender_func =
-      std::make_shared<std::function<void()>>(std::bind(RenderInPlot, this));
+      std::make_shared<std::function<void()>>(std::bind(&CurveFitting::RenderInPlot, this));
 }
 
 CurveFitting::~CurveFitting() {}
