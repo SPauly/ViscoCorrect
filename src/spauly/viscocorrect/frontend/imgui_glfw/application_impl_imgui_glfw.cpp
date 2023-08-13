@@ -114,10 +114,6 @@ bool ApplicationImplImguiGlfw::Render() {
 
   glfwPollEvents();
 
-  for (auto &layer : layer_stack_) {
-    layer->OnUpdate(0);  // implement time tracking here if applicable
-  }
-
   // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();

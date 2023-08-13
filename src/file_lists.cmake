@@ -19,6 +19,7 @@ set(_visco_hdrs
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util/input_units.h
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util/mathematical_functions.h
     ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util/properties.h
+    ${PROJECT_SOURCE_DIR}/src/spauly/viscocorrect/util/timer.h
 )
 
 set(_visco_includes

@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "/O2 /arch:NATIVE")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/O2 /arch:NATIVE /Zi")
 
 # option for building with debug features
-option(BUILD_DEBUG_FEATURES "Build with debug features" ON)
+option(BUILD_DEBUG_FEATURES "Build with debug features" OFF)
 
 # Load file lists
 include(${PROJECT_SOURCE_DIR}/src/file_lists.cmake)
@@ -56,10 +56,6 @@ add_dependencies(ViscoCorrect ${_visco_TARGET_LIBRARIES})
 # Set the BUILD_DEBUG_FEATURES to OFF when building in Release mode
 target_compile_definitions(ViscoCorrect PRIVATE
     $<$<CONFIG:Release>:BUILD_DEBUG_FEATURES=OFF>
-)
-
-# Set the BUILD_DEBUG_FEATURES to OFF when building in Release mode
-target_compile_definitions(ViscoCorrect PRIVATE
     $<$<CONFIG:Debug>:BUILD_DEBUG_FEATURES=ON>
 )
 

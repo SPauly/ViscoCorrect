@@ -4,6 +4,7 @@
 #include <deque>
 #include <functional>
 #include <vector>
+#include <chrono>
 
 #include "spauly/viscocorrect/application_base.h"
 #include "spauly/viscocorrect/calculator.h"
@@ -31,6 +32,9 @@ class Application {
   void HandleEvents();
 
  private:
+  bool should_close_ = false;
+  long long sleep_time_ = 0;
+
   ApplicationBase *frontend_impl_;
 
   Calculator calculator_;

@@ -1,6 +1,9 @@
 #include "spauly/viscocorrect/application.h"
 
 #include <memory>
+#include <chrono>
+
+#include "spauly/viscocorrect/util/timer.h"
 
 namespace viscocorrect {
 Application::Application(ApplicationBase *application_implementaion)
@@ -29,8 +32,19 @@ void Application::Run() {
   HandleEvents();  // Handle events registered during initialization so that the
                    // process is completed
 
-  while (frontend_impl_->Render()) {
+  should_close_ = !frontend_impl_->Render();
+  while (!should_close_) {
+    
+    util::Timer timer;
+    constexpr long long expected_frame_time_micro = 1000000 / 75;
+
     HandleEvents();
+    should_close_ = !frontend_impl_->Render();
+
+    sleep_time_ = expected_frame_time_micro - timer.Elapsed<std::chrono::microseconds>();
+    if(sleep_time_ > 0)
+      std::this_thread::sleep_for(std::chrono::microseconds(sleep_time_));
+
   }
   Shutdown();
 }
