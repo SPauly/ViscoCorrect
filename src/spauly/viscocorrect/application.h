@@ -1,17 +1,16 @@
 #ifndef SPAULY_VISCOCORRECT_APPLICATION_H
 #define SPAULY_VISCOCORRECT_APPLICATION_H
 
+#include <chrono>
 #include <deque>
 #include <functional>
 #include <vector>
-#include <chrono>
 
 #include "spauly/viscocorrect/application_base.h"
 #include "spauly/viscocorrect/calculator.h"
 #include "spauly/viscocorrect/manage_project.h"
 #include "spauly/viscocorrect/project.h"
 #include "spauly/viscocorrect/util/event.h"
-#include "spauly/viscocorrect/util/timer.h"
 
 namespace viscocorrect {
 // defined in this file
@@ -34,8 +33,6 @@ class Application {
 
  private:
   bool should_close_ = false;
-  long long sleep_time_ = 0;
-  util::Timer timer_;
 
   ApplicationBase *frontend_impl_;
 

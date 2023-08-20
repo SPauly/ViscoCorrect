@@ -28,8 +28,8 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
 
   virtual bool Init() override;
   virtual void Shutdown() override;
-
   virtual bool Render() override;
+  virtual inline const float GetFramerate() override { return io_->Framerate; };
 
   virtual std::shared_ptr<GraphImplBase> get_graph() override { return graph_; }
 
@@ -41,21 +41,22 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   void SetStyle();
 
  private:
-  //config
+  // config
   bool use_open_workspace = false;
   bool show_graph_ = false;
-  
-  //internal use 
+
+  // internal use
   GLFWwindow *window_;
   ImGuiViewport *viewport_;
   ImGuiIO *io_;
 
-  //Appearence
+  // Appearence
   const int display_w_ = 450;
   const int display_h_ = 650;
   const int display_w_offset_graph_ = 450;
-  int temp_display_w_, temp_display_h_; //for temporary use
-  const ImGuiWindowFlags closed_workspace_flags_ = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+  int temp_display_w_, temp_display_h_;  // for temporary use
+  const ImGuiWindowFlags closed_workspace_flags_ =
+      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
   const ImGuiWindowFlags open_workspace_flags_ = ImGuiWindowFlags_NoCollapse;
 
   // Style

@@ -18,8 +18,8 @@ class ApplicationBase {
 
   virtual bool Init() = 0;
   virtual void Shutdown() = 0;
-
   virtual bool Render() = 0;
+  virtual inline const float GetFramerate() = 0;
 
   virtual std::shared_ptr<GraphImplBase> get_graph() {
     return nullptr;

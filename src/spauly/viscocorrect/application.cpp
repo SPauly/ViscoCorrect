@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <memory>
+#include <thread>
 
 #include "spauly/viscocorrect/util/timer.h"
 
@@ -23,6 +24,9 @@ Application::~Application() {
 }
 
 void Application::Run() {
+  long long sleep_time = 0;
+  util::Timer frame_timer, sleep_calc_timer;
+
   if (!frontend_impl_->Init()) {
     event_que_.clear();
     projects_->clear();
@@ -33,18 +37,21 @@ void Application::Run() {
                    // process is completed
 
   should_close_ = !frontend_impl_->Render();
+
   while (!should_close_) {
-    timer_.Reset();
+    frame_timer.Reset();
 
     HandleEvents();
     should_close_ = !frontend_impl_->Render();
 
-    constexpr long long expected_frame_time_micro = 1000000 / 75;
-    sleep_time_ =
-        expected_frame_time_micro - timer_.Elapsed<std::chrono::microseconds>();
+    sleep_calc_timer.Reset();
+    sleep_time =
+        (1000000L / static_cast<long long>(frontend_impl_->GetFramerate())) -
+        frame_timer.Elapsed<std::chrono::microseconds>();
+    sleep_time -= sleep_calc_timer.Elapsed<std::chrono::microseconds>();
 
-    if (sleep_time_ > 0)
-      std::this_thread::sleep_for(std::chrono::microseconds(sleep_time_));
+    if (sleep_time > 0)
+      std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
   }
   Shutdown();
 }
