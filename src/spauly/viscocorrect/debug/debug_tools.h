@@ -1,12 +1,13 @@
 #ifndef SPAULY_VISCOCORRECT_DEBUG_DEBUG_TOOLS_H
 #define SPAULY_VISCOCORRECT_DEBUG_DEBUG_TOOLS_H
 
+#include <imgui.h>
+
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "imgui.h"
 #include "spauly/viscocorrect/debug/curve_fitting.h"
 #include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 #include "spauly/viscocorrect/frontend/util_frontend/layerstack.h"
@@ -40,7 +41,7 @@ class DebugToolBase : public viscocorrect::frontend::util_frontend::Layer {
   virtual void OnUIRender() final;
 
   // overload this function
-  virtual void Run(){};
+  virtual void Run() = 0;
 
   template <typename Func, typename Obj>
   std::unique_ptr<std::function<void()>> GetCallback(Func func, Obj *obj) {
