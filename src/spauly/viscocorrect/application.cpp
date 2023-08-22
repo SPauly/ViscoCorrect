@@ -39,19 +39,10 @@ void Application::Run() {
   should_close_ = !frontend_impl_->Render();
 
   while (!should_close_) {
-    frame_timer.Reset();
 
     HandleEvents();
     should_close_ = !frontend_impl_->Render();
-
-    sleep_calc_timer.Reset();
-    sleep_time =
-        (1000000L / static_cast<long long>(frontend_impl_->GetFramerate())) -
-        frame_timer.Elapsed<std::chrono::microseconds>();
-    sleep_time -= sleep_calc_timer.Elapsed<std::chrono::microseconds>();
-
-    if (sleep_time > 0)
-      std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
+    
   }
   Shutdown();
 }
