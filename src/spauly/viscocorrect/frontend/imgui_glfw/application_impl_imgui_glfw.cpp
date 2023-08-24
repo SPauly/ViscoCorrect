@@ -213,6 +213,7 @@ void ApplicationImplImguiGlfw::ProjectManager() {
     ImGui::Separator();
 
     static bool found_error = false;
+    
     if (ImGui::Button("Calculate")) {
       if (!IsFlowrateInputOkay(proj.parameters.flowrate_q) ||
           !IsTotalHeadInputOkay(proj.parameters.total_head_m) ||
@@ -266,8 +267,14 @@ void ApplicationImplImguiGlfw::MenuBar() {
     }
 
     if (ImGui::BeginMenu("Help")) {
-      ImGui::MenuItem("Help");
-      ImGui::MenuItem("Feedback");
+      if (ImGui::MenuItem("Contact")) {
+#ifdef _WIN32
+        ShellExecute(nullptr, "open",
+                     "https:\\\\github.com\\SPauly\\ViscoCorrect", nullptr,
+                     nullptr, SW_SHOWNORMAL);
+#endif  // _WIN32
+      }
+
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
