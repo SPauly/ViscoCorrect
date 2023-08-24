@@ -394,10 +394,7 @@ void ApplicationImplImguiGlfw::HyperLink(const char *link, const char *marker) {
   }
   if (ImGui::IsItemClicked()) {
 #ifdef _WIN32
-    ::ShellExecuteA(NULL, "open", link, NULL, NULL, SW_SHOWDEFAULT);
-    char command[256];
-    snprintf(command, 256, "xdg-open \"%s\"", link);
-    system(command);
+    ShellExecute(nullptr, "open", link, nullptr, nullptr, SW_SHOWNORMAL);
 #endif  // _WIN32
   }
 }
