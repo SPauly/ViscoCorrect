@@ -37,8 +37,12 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   void ProjectManager();
   void MenuBar();
   void Feedback();
+  void Disclaimer();
 
   void SetStyle();
+  void HelpMarker(const char* description, const char* marker = nullptr);
+  void HyperLink(const char *link, const char* marker = nullptr);
+
 
  private:
   // config
@@ -49,6 +53,7 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   GLFWwindow *window_;
   ImGuiViewport *viewport_;
   ImGuiIO *io_;
+  bool submitting_feedback_ = false;
 
   // Appearence
   const int display_w_ = 450;

@@ -2,10 +2,15 @@
 
 #include <fstream>
 #include <string>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_internal.h>
+
 #include "spauly/viscocorrect/util/properties.h"  //for verifying the input
 
 namespace viscocorrect {
@@ -112,9 +117,8 @@ void ApplicationImplImguiGlfw::Shutdown() {
 bool ApplicationImplImguiGlfw::Render() {
   if (glfwWindowShouldClose(window_)) return false;
 
-  glfwPollEvents();
+  glfwWaitEvents();
 
-  // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -137,11 +141,6 @@ bool ApplicationImplImguiGlfw::Render() {
   glClear(GL_COLOR_BUFFER_BIT);
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-  // Update and Render additional Platform Windows
-  // (Platform functions may change the current OpenGL context, so we
-  // save/restore it to make it easier to paste this code elsewhere.
-  //  For this specific demo app we could also call
-  //  glfwMakeContextCurrent(window) directly)
   if (io_->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     GLFWwindow *backup_current_context = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
@@ -174,6 +173,8 @@ void ApplicationImplImguiGlfw::ProjectManager() {
     ImGui::Combo("Q(BEP) - Factor for Q",
                  reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
                  "0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
+    ImGui::SameLine();
+    HelpMarker("Ratio of actual flow to flow at BEP");
     ImGui::Unindent();
     ImGui::InputFloat("H - Total differential head in",
                       &proj.parameters.total_head_m);
@@ -212,6 +213,7 @@ void ApplicationImplImguiGlfw::ProjectManager() {
     ImGui::Separator();
 
     static bool found_error = false;
+    
     if (ImGui::Button("Calculate")) {
       if (!IsFlowrateInputOkay(proj.parameters.flowrate_q) ||
           !IsTotalHeadInputOkay(proj.parameters.total_head_m) ||
@@ -223,7 +225,13 @@ void ApplicationImplImguiGlfw::ProjectManager() {
           util::EventType::kCalcReq, &proj));
     }
 
-    if (found_error) ImGui::Text("Input not valid");
+    if (found_error) {
+      ImGui::SameLine();
+      ImGui::Text("Input not valid");
+    }
+
+    Disclaimer();
+    if (submitting_feedback_) Feedback();
   }
 
   ImGui::End();
@@ -259,8 +267,14 @@ void ApplicationImplImguiGlfw::MenuBar() {
     }
 
     if (ImGui::BeginMenu("Help")) {
-      ImGui::MenuItem("Help");
-      ImGui::MenuItem("Feedback");
+      if (ImGui::MenuItem("Contact")) {
+#ifdef _WIN32
+        ShellExecute(nullptr, "open",
+                     "https:\\\\github.com\\SPauly\\ViscoCorrect", nullptr,
+                     nullptr, SW_SHOWNORMAL);
+#endif  // _WIN32
+      }
+
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
@@ -268,9 +282,11 @@ void ApplicationImplImguiGlfw::MenuBar() {
 }
 
 void ApplicationImplImguiGlfw::Feedback() {
-  if (ImGui::IsPopupOpen("Feedback")) ImGui::OpenPopup("Feedback");
+  ImGui::OpenPopup("Feedback");
+  ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+  ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
-  if (ImGui::BeginPopupModal("Save?", NULL,
+  if (ImGui::BeginPopupModal("Feedback", NULL,
                              ImGuiWindowFlags_AlwaysAutoResize)) {
     ImGui::Text("Are the calculated values wrong?");
     ImGui::Text("Please provide your feedback here:");
@@ -319,11 +335,74 @@ void ApplicationImplImguiGlfw::Feedback() {
 
           // Close the file
           feedback_file.close();
-        } else {
         }
       }
+      submitting_feedback_ = false;
+      ImGui::CloseCurrentPopup();
     }
     ImGui::EndPopup();
+  }
+}
+
+void ApplicationImplImguiGlfw::Disclaimer() { 
+  ImGui::Text("");
+  ImGui::Text("                    !!! DISCLAIMER !!!");
+  ImGui::Text("This software currently is purely experimental and all "); 
+  ImGui::Text("calculated values should be varified manually. ViscoCorrect");
+  ImGui::Text("uses a graphical approached based on ");
+  ImGui::SameLine();
+  HyperLink(
+      "https:\\\\www.researchgate.net\\figure\\The-graph-obtained-by-the-"
+      "American-Institute-of-hydraulics_fig1_335209726",
+      "this graph");
+  ImGui::SameLine();
+  ImGui::Text(" obtained by");
+  ImGui::Text("the American Institute of Hydraulics.");
+  ImGui::Text("Note that the used standard is deprecated! The HI advices to ");
+  ImGui::Text("only use the latest "); 
+  ImGui::SameLine();
+  HyperLink(
+      "https:\\\\www.pumps.org\\what-we-do\\standards\\?pumps-search-product=9."
+      "6.7",
+      "ANSI/HI 9.6.7 Standard");
+  ImGui::SameLine();
+  ImGui::Text("!");
+  ImGui::Text("Use at your own risk.");
+  ImGui::Text("");
+  ImGui::Text("Please ");
+  ImGui::SameLine();
+  if (ImGui::SmallButton("provide feedback"))
+    submitting_feedback_ = true;
+  ImGui::SameLine();
+  ImGui::Text(" in case the calculated values are incorrect.");
+  ImGui::Text("Thank you :)");
+}
+
+void ApplicationImplImguiGlfw::HelpMarker(const char* description,
+    const char* marker) {
+  ImGui::TextDisabled((marker) ? marker : "(?)");
+  if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort)) {
+    ImGui::BeginTooltip();
+    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+    ImGui::TextUnformatted(description);
+    ImGui::PopTextWrapPos();
+    ImGui::EndTooltip();
+  }
+}
+
+void ApplicationImplImguiGlfw::HyperLink(const char *link, const char *marker) {
+  ImGui::TextDisabled((marker) ? marker : link);
+  if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort)) {
+    ImGui::BeginTooltip();
+    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+    ImGui::TextUnformatted(link);
+    ImGui::PopTextWrapPos();
+    ImGui::EndTooltip();
+  }
+  if (ImGui::IsItemClicked()) {
+#ifdef _WIN32
+    ShellExecute(nullptr, "open", link, nullptr, nullptr, SW_SHOWNORMAL);
+#endif  // _WIN32
   }
 }
 
