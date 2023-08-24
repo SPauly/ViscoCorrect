@@ -1,12 +1,15 @@
 #include "frontend/imgui_glfw/application_impl_imgui_glfw.h"
 
+#include <fstream>
+#include <string>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
-
-#include <fstream>
-#include <string>
 
 #include "spauly/viscocorrect/util/properties.h"  //for verifying the input
 
@@ -114,88 +117,40 @@ void ApplicationImplImguiGlfw::Shutdown() {
 bool ApplicationImplImguiGlfw::Render() {
   if (glfwWindowShouldClose(window_)) return false;
 
-  glfwWaitEvents();
+  glfwPollEvents();
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+  ImGui_ImplOpenGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
+  ImGui::NewFrame();
 
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+  ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-    for (auto &layer : layer_stack_) {
-      layer->OnUIRender();
-    }
+  for (auto &layer : layer_stack_) {
+    layer->OnUIRender();
+  }
 
-    MenuBar();
-    ProjectManager();
+  MenuBar();
+  ProjectManager();
 
-    // Rendering
-    ImGui::Render();
-    glfwGetFramebufferSize(window_, &temp_display_w_, &temp_display_h_);
-    glViewport(0, 0, temp_display_w_, temp_display_h_);
-    glClearColor(clear_color_.x * clear_color_.w,
-                 clear_color_.y * clear_color_.w,
-                 clear_color_.z * clear_color_.w, clear_color_.w);
-    glClear(GL_COLOR_BUFFER_BIT);
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+  // Rendering
+  ImGui::Render();
+  glfwGetFramebufferSize(window_, &temp_display_w_, &temp_display_h_);
+  glViewport(0, 0, temp_display_w_, temp_display_h_);
+  glClearColor(clear_color_.x * clear_color_.w, clear_color_.y * clear_color_.w,
+               clear_color_.z * clear_color_.w, clear_color_.w);
+  glClear(GL_COLOR_BUFFER_BIT);
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    // Update and Render additional Platform Windows
-    // (Platform functions may change the current OpenGL context, so we
-    // save/restore it to make it easier to paste this code elsewhere.
-    //  For this specific demo app we could also call
-    //  glfwMakeContextCurrent(window) directly)
-    if (io_->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-      GLFWwindow *backup_current_context = glfwGetCurrentContext();
-      ImGui::UpdatePlatformWindows();
-      ImGui::RenderPlatformWindowsDefault();
-      glfwMakeContextCurrent(backup_current_context);
-    }
+  if (io_->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    GLFWwindow *backup_current_context = glfwGetCurrentContext();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+    glfwMakeContextCurrent(backup_current_context);
+  }
 
-    glfwSwapBuffers(window_);
- 
+  glfwSwapBuffers(window_);
+
   return true;
-}
-
-bool ApplicationImplImguiGlfw::NeedRender() {
-  ImGuiContext *imgui_ctx = ImGui::GetCurrentContext();
-  static bool is_focused = false;
-
-  if (update_frames_counter_ < update_frames_size_) {
-    update_frames_counter_++;
-    return true;
-  }
-
-  for (const auto &event : imgui_ctx->InputEventsQueue) {
-    if (event.Type == ImGuiInputEventType_MousePos) {
-      ImVec2 current_mouse_pos = ImVec2(ImFloorSigned(event.MousePos.PosX),
-                                        ImFloorSigned(event.MousePos.PosY));
-
-      const ImVec2 viewport_pos = ImGui::GetMainViewport()->Pos;
-      const ImVec2 viewport_size = ImGui::GetMainViewport()->Size;
-      if ((current_mouse_pos.x >= viewport_pos.x &&
-           current_mouse_pos.x <= (viewport_pos.x + viewport_size.x) &&
-           current_mouse_pos.y >= viewport_pos.y &&
-           current_mouse_pos.y <= (viewport_pos.y + viewport_size.y))) {
-        prev_mouse_pos_ = current_mouse_pos;
-        update_frames_counter_ = 0;
-        return true;
-      }
-    }
-    if(is_focused && event.Type != ImGuiInputEventType_MousePos)
-    {
-        update_frames_counter_ = 0;
-        return true;
-    }
-    if (event.Type == ImGuiInputEventType_Focus)
-    {
-        if ((is_focused = event.AppFocused.Focused)) {
-        update_frames_counter_ = 0;
-        return true;
-        }
-    }
-  }
-
-  return false;
 }
 
 void ApplicationImplImguiGlfw::ProjectManager() {
@@ -218,6 +173,8 @@ void ApplicationImplImguiGlfw::ProjectManager() {
     ImGui::Combo("Q(BEP) - Factor for Q",
                  reinterpret_cast<int *>(&proj.parameters.selected_h_curve),
                  "0.6x\0 0.8x\0 1.0x\0 1.2x\0\0");
+    ImGui::SameLine();
+    HelpMarker("Ratio of actual flow to flow at BEP");
     ImGui::Unindent();
     ImGui::InputFloat("H - Total differential head in",
                       &proj.parameters.total_head_m);
@@ -267,7 +224,13 @@ void ApplicationImplImguiGlfw::ProjectManager() {
           util::EventType::kCalcReq, &proj));
     }
 
-    if (found_error) ImGui::Text("Input not valid");
+    if (found_error) {
+      ImGui::SameLine();
+      ImGui::Text("Input not valid");
+    }
+
+    Disclaimer();
+    if (submitting_feedback_) Feedback();
   }
 
   ImGui::End();
@@ -312,9 +275,11 @@ void ApplicationImplImguiGlfw::MenuBar() {
 }
 
 void ApplicationImplImguiGlfw::Feedback() {
-  if (ImGui::IsPopupOpen("Feedback")) ImGui::OpenPopup("Feedback");
+  ImGui::OpenPopup("Feedback");
+  ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+  ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
-  if (ImGui::BeginPopupModal("Save?", NULL,
+  if (ImGui::BeginPopupModal("Feedback", NULL,
                              ImGuiWindowFlags_AlwaysAutoResize)) {
     ImGui::Text("Are the calculated values wrong?");
     ImGui::Text("Please provide your feedback here:");
@@ -363,11 +328,77 @@ void ApplicationImplImguiGlfw::Feedback() {
 
           // Close the file
           feedback_file.close();
-        } else {
         }
       }
+      submitting_feedback_ = false;
+      ImGui::CloseCurrentPopup();
     }
     ImGui::EndPopup();
+  }
+}
+
+void ApplicationImplImguiGlfw::Disclaimer() { 
+  ImGui::Text("");
+  ImGui::Text("                    !!! DISCLAIMER !!!");
+  ImGui::Text("This software currently is purely experimental and all "); 
+  ImGui::Text("calculated values should be varified manually. ViscoCorrect");
+  ImGui::Text("uses a graphical approached based on ");
+  ImGui::SameLine();
+  HyperLink(
+      "https:\\\\www.researchgate.net\\figure\\The-graph-obtained-by-the-"
+      "American-Institute-of-hydraulics_fig1_335209726",
+      "this graph");
+  ImGui::SameLine();
+  ImGui::Text(" obtained by");
+  ImGui::Text("the American Institute of Hydraulics.");
+  ImGui::Text("Note that the used standard is deprecated! The HI advices to ");
+  ImGui::Text("only use the latest "); 
+  ImGui::SameLine();
+  HyperLink(
+      "https:\\\\www.pumps.org\\what-we-do\\standards\\?pumps-search-product=9."
+      "6.7",
+      "ANSI/HI 9.6.7 Standard");
+  ImGui::SameLine();
+  ImGui::Text("!");
+  ImGui::Text("Use at your own risk.");
+  ImGui::Text("");
+  ImGui::Text("Please ");
+  ImGui::SameLine();
+  if (ImGui::SmallButton("provide feedback"))
+    submitting_feedback_ = true;
+  ImGui::SameLine();
+  ImGui::Text(" in case the calculated values are incorrect.");
+  ImGui::Text("Thank you :)");
+}
+
+void ApplicationImplImguiGlfw::HelpMarker(const char* description,
+    const char* marker) {
+  ImGui::TextDisabled((marker) ? marker : "(?)");
+  if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort)) {
+    ImGui::BeginTooltip();
+    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+    ImGui::TextUnformatted(description);
+    ImGui::PopTextWrapPos();
+    ImGui::EndTooltip();
+  }
+}
+
+void ApplicationImplImguiGlfw::HyperLink(const char *link, const char *marker) {
+  ImGui::TextDisabled((marker) ? marker : link);
+  if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort)) {
+    ImGui::BeginTooltip();
+    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+    ImGui::TextUnformatted(link);
+    ImGui::PopTextWrapPos();
+    ImGui::EndTooltip();
+  }
+  if (ImGui::IsItemClicked()) {
+#ifdef _WIN32
+    ::ShellExecuteA(NULL, "open", link, NULL, NULL, SW_SHOWDEFAULT);
+    char command[256];
+    snprintf(command, 256, "xdg-open \"%s\"", link);
+    system(command);
+#endif  // _WIN32
   }
 }
 
