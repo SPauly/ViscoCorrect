@@ -117,7 +117,7 @@ void ApplicationImplImguiGlfw::Shutdown() {
 bool ApplicationImplImguiGlfw::Render() {
   if (glfwWindowShouldClose(window_)) return false;
 
-  glfwPollEvents();
+  glfwWaitEvents();
 
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
