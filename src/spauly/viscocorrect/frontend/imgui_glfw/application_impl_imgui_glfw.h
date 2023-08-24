@@ -40,6 +40,8 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
 
   void SetStyle();
 
+  bool NeedRender();
+
  private:
   // config
   bool use_open_workspace = false;
@@ -49,6 +51,9 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   GLFWwindow *window_;
   ImGuiViewport *viewport_;
   ImGuiIO *io_;
+  const int update_frames_size_ = 20;
+  int update_frames_counter_ = 0;
+  ImVec2 prev_mouse_pos_;
 
   // Appearence
   const int display_w_ = 450;

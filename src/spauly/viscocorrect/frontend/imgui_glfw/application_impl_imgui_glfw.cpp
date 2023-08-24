@@ -1,11 +1,13 @@
 #include "frontend/imgui_glfw/application_impl_imgui_glfw.h"
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_internal.h>
+
 #include <fstream>
 #include <string>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 #include "spauly/viscocorrect/util/properties.h"  //for verifying the input
 
 namespace viscocorrect {
@@ -112,46 +114,88 @@ void ApplicationImplImguiGlfw::Shutdown() {
 bool ApplicationImplImguiGlfw::Render() {
   if (glfwWindowShouldClose(window_)) return false;
 
-  glfwPollEvents();
+  glfwWaitEvents();
 
-  // Start the Dear ImGui frame
-  ImGui_ImplOpenGL3_NewFrame();
-  ImGui_ImplGlfw_NewFrame();
-  ImGui::NewFrame();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 
-  ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-  for (auto &layer : layer_stack_) {
-    layer->OnUIRender();
-  }
+    for (auto &layer : layer_stack_) {
+      layer->OnUIRender();
+    }
 
-  MenuBar();
-  ProjectManager();
+    MenuBar();
+    ProjectManager();
 
-  // Rendering
-  ImGui::Render();
-  glfwGetFramebufferSize(window_, &temp_display_w_, &temp_display_h_);
-  glViewport(0, 0, temp_display_w_, temp_display_h_);
-  glClearColor(clear_color_.x * clear_color_.w, clear_color_.y * clear_color_.w,
-               clear_color_.z * clear_color_.w, clear_color_.w);
-  glClear(GL_COLOR_BUFFER_BIT);
-  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    // Rendering
+    ImGui::Render();
+    glfwGetFramebufferSize(window_, &temp_display_w_, &temp_display_h_);
+    glViewport(0, 0, temp_display_w_, temp_display_h_);
+    glClearColor(clear_color_.x * clear_color_.w,
+                 clear_color_.y * clear_color_.w,
+                 clear_color_.z * clear_color_.w, clear_color_.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-  // Update and Render additional Platform Windows
-  // (Platform functions may change the current OpenGL context, so we
-  // save/restore it to make it easier to paste this code elsewhere.
-  //  For this specific demo app we could also call
-  //  glfwMakeContextCurrent(window) directly)
-  if (io_->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-    GLFWwindow *backup_current_context = glfwGetCurrentContext();
-    ImGui::UpdatePlatformWindows();
-    ImGui::RenderPlatformWindowsDefault();
-    glfwMakeContextCurrent(backup_current_context);
-  }
+    // Update and Render additional Platform Windows
+    // (Platform functions may change the current OpenGL context, so we
+    // save/restore it to make it easier to paste this code elsewhere.
+    //  For this specific demo app we could also call
+    //  glfwMakeContextCurrent(window) directly)
+    if (io_->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+      GLFWwindow *backup_current_context = glfwGetCurrentContext();
+      ImGui::UpdatePlatformWindows();
+      ImGui::RenderPlatformWindowsDefault();
+      glfwMakeContextCurrent(backup_current_context);
+    }
 
-  glfwSwapBuffers(window_);
-
+    glfwSwapBuffers(window_);
+ 
   return true;
+}
+
+bool ApplicationImplImguiGlfw::NeedRender() {
+  ImGuiContext *imgui_ctx = ImGui::GetCurrentContext();
+  static bool is_focused = false;
+
+  if (update_frames_counter_ < update_frames_size_) {
+    update_frames_counter_++;
+    return true;
+  }
+
+  for (const auto &event : imgui_ctx->InputEventsQueue) {
+    if (event.Type == ImGuiInputEventType_MousePos) {
+      ImVec2 current_mouse_pos = ImVec2(ImFloorSigned(event.MousePos.PosX),
+                                        ImFloorSigned(event.MousePos.PosY));
+
+      const ImVec2 viewport_pos = ImGui::GetMainViewport()->Pos;
+      const ImVec2 viewport_size = ImGui::GetMainViewport()->Size;
+      if ((current_mouse_pos.x >= viewport_pos.x &&
+           current_mouse_pos.x <= (viewport_pos.x + viewport_size.x) &&
+           current_mouse_pos.y >= viewport_pos.y &&
+           current_mouse_pos.y <= (viewport_pos.y + viewport_size.y))) {
+        prev_mouse_pos_ = current_mouse_pos;
+        update_frames_counter_ = 0;
+        return true;
+      }
+    }
+    if(is_focused && event.Type != ImGuiInputEventType_MousePos)
+    {
+        update_frames_counter_ = 0;
+        return true;
+    }
+    if (event.Type == ImGuiInputEventType_Focus)
+    {
+        if ((is_focused = event.AppFocused.Focused)) {
+        update_frames_counter_ = 0;
+        return true;
+        }
+    }
+  }
+
+  return false;
 }
 
 void ApplicationImplImguiGlfw::ProjectManager() {
