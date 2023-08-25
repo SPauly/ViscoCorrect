@@ -1,7 +1,5 @@
 #include "spauly/viscocorrect/frontend/imgui_glfw/graph_impl_imgui_glfw.h"
 
-#include "implot.h"
-
 namespace viscocorrect {
 namespace frontend {
 namespace imgui_glfw {
@@ -29,10 +27,10 @@ void GraphImplImGuiGlfw::OnUIRender() {
 
   if (use_autofit_) Autofit();
 
-  if (ImPlot::BeginPlot("##plot2", plot_size_2_, ImPlotFlags_NoLegend)) {
+  if (ImPlot::BeginPlot("##plot2", plot_size_2_, plot_flags_)) {
     // Set up GraphImplImGuiGlfw
-    ImPlot::SetupAxis(ImAxis_X1, nullptr);
-    ImPlot::SetupAxis(ImAxis_Y1, nullptr);
+    ImPlot::SetupAxis(ImAxis_X1, nullptr, axis_flags_);
+    ImPlot::SetupAxis(ImAxis_Y1, nullptr, axis_flags_);
     ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, plot_size_2_.x);
     ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, plot_size_2_.y);
 
@@ -46,10 +44,10 @@ void GraphImplImGuiGlfw::OnUIRender() {
     ImPlot::EndPlot();
   }
 
-  if (ImPlot::BeginPlot("##plot1", plot_size_1_, ImPlotFlags_NoLegend)) {
+  if (ImPlot::BeginPlot("##plot1", plot_size_1_, plot_flags_)) {
     // Set up GraphImplImGuiGlfw
-    ImPlot::SetupAxis(ImAxis_X1, nullptr);
-    ImPlot::SetupAxis(ImAxis_Y1, nullptr);
+    ImPlot::SetupAxis(ImAxis_X1, nullptr, axis_flags_);
+    ImPlot::SetupAxis(ImAxis_Y1, nullptr, axis_flags_);
     ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, plot_size_1_.x);
     ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, plot_size_1_.y);
 

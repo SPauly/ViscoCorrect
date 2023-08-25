@@ -7,7 +7,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "imgui.h"
+#include <imgui.h>
+#include <implot.h>
+
 #include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 #include "spauly/viscocorrect/graph_base.h"
 #include "spauly/viscocorrect/util/mathematical_functions.h"
@@ -43,7 +45,12 @@ class GraphImplImGuiGlfw : public frontend::util_frontend::Layer,
   // config
   bool use_autofit_ = false;
   float scaling_factor_ = 1.0f;
+
+  // Style
   ImGuiWindowFlags window_flags_ = ImGuiWindowFlags_NoCollapse;
+  ImPlotFlags plot_flags_ = ImPlotFlags_CanvasOnly | ImPlotFlags_Crosshairs;
+  ImPlotAxisFlags axis_flags_ =
+      ImPlotAxisFlags_NoDecorations | ImPlotAxisFlags_NoMenus;
 
   // internal use
   ImVec2 plot_size_1_;  // gotta change these names to be more convinient

@@ -411,7 +411,7 @@ void ApplicationImplImguiGlfw::ConfigWindow() {
   colors_ = style_->Colors;
 
   style_->WindowTitleAlign = ImVec2(0.5f, 0.5f);
-  style_->WindowMenuButtonPosition = 0;
+  style_->WindowMenuButtonPosition = -1;
   style_->TabRounding = rounding_;
   style_->FrameRounding = rounding_;
   style_->WindowRounding = rounding_;
