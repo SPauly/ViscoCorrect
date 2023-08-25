@@ -1,14 +1,32 @@
+// ViscoCorrect - Correction factors centrifugal pumps
+// Copyright (C) 2023  Simon Pauly
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Contact via <https://github.com/SPauly/ViscoCorrect>
+
 #ifndef SPAULY_VISCOCORRECT_FRONTEND_IMGUI_GLFW_GRAPH_IMPL_IMGUI_GLFW_H
 #define SPAULY_VISCOCORRECT_FRONTEND_IMGUI_GLFW_GRAPH_IMPL_IMGUI_GLFW_H
+
+#include <imgui.h>
+#include <implot.h>
 
 #include <functional>
 #include <map>
 #include <memory>
 #include <unordered_map>
 #include <vector>
-
-#include <imgui.h>
-#include <implot.h>
 
 #include "spauly/viscocorrect/frontend/util_frontend/layer.h"
 #include "spauly/viscocorrect/graph_base.h"

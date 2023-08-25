@@ -1,3 +1,21 @@
+// ViscoCorrect - Correction factors centrifugal pumps
+// Copyright (C) 2023  Simon Pauly
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Contact via <https://github.com/SPauly/ViscoCorrect> 
+
 #include "spauly/viscocorrect/debug/curve_fitting.h"
 
 #include "spauly/viscocorrect/debug/debug_tools.h"
@@ -34,8 +52,8 @@ CurveFitting::CurveFitting(std::shared_ptr<EventCallbackType> callback)
   curves.push_back(FullDataCurve(raw_points.at(4), true, 6));
   curves.push_back(FullDataCurve(raw_points.at(5), true, 6));
 
-  PlotRender_func =
-      std::make_shared<std::function<void()>>(std::bind(&CurveFitting::RenderInPlot, this));
+  PlotRender_func = std::make_shared<std::function<void()>>(
+      std::bind(&CurveFitting::RenderInPlot, this));
 }
 
 CurveFitting::~CurveFitting() {}
@@ -60,20 +78,26 @@ void CurveFitting::Render() {
   if (ImGui::Button("Refresh Curve")) {
     if (b_function) {
       curves.clear();
-      curves.push_back(FullDataCurve(raw_points.at(0), (bool)use_poly_, num_params_));
-      curves.push_back(FullDataCurve(raw_points.at(1), (bool)use_poly_, num_params_));
-      curves.push_back(FullDataCurve(raw_points.at(2), (bool)use_poly_, num_params_));
-      curves.push_back(FullDataCurve(raw_points.at(3), (bool)use_poly_, num_params_));
-      curves.push_back(FullDataCurve(raw_points.at(4), (bool)use_poly_, num_params_));
-      curves.push_back(FullDataCurve(raw_points.at(5), (bool)use_poly_, num_params_));
+      curves.push_back(
+          FullDataCurve(raw_points.at(0), (bool)use_poly_, num_params_));
+      curves.push_back(
+          FullDataCurve(raw_points.at(1), (bool)use_poly_, num_params_));
+      curves.push_back(
+          FullDataCurve(raw_points.at(2), (bool)use_poly_, num_params_));
+      curves.push_back(
+          FullDataCurve(raw_points.at(3), (bool)use_poly_, num_params_));
+      curves.push_back(
+          FullDataCurve(raw_points.at(4), (bool)use_poly_, num_params_));
+      curves.push_back(
+          FullDataCurve(raw_points.at(5), (bool)use_poly_, num_params_));
     }
     for (int i = 0; i < curves.size(); i++) {
       FitCurve(curves.at(i));
     }
     b_function = true;
-  } 
+  }
 
-  ImGui::End(); 
+  ImGui::End();
 }
 
 void CurveFitting::RenderInPlot() {
