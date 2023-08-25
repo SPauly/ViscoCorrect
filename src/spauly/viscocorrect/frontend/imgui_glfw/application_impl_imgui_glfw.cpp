@@ -210,7 +210,7 @@ void ApplicationImplImguiGlfw::ProjectManager() {
     ImGui::Separator();
 
     static bool found_error = false;
-    
+
     if (ImGui::Button("Calculate")) {
       if (!IsFlowrateInputOkay(proj.parameters.flowrate_q) ||
           !IsTotalHeadInputOkay(proj.parameters.total_head_m) ||
@@ -299,42 +299,44 @@ void ApplicationImplImguiGlfw::Feedback() {
     ImGui::PopItemWidth();
 
     if (ImGui::Button("Submit Feedback")) {
-      std::string entry = "----------------\nParameters:";
+      std::string entry{""};
 
-      if (auto projectsPtr = get_projects();
-          projectsPtr && !projectsPtr->empty()) {
-        const auto &parameters = projectsPtr->at(0).parameters;
-        const auto &corrections = projectsPtr->at(0).correction;
+      const auto &parameters = get_projects()->at(0).parameters;
+      const auto &corrections = get_projects()->at(0).correction;
 
-        entry += "Flowrate: " + std::to_string(parameters.flowrate_q) + "\n";
-        entry +=
-            "Total Head: " + std::to_string(parameters.total_head_m) + "\n";
-        entry += "Viscosity: " + std::to_string(parameters.viscosity_v) + "\n";
-        entry +=
-            "Multiplier H: " + std::to_string(parameters.selected_h_curve) +
-            "\n";
+      entry +=
+          std::to_string(parameters.flowrate_q) + ",0," +
+          std::to_string(parameters.total_head_m) + ",0," +
+          std::to_string(parameters.viscosity_v) + ",0," +
+          std::to_string(parameters.selected_h_curve) + "," +
+          std::to_string(corrections.Q) + "," + std::to_string(expected_q) +
+          "," + std::to_string(corrections.Q - expected_q) + "," +
+          std::to_string(corrections.H_selected) + "," +
+          std::to_string(expected_h) + "," +
+          std::to_string(corrections.H_selected - expected_h) + "," +
+          std::to_string(corrections.eta) + "," + std::to_string(expected_eta) +
+          "," + std::to_string(corrections.eta - expected_eta);
 
-        entry += "Calculated values - Expected values = difference:\n";
-        entry += "Q: " + std::to_string(corrections.Q) + " - " +
-                 std::to_string(expected_q) + " = " +
-                 std::to_string(corrections.Q - expected_q) + "\n";
-        entry += "eta: " + std::to_string(corrections.eta) + " - " +
-                 std::to_string(expected_eta) + " = " +
-                 std::to_string(corrections.eta - expected_eta) + "\n";
-        entry += "H: " + std::to_string(corrections.H_selected) + " - " +
-                 std::to_string(expected_h) + " = " +
-                 std::to_string(corrections.H_selected - expected_h) + "\n\n";
+      std::ifstream file_existence_check("feedback.csv");
 
-        std::ofstream feedback_file("feedback.txt",
+      if (!file_existence_check.good()) {
+        std::ofstream creation_file("feedback.csv",
                                     std::ios::app | std::ios::out);
-        if (feedback_file.is_open()) {
-          // Write the entry to the file
-          feedback_file << entry << std::endl;
-
-          // Close the file
-          feedback_file.close();
+        if (creation_file.is_open()) {
+          creation_file << "Flowrate,FlowrateCon,TotalHead,TotalHeadCon,"
+                           "Viscosity,ViscosityCon,MultiplierH,CalcQ,ExpQ,"
+                           "DiffQ,CalcH,ExpH,DiffH,CalcEta,ExpEta,DiffEta"
+                        << std::endl;
+          creation_file.close();
         }
       }
+      std::ofstream feedback_file("feedback.csv",
+                                  std::ios::app | std::ios::out);
+      if (feedback_file.is_open()) {
+        feedback_file << entry << std::endl;
+        feedback_file.close();
+      }
+
       submitting_feedback_ = false;
       ImGui::CloseCurrentPopup();
     }
