@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "/O2 /arch:NATIVE")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/O2 /arch:NATIVE /Zi")
 
 # option for building with debug features
-option(BUILD_DEBUG_FEATURES "Build with debug features" OFF)
+option(BUILD_DEBUG_FEATURES "Build with debug features" ON)
 
 # Load file lists
 include(${PROJECT_SOURCE_DIR}/src/file_lists.cmake)

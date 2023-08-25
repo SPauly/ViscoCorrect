@@ -37,32 +37,44 @@ class ApplicationImplImguiGlfw : public viscocorrect::ApplicationBase {
   void ProjectManager();
   void MenuBar();
   void Feedback();
+  void Disclaimer();
 
+  void ConfigWindow();
   void SetStyle();
+  void DarkMode();
+  void LightMode();
+  void HelpMarker(const char* description, const char* marker = nullptr);
+  void HyperLink(const char *link, const char* marker = nullptr);
+
 
  private:
   // config
   bool use_open_workspace = false;
   bool show_graph_ = false;
+  bool use_dark_mode = false;
 
   // internal use
   GLFWwindow *window_;
   ImGuiViewport *viewport_;
   ImGuiIO *io_;
+  bool submitting_feedback_ = false;
 
   // Appearence
-  const int display_w_ = 450;
+  const int display_w_ = 445;
   const int display_h_ = 650;
-  const int display_w_offset_graph_ = 450;
+  const int display_w_offset_graph_ = 445;
   int temp_display_w_, temp_display_h_;  // for temporary use
-  const ImGuiWindowFlags closed_workspace_flags_ =
-      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
-  const ImGuiWindowFlags open_workspace_flags_ = ImGuiWindowFlags_NoCollapse;
+  const ImGuiWindowFlags closed_workspace_flags_ = ImGuiWindowFlags_NoCollapse |
+                                                   ImGuiWindowFlags_NoMove |
+                                                   ImGuiWindowFlags_NoResize;
+  const ImGuiWindowFlags open_workspace_flags_ =
+      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
+  const float rounding_ = 2.0;
 
   // Style
   ImVec4 clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   ImVec4 *colors_ = nullptr;
-  bool use_dark_mode = false;
+  ImGuiStyle *style_ = nullptr;
 
   // utils
   util_frontend::LayerStack layer_stack_;
