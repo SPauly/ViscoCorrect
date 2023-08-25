@@ -116,7 +116,6 @@ bool ApplicationImplImguiGlfw::Render() {
 
   glfwWaitEvents();
 
-  // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -211,6 +210,7 @@ void ApplicationImplImguiGlfw::ProjectManager() {
     ImGui::Separator();
 
     static bool found_error = false;
+    
     if (ImGui::Button("Calculate")) {
       if (!IsFlowrateInputOkay(proj.parameters.flowrate_q) ||
           !IsTotalHeadInputOkay(proj.parameters.total_head_m) ||

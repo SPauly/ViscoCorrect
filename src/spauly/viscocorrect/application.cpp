@@ -39,9 +39,11 @@ void Application::Run() {
   should_close_ = !frontend_impl_->Render();
 
   while (!should_close_) {
+
     HandleEvents();
     should_close_ = !frontend_impl_->Render();
-}
+    
+  }
   Shutdown();
 }
 
