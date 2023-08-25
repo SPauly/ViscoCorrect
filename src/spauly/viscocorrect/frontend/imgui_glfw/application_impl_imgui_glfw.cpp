@@ -241,7 +241,7 @@ void ApplicationImplImguiGlfw::MenuBar() {
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("View")) {
-      if (ImGui::MenuItem("Toggle Dark/Light mode [not impl]", "##",
+      if (ImGui::MenuItem("Toggle Dark/Light mode [not impl]", "",
                           &use_dark_mode))
         SetStyle();
       if (ImGui::MenuItem("Show Graph [beta]", "STRG + G", &show_graph_)) {
