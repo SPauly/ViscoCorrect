@@ -1,4 +1,4 @@
-// ViscoCorrect - Correction factors centrifugal pumps
+// ViscoCorrect - Correction factors for centrifugal pumps
 // Copyright (C) 2023  Simon Pauly
 //
 // This program is free software: you can redistribute it and/or modify
