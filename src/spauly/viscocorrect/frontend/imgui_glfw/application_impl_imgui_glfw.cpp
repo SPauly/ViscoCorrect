@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Contact via <https://github.com/SPauly/ViscoCorrect> 
+// Contact via <https://github.com/SPauly/ViscoCorrect>
 
 #include "frontend/imgui_glfw/application_impl_imgui_glfw.h"
 
@@ -197,8 +197,7 @@ void ApplicationImplImguiGlfw::ProjectManager() {
     ImGui::Combo("##totalhunit",
                  reinterpret_cast<int *>(&proj.parameters.total_head_unit),
                  "m\0ft\0\0");
-    ImGui::InputFloat("v - Kinematic viscosity in",
-                      &proj.parameters.viscosity_v);
+    ImGui::InputFloat("v - Viscosity in", &proj.parameters.viscosity_v);
     ImGui::SameLine();
     ImGui::Combo("##viscounit",
                  reinterpret_cast<int *>(&proj.parameters.viscosity_unit),

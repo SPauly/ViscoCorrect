@@ -1,4 +1,6 @@
-## Ignore build folders for now
+## Ignore build folders
+cmake_out/
+bazel_out/ 
 build/
 out/
 
