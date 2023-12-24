@@ -23,6 +23,7 @@
 #include <deque>
 #include <functional>
 #include <vector>
+#include <thread>
 
 #include "spauly/viscocorrect/application_base.h"
 #include "spauly/viscocorrect/calculator.h"
